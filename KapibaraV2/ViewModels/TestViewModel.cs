@@ -5,52 +5,33 @@ namespace KapibaraV2.ViewModels
 {
     public class TestViewModel : INotifyPropertyChanged
     {
-        private double _number1;
-        private double _number2;
-        private double _sum;
+        private readonly Model _model;
+
+        public TestViewModel(Model model)
+        {
+            _model = model;
+            _model.PropertyChanged += (sender, e) => { OnPropertyChanged(e.PropertyName); };
+        }
 
         public double Number1
         {
-            get { return _number1; }
-            set
-            {
-                _number1 = value;
-                OnPropertyChanged(nameof(Number1));
-                CalculateSum();
-            }
+            get => _model.Number1;
+            set => _model.Number1 = value;
         }
 
         public double Number2
         {
-            get { return _number2; }
-            set
-            {
-                _number2 = value;
-                OnPropertyChanged(nameof(Number2));
-                CalculateSum();
-            }
+            get => _model.Number2;
+            set => _model.Number2 = value;
         }
 
-        public double Sum
-        {
-            get { return _sum; }
-            private set
-            {
-                _sum = value;
-                OnPropertyChanged(nameof(Sum));
-            }
-        }
+        public double Sum => _model.Sum;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void CalculateSum()
-        {
-            Sum = Number1 + Number2;
         }
     }
 }
