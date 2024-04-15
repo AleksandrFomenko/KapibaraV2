@@ -5,6 +5,7 @@ using Nice3point.Revit.Toolkit.External;
 using System.Windows.Controls.Ribbon;
 using System.Windows.Media;
 using Autodesk.Windows;
+using KapibaraV2.Views;
 
 namespace KapibaraV2
 {
@@ -39,6 +40,7 @@ namespace KapibaraV2
             // Информация
             panelInfo.AddPushButton<KapibaraInfo>("Info");
             panelInfo.AddPushButton<KapibaraTestMvvm>("TestMVVM");
+        
 
             Autodesk.Windows.RibbonControl ribbon = Autodesk.Windows.ComponentManager.Ribbon;
             System.Windows.Media.SolidColorBrush panelBackgroundBrushPurple = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(204, 204, 255));

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KapibaraV2", "KapibaraV2\KapibaraV2.csproj", "{28584587-AEFD-415D-AEE2-028D7321E908}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KapibaraV2", "KapibaraV2\KapibaraV2.csproj", "{28584587-AEFD-415D-AEE2-028D7321E908}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,8 +39,8 @@ Global
 		{28584587-AEFD-415D-AEE2-028D7321E908}.Release R21|Any CPU.Build.0 = Release R21|Any CPU
 		{28584587-AEFD-415D-AEE2-028D7321E908}.Release R22|Any CPU.ActiveCfg = Release R22|Any CPU
 		{28584587-AEFD-415D-AEE2-028D7321E908}.Release R22|Any CPU.Build.0 = Release R22|Any CPU
-		{28584587-AEFD-415D-AEE2-028D7321E908}.Release R23|Any CPU.ActiveCfg = Release R23|Any CPU
-		{28584587-AEFD-415D-AEE2-028D7321E908}.Release R23|Any CPU.Build.0 = Release R23|Any CPU
+		{28584587-AEFD-415D-AEE2-028D7321E908}.Release R23|Any CPU.ActiveCfg = Debug R23|Any CPU
+		{28584587-AEFD-415D-AEE2-028D7321E908}.Release R23|Any CPU.Build.0 = Debug R23|Any CPU
 		{28584587-AEFD-415D-AEE2-028D7321E908}.Release R24|Any CPU.ActiveCfg = Release R24|Any CPU
 		{28584587-AEFD-415D-AEE2-028D7321E908}.Release R24|Any CPU.Build.0 = Release R24|Any CPU
 		{28584587-AEFD-415D-AEE2-028D7321E908}.Release R25|Any CPU.ActiveCfg = Release R25|Any CPU
