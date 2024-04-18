@@ -19,6 +19,7 @@ using System.Xml.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Plumbing;
 using Autodesk.Revit.UI;
+using KapibaraV2.Helpers;
 
 namespace Kapibara2.Views.MepGeneral
 {
@@ -228,7 +229,7 @@ namespace Kapibara2.Views.MepGeneral
 
         public void ExecuteTransactionSystemName()
         {
-            CollectionMethods cm = new CollectionMethods();
+            Helper helper = new Helper();
             FilteredElementCollector collector;
             if (activeView)
             {
@@ -277,14 +278,14 @@ namespace Kapibara2.Views.MepGeneral
                         if (par.AsValueString() != null && par.AsValueString() != "Не определено")
                         {
 
-                            cm.setParameterValueByNameToElement(elem, ParameterName, par.AsValueString());
+                            helper.setParameterValueByNameToElement(elem, ParameterName, par.AsValueString());
 
-                            foreach (Element subelem in cm.GetSubComponents(elem))
+                            foreach (Element subelem in helper.GetSubComponents(elem))
                             {
-                                cm.setParameterValueByNameToElement(subelem, ParameterName, par.AsValueString());
-                                foreach (Element subelem_second in cm.GetSubComponents(subelem))
+                                helper.setParameterValueByNameToElement(subelem, ParameterName, par.AsValueString());
+                                foreach (Element subelem_second in helper.GetSubComponents(subelem))
                                 {
-                                    cm.setParameterValueByNameToElement(subelem_second, ParameterName, elem.get_Parameter(bp).AsValueString());
+                                    helper.setParameterValueByNameToElement(subelem_second, ParameterName, elem.get_Parameter(bp).AsValueString());
                                 }
                             }
                         }
@@ -293,13 +294,13 @@ namespace Kapibara2.Views.MepGeneral
                             if (elem is FamilyInstance notSuperComponent && notSuperComponent.SuperComponent == null)
                             {
                                 getSystemTypeResult = getSystemType(notSuperComponent);
-                                cm.setParameterValueByNameToElement(notSuperComponent, ParameterName, getSystemTypeResult);
-                                foreach (Element subelem in cm.GetSubComponents(notSuperComponent))
+                                helper.setParameterValueByNameToElement(notSuperComponent, ParameterName, getSystemTypeResult);
+                                foreach (Element subelem in helper.GetSubComponents(notSuperComponent))
                                 {
-                                    cm.setParameterValueByNameToElement(subelem, ParameterName, getSystemTypeResult);
-                                    foreach (Element subelem_second in cm.GetSubComponents(subelem))
+                                    helper.setParameterValueByNameToElement(subelem, ParameterName, getSystemTypeResult);
+                                    foreach (Element subelem_second in helper.GetSubComponents(subelem))
                                     {
-                                        cm.setParameterValueByNameToElement(subelem_second, ParameterName, getSystemTypeResult);
+                                        helper.setParameterValueByNameToElement(subelem_second, ParameterName, getSystemTypeResult);
                                     }
                                 }
                             }
@@ -310,13 +311,13 @@ namespace Kapibara2.Views.MepGeneral
                     {
                         if (par.AsString() != null && par.AsString() != "")
                         {
-                            cm.setParameterValueByNameToElement(elem, ParameterName, par.AsString());
-                            foreach (Element subelem in cm.GetSubComponents(elem))
+                            helper.setParameterValueByNameToElement(elem, ParameterName, par.AsString());
+                            foreach (Element subelem in helper.GetSubComponents(elem))
                             {
-                                cm.setParameterValueByNameToElement(subelem, ParameterName, par.AsString());
-                                foreach (Element subelem_second in cm.GetSubComponents(subelem))
+                                helper.setParameterValueByNameToElement(subelem, ParameterName, par.AsString());
+                                foreach (Element subelem_second in helper.GetSubComponents(subelem))
                                 {
-                                    cm.setParameterValueByNameToElement(subelem_second, ParameterName, par.AsString());
+                                    helper.setParameterValueByNameToElement(subelem_second, ParameterName, par.AsString());
                                 }
                             }
                         }
@@ -325,13 +326,13 @@ namespace Kapibara2.Views.MepGeneral
                             if (elem is FamilyInstance notSuperComponent && notSuperComponent.SuperComponent == null)
                             {
                                 getSystemTypeResult = getSystemType(notSuperComponent);
-                                cm.setParameterValueByNameToElement(notSuperComponent, ParameterName, getSystemTypeResult);
-                                foreach (Element subelem in cm.GetSubComponents(notSuperComponent))
+                                helper.setParameterValueByNameToElement(notSuperComponent, ParameterName, getSystemTypeResult);
+                                foreach (Element subelem in helper.GetSubComponents(notSuperComponent))
                                 {
-                                    cm.setParameterValueByNameToElement(subelem, ParameterName, getSystemTypeResult);
-                                    foreach (Element subelem_second in cm.GetSubComponents(subelem))
+                                    helper.setParameterValueByNameToElement(subelem, ParameterName, getSystemTypeResult);
+                                    foreach (Element subelem_second in helper.GetSubComponents(subelem))
                                     {
-                                        cm.setParameterValueByNameToElement(subelem_second, ParameterName, getSystemTypeResult);
+                                        helper.setParameterValueByNameToElement(subelem_second, ParameterName, getSystemTypeResult);
                                     }
                                 }
                             }
