@@ -6,6 +6,7 @@ using System.Windows.Controls.Ribbon;
 using System.Windows.Media;
 using Autodesk.Windows;
 using KapibaraV2.Views;
+using KapibaraV2.Commands.MepGeneral;
 
 namespace KapibaraV2
 {
@@ -28,7 +29,7 @@ namespace KapibaraV2
             var panelHeating = Application.CreatePanel("Отопление", "KapibaraV2");
             var panelInfo = Application.CreatePanel("Info", "KapibaraV2");
             //MEP общие
-            panelMepGeneral.AddPushButton<KapibaraSystemName>("Имя системы")
+            panelMepGeneral.AddPushButton<SystemNameCommand>("Имя системы")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
             panelMepGeneral.AddPushButton<KapibaraFloor>("Этаж")
