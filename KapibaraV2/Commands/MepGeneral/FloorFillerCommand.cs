@@ -9,14 +9,13 @@ namespace KapibaraV2.Commands.MepGeneral
 {
     [UsedImplicitly]
     [Transaction(TransactionMode.Manual)]
-
-    public class SystemNameCommand : ExternalCommand
+    internal class FloorFillerCommand : ExternalCommand
     {
         public override void Execute()
         {
             RevitApi.Initialize(ExternalCommandData);
-            var viewModel = new SystemNameViewModel();
-            var view = new SystemNameView(viewModel);
+            var viewModel = new FloorFillerModel();
+            var view = new FloorFillerVIew(viewModel);
             view.ShowDialog();
         }
     }

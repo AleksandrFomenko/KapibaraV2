@@ -32,7 +32,7 @@ namespace KapibaraV2
             panelMepGeneral.AddPushButton<SystemNameCommand>("Имя системы")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
-            panelMepGeneral.AddPushButton<KapibaraFloor>("Этаж")
+            panelMepGeneral.AddPushButton<FloorFillerCommand>("Этаж")
                 .SetImage("/KapibaraV2;component/Resources/Icons/Floor.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/Floor.png");
             panelMepGeneral.AddPushButton<KapibaraActiveView>("Set in \n active view")

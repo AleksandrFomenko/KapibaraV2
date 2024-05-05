@@ -15,7 +15,6 @@
         <SolidColorBrush Color="#1E1E1E"/>
     </Window.Background>
     <Window.Resources>
-        <!-- Стиль для кнопок в стиле Spotify -->
         <Style TargetType="Button">
             <Setter Property="Foreground" Value="#FFFFFF"/>
             <Setter Property="Background" Value="#1DB954"/>

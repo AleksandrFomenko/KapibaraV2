@@ -41,8 +41,6 @@ namespace KapibaraV2.ViewModels.MepGeneral
             BuiltInCategory.OST_DuctFitting
         };
 
-        
-
         public List<string> SystemParameters { get; } = new List<string> { "Имя системы", "Сокращение для системы" };
         public List<string> UserParameters { get; set; } = new List<string>();
         public List<string> Elements { get; } = new List<string> { "Трубопроводам", "Воздуховодам" };
@@ -167,6 +165,7 @@ namespace KapibaraV2.ViewModels.MepGeneral
                 snm.Execute();
                 t.Commit(); 
             }
+            Autodesk.Revit.UI.TaskDialog.Show("Succeeded", string.Format("Обработано {0} элементов", _isActiveView));
             CloseAction();
         }
 
