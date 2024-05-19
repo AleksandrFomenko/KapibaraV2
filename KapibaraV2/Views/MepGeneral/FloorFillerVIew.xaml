@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KapibaraV2.Views.MepGeneral"
         mc:Ignorable="d"
-        Title="FloorView" Height="450" Width="800">
+        Title="FloorView" Height="1000" Width="750" ResizeMode="NoResize" >
     <Window.Resources>
         <LinearGradientBrush x:Key="Gradient" StartPoint="0,0" EndPoint="1,1">
             <GradientStop Color="#252828"/>
@@ -22,21 +22,132 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+        <Style TargetType="TextBlock" x:Key="OtherText">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontFamily" Value="Times New Roman"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center" />
+
+        </Style>
         <Style TargetType="Border" x:Key="CustomBorder">
             <Setter Property="BorderBrush" Value="#1DB954"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="Padding" Value="5"/>
             <Setter Property="CornerRadius" Value= "{StaticResource Radius}" />
         </Style>
+        <Style x:Key="CustomTextBoxStyle" TargetType="TextBox">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Style="{StaticResource CustomBorder}" Background="{TemplateBinding Background}">
+                            <ScrollViewer x:Name="PART_ContentHost" Width="180" Margin="3,-5,3,-5"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <Style x:Key="MainBtn" TargetType="Button">
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Background" Value="#1DB954"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="IsCancel" Value="True"/>
+        </Style>
+        <ControlTemplate x:Key="MainBtnTemplate" TargetType="Button">
+            <Grid>
+                <Border x:Name="Border" Background="{TemplateBinding Background}" CornerRadius="20"/>
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Border" Property="Background" Value="#45C963"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="Border" Property="Background" Value="#1AA34A"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+
+        <Style TargetType="ToggleButton" x:Key="CustomToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid Margin="0">
+                            <Border x:Name="BackgroundBorder" Background="White" CornerRadius="13" Margin="1,0,1,0"/>
+                            <Border x:Name="ThumbBorder" Background="Gray" CornerRadius="13" Margin="2,1,35,1"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="ThumbBorder" Property="Background" Value="#1DB954"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ThicknessAnimation Storyboard.TargetName="ThumbBorder" Storyboard.TargetProperty="Margin" To="35,1,2,1" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ThicknessAnimation Storyboard.TargetName="ThumbBorder" Storyboard.TargetProperty="Margin" To="2,1,35,1" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid Style = "{StaticResource grid}">
+        <TextBlock
+                   Style="{StaticResource OtherText}" 
+                   Margin="30,779,30,0" HorizontalAlignment="Stretch" IsEnabled="False" VerticalAlignment="Top" Height="95"><Run Text="Рекомендуется запускать по уровням на активном виде, в данном случае вы"/><LineBreak/><Run Text="точно укажите относительно каких уровней искать элементы,"/><LineBreak/><Run Text="но если"/><Run Language="ru-ru" Text=" "/><Run Text="вы уверены в отсутствии лишних уровней в проекте, игнорируйте эту"/><LineBreak/><Run Text="настройку."/></TextBlock>
+        <Button Content="Ok" Style="{StaticResource MainBtn}" Template="{StaticResource MainBtnTemplate}" Command="{Binding OkCommand}" Margin="0,0,0,50" Width="220" Height="44" VerticalAlignment="Bottom"/>
         <Grid Margin="25,25,25,0" Height="42" VerticalAlignment="Top" Style = "{StaticResource grid}">
-            <TextBlock Text="Этаж" Style="{StaticResource MainText}" /> 
+            <Grid.Background>
+                <LinearGradientBrush>
+                    <GradientStop Color="#FF252828"/>
+                    <GradientStop Color="#FF252828" Offset="2"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <TextBlock Text="Этаж" Style="{StaticResource MainText}" />
         </Grid>
-        <Grid Margin="25,100,0,0" HorizontalAlignment="Left" Width="663" Height="211" VerticalAlignment="Top" >
-            <Border Style= "{StaticResource CustomBorder}"></Border>
-            <TextBlock Text=" Настройка и выбор параметров" Margin="46,-12,341,0" Height="40" VerticalAlignment="Top" FontSize = "20" Foreground="White" FontFamily="Times New Roman" Background="#252828"/>
+        <Grid Margin="25,150,25,0" Height="600" VerticalAlignment="Top" >
+            <TextBox Style="{StaticResource CustomTextBoxStyle}" Text="{Binding SetHighLvl}" Margin="470,255,30,0" Height="30" VerticalAlignment="Top"/>
+            <Border Style= "{StaticResource CustomBorder}" Margin="-10,0,10,0"></Border>
+            <TextBlock Text=" Настройка и выбор параметров" Style="{StaticResource OtherText}" Margin="0,-10,370,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Top" Width="277" Background="#FF252828"/>
+            <TextBlock Text="Выбор параметра" Style="{StaticResource OtherText}" Margin="0,60,395,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Top" Width="222"/>
+            <ComboBox VerticalAlignment="Top" Margin="0,60,50,0" HorizontalAlignment="Right" Width="330" Height="27">
+                <ComboBoxItem Content="Option 1"/>
+                <ComboBoxItem Content="Option 2"/>
+                <ComboBoxItem Content="Option 3"/>
+            </ComboBox>
+            <ToggleButton Style="{StaticResource CustomToggleButton}" IsChecked="{Binding IsActiveView, Mode=TwoWay}" Margin="595,120,0,0" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="75" />
+            <TextBlock Style="{StaticResource OtherText}" Margin="0,120,196,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Top" Width="421"><Run Text="Взять элементы только с активного "/><Run Language="ru-ru" Text="в"/><Run Text="ида"/></TextBlock>
+            <TextBlock Style="{StaticResource OtherText}" Margin="0,165,230,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Top" Width="387"><Run Language="ru-ru" Text="Взять уровни только с активного вида"/></TextBlock>
+            <ToggleButton Style="{StaticResource CustomToggleButton}" IsChecked="{Binding IsActiveView, Mode=TwoWay}" Margin="595,165,0,0" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="75" />
+            <TextBlock Style="{StaticResource OtherText}" Margin="0,210,230,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Top" Width="387"><Run Language="ru-ru" Text="Записать только числа"/></TextBlock>
+            <ToggleButton Style="{StaticResource CustomToggleButton}" IsChecked="{Binding IsActiveView, Mode=TwoWay}" Margin="595,210,0,0" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="75" />
+            <TextBlock Style="{StaticResource OtherText}" Margin="0,255,230,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Top" Width="387"><Run Language="ru-ru" Text="Значение верхнего уровня"/></TextBlock>
+            <TextBlock Style="{StaticResource OtherText}" Margin="0,300,230,0" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Top" Width="387"><Run Language="ru-ru" Text="Значение нижнего уровня"/></TextBlock>
         </Grid>
     </Grid>
 </Window>
