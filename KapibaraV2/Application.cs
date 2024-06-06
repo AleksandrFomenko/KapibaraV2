@@ -7,6 +7,7 @@ using System.Windows.Media;
 using Autodesk.Windows;
 using KapibaraV2.Views;
 using KapibaraV2.Commands.MepGeneral;
+using KapibaraV2.Commands.BIM;
 
 namespace KapibaraV2
 {
@@ -23,11 +24,18 @@ namespace KapibaraV2
 
         private void CreateRibbon()
         {
+            var panelBIM = Application.CreatePanel("BIM", "KapibaraV2");
             var panelMepGeneral = Application.CreatePanel("MEP общие", "KapibaraV2");
-            var panelVentilation = Application.CreatePanel("Вентиляция", "KapibaraV2");
-            var panelWater = Application.CreatePanel("Водоснабжение, канализация", "KapibaraV2");
-            var panelHeating = Application.CreatePanel("Отопление", "KapibaraV2");
+            //var panelVentilation = Application.CreatePanel("Вентиляция", "KapibaraV2");
+            //var panelWater = Application.CreatePanel("Водоснабжение, канализация", "KapibaraV2");
+            //var panelHeating = Application.CreatePanel("Отопление", "KapibaraV2");
             var panelInfo = Application.CreatePanel("Info", "KapibaraV2");
+
+            //BIM
+            panelBIM.AddPushButton<ExportModels>("Export models")
+                .SetImage("/KapibaraV2;component/Resources/Icons/ActiveView.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
+
             //MEP общие
             panelMepGeneral.AddPushButton<SystemNameCommand>("Имя системы")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
@@ -35,9 +43,11 @@ namespace KapibaraV2
             panelMepGeneral.AddPushButton<FloorFillerCommand>("Этаж")
                 .SetImage("/KapibaraV2;component/Resources/Icons/Floor.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/Floor.png");
+            /*
             panelMepGeneral.AddPushButton<KapibaraActiveView>("Set in \n active view")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ActiveView.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
+            */
             // Информация
             panelInfo.AddPushButton<KapibaraInfo>("Info");
             panelInfo.AddPushButton<KapibaraTestMvvm>("TestMVVM");
