@@ -97,6 +97,11 @@
 
     <Grid>
         <StackPanel Style="{StaticResource SidePanelStyle}">
+            <TextBlock Style="{StaticResource SidePanelTextStyle}" Text="Файл конфигурации" Cursor="Hand">
+                <TextBlock.InputBindings>
+                    <MouseBinding Gesture="LeftClick" Command="{Binding SelectConfigFileCommand}" />
+                </TextBlock.InputBindings>
+            </TextBlock>
             <TextBlock Style="{StaticResource SidePanelTextStyle}" Text="Список проектов"/>
             <ListBox Style="{StaticResource ListBoxStyle}">
                 <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 1"/>
@@ -136,7 +141,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Content="Добавить" Style="{StaticResource MainBtn}" Template="{StaticResource MainBtnTemplate}" Background="#1DB954" Height="NaN" VerticalAlignment="Stretch" />
+                <Button Content="Добавить" Style="{StaticResource MainBtn}" Template="{StaticResource MainBtnTemplate}" Background="#1DB954" Height="NaN" VerticalAlignment="Stretch" Click="Button_Click" />
                 <Button Grid.Column="1" Content="Удалить" Style="{StaticResource MainBtn}" Template="{StaticResource MainBtnTemplate}" Background="#FF0000" VerticalAlignment="Stretch" />
             </Grid>
         </StackPanel>

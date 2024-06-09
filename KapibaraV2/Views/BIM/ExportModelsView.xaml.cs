@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using KapibaraV2.ViewModels.BIM;
+using KapibaraV2.Configuration;
 
 namespace KapibaraV2.Views.BIM
 {
@@ -26,6 +27,13 @@ namespace KapibaraV2.Views.BIM
         {
             DataContext = viewModel;
             InitializeComponent();
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string configPath = Config.GetConfigPath();
+            Autodesk.Revit.UI.TaskDialog.Show("Succeeded", configPath);
 
         }
     }
