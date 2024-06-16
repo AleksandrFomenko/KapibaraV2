@@ -1,5 +1,4 @@
-﻿using Autodesk.Revit.DB;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,18 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using KapibaraV2.ViewModels.BIM;
-using KapibaraV2.Configuration;
+using KapibaraV2.ViewModels.BIM.AddDeleteProjects;
 
 namespace KapibaraV2.Views.BIM
 {
-    public partial class ExportModelsView : Window
+    public partial class AddProjectView : Window
     {
-        public ExportModelsView(ExportModelsViewModel viewModel)
+        public AddProjectView(AddProjectViewModel vm)
         {
-            DataContext = viewModel;
+            DataContext = vm; 
             InitializeComponent();
         }
     }

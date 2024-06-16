@@ -5,7 +5,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:local="clr-namespace:KapibaraV2.Views.BIM"
         mc:Ignorable="d" 
-        Width="1200" Height="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Width="1400" Height="900" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        Background="Black">
 
     <Window.Resources>
         <Style x:Key="SidePanelStyle" TargetType="StackPanel">
@@ -17,17 +18,17 @@
 
         <Style x:Key="SidePanelTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="22"/>
-            <Setter Property="Margin" Value="10,20,10,10"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="5"/>
         </Style>
 
         <Style x:Key="ListBoxStyle" TargetType="ListBox">
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="#252828"/>
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="#1DB954"/>
             <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Margin" Value="10,20,10,10"/>
-            <Setter Property="Height" Value="600"/>
+            <Setter Property="Margin" Value="10,30,10,10"/>
+            <Setter Property="Height" Value="580"/>
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -44,7 +45,7 @@
 
         <Style x:Key="ListBoxItemStyle" TargetType="ListBoxItem">
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontSize" Value="22"/>
             <Setter Property="Padding" Value="5"/>
             <Setter Property="Margin" Value="2"/>
             <Setter Property="Template">
@@ -92,48 +93,31 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-
     </Window.Resources>
 
     <Grid>
         <StackPanel Style="{StaticResource SidePanelStyle}">
-            <TextBlock Style="{StaticResource SidePanelTextStyle}" Text="Файл конфигурации" Cursor="Hand">
-                <TextBlock.InputBindings>
-                    <MouseBinding Gesture="LeftClick" Command="{Binding SelectConfigFileCommand}" />
-                </TextBlock.InputBindings>
-            </TextBlock>
-            <TextBlock Style="{StaticResource SidePanelTextStyle}" Text="Список проектов"/>
-            <ListBox Style="{StaticResource ListBoxStyle}">
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 1"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 2"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 3"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 4"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 5"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 6"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 7"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 8"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 9"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 10"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 11"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 12"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 13"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 14"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 15"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 16"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 17"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 18"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 19"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 20"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 21"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 22"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 23"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 24"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 25"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 26"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 27"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 28"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 29"/>
-                <ListBoxItem Style="{StaticResource ListBoxItemStyle}" Content="Тест 30"/>
+            <Border Background="#1DB954" CornerRadius="10" Margin="10" Padding="5" Cursor="Hand" HorizontalAlignment="Center" Width="270">
+                <TextBlock Style="{StaticResource SidePanelTextStyle}"
+                           Text="Файл конфигурации"
+                           TextAlignment="Center">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding SelectConfigFileCommand}" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+            </Border>
+
+            <ScrollViewer MaxHeight="60" VerticalScrollBarVisibility="Auto">
+                <TextBlock Style="{StaticResource SidePanelTextStyle}" Text="{Binding ConfigFilePath}" IsHitTestVisible="False" TextWrapping="Wrap" FontSize="12"/>
+            </ScrollViewer>
+
+            <TextBlock Style="{StaticResource SidePanelTextStyle}" Text="Список проектов" Margin="10,30,0,0"/>
+            <ListBox Style="{StaticResource ListBoxStyle}" ItemsSource="{Binding Projects}" SelectedItem="{Binding SelectedProject}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" FontSize="22" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
             <Grid HorizontalAlignment="Stretch" Margin="10" Height="31">
                 <Grid.ColumnDefinitions>
@@ -141,12 +125,46 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Content="Добавить" Style="{StaticResource MainBtn}" Template="{StaticResource MainBtnTemplate}" Background="#1DB954" Height="NaN" VerticalAlignment="Stretch" Click="Button_Click" />
-                <Button Grid.Column="1" Content="Удалить" Style="{StaticResource MainBtn}" Template="{StaticResource MainBtnTemplate}" Background="#FF0000" VerticalAlignment="Stretch" />
+                <Button Content="Добавить"
+                        Style="{StaticResource MainBtn}"
+                        Template="{StaticResource MainBtnTemplate}"
+                        Background="#1DB954"
+                        Height="NaN"
+                        VerticalAlignment="Stretch"
+                        Command="{Binding AddProjectCommand}"/>
+                <Button Grid.Column="1" Content="Удалить"
+                        Style="{StaticResource MainBtn}"
+                        Template="{StaticResource MainBtnTemplate}"
+                        Background="#FF0000" VerticalAlignment="Stretch"
+                        Command="{Binding DeleteProjectCommand}"/>
             </Grid>
         </StackPanel>
+
         <Grid Margin="300,0,0,0">
-            <TextBlock Text="Main Content" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="1,0" EndPoint="1,3">
+                    <GradientStop Color="#1b1b54" Offset="0.0"/>
+                    <GradientStop Color="#252828" Offset="0.4"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Список моделей" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" Foreground="White"/>
+
+            <ListBox Grid.Row="1"
+             Style="{StaticResource ListBoxStyle}"
+             ItemsSource="{Binding SelectedProject.ModelPaths}"
+             SelectedItem="{Binding SelectedModelPath}"
+             Background="Transparent" Margin="10,40,10,10" Height="NaN">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="18"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Grid>
     </Grid>
 </Window>

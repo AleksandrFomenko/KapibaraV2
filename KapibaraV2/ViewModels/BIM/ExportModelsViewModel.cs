@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Microsoft.Win32;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using KapibaraV2.Configuration;
+using KapibaraV2.Models.BIM.ExportModels;
+using KapibaraV2.Views.BIM;
+using KapibaraV2.ViewModels.BIM.AddDeleteProjects;
 
 namespace KapibaraV2.ViewModels.BIM
 {
@@ -15,14 +15,19 @@ namespace KapibaraV2.ViewModels.BIM
         [ObservableProperty]
         private string configFilePath;
 
+        [ObservableProperty]
+        private ObservableCollection<Project> projects;
+
+        [ObservableProperty]
+        private Project selectedProject;
+
         public ExportModelsViewModel()
         {
-            SelectConfigFileCommand = new RelayCommand(SelectConfigFile);
-            // InitializeParameters();
+            LoadConfigFilePath();
+            LoadProjects();
         }
 
-        public ICommand SelectConfigFileCommand { get; }
-
+        [RelayCommand]
         private void SelectConfigFile()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -32,7 +37,40 @@ namespace KapibaraV2.ViewModels.BIM
             if (openFileDialog.ShowDialog() == true)
             {
                 ConfigFilePath = openFileDialog.FileName;
+                Config.UpdateConfigPath(ConfigFilePath);
+                LoadProjects();
             }
+        }
+        [RelayCommand]
+        private void AddProject()
+        {
+            var vmAddProject = new AddProjectViewModel(this);
+            var view = new  AddProjectView(vmAddProject);
+
+            view.ShowDialog();
+
+        }
+
+        [RelayCommand]
+        private void DeleteProject()
+        {
+           
+            if (SelectedProject != null)
+            {
+                Config.RemoveProject(SelectedProject.Name);
+                LoadProjects();
+            }
+        }
+
+        private void LoadConfigFilePath()
+        {
+            ConfigFilePath = Config.GetConfigPath();
+        }
+
+        public void LoadProjects()
+        {
+            var projectsList = Config.GetProjects();
+            Projects = new ObservableCollection<Project>(projectsList);
         }
     }
 }
