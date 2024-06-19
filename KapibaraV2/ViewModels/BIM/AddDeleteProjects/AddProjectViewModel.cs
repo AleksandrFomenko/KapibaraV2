@@ -12,6 +12,7 @@ namespace KapibaraV2.ViewModels.BIM.AddDeleteProjects
     public partial class AddProjectViewModel : ObservableObject
     {
         private readonly ExportModelsViewModel _mainViewModel;
+
         [ObservableProperty]
         private string projectName;
 

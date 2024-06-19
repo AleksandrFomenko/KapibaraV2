@@ -12,6 +12,7 @@ namespace KapibaraV2.Configuration
     public class Config
     {
         public string PathConfig { get; set; }
+        public string SavePath { get; set; }
         public List<Project> Projects { get; set; } = new List<Project>();
 
         private static readonly string dllPath = Assembly.GetExecutingAssembly().Location;
@@ -67,6 +68,7 @@ namespace KapibaraV2.Configuration
             return config?.PathConfig;
         }
 
+
         public static void UpdateConfigPath(string newPath)
         {
             var config = LoadConfig(ConfigFilePath) ?? new Config();
@@ -93,6 +95,7 @@ namespace KapibaraV2.Configuration
             config.Projects.Add(newProject);
             config.SaveConfig(configPath);
         }
+
         public static void RemoveProject(string projectName)
         {
             var configPath = GetConfigPath();
@@ -108,5 +111,23 @@ namespace KapibaraV2.Configuration
                 }
             }
         }
+
+        public static void SaveProject(Project updatedProject)
+        {
+            var configPath = GetConfigPath();
+            var config = LoadConfig(configPath);
+
+            if (config != null)
+            {
+                var project = config.Projects.FirstOrDefault(p => p.Name == updatedProject.Name);
+                if (project != null)
+                {
+                    project.Paths = updatedProject.Paths;
+                    project.SavePath = updatedProject.SavePath;
+                    config.SaveConfig(configPath);
+                }
+            }
+        }
+
     }
 }
