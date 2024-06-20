@@ -136,6 +136,11 @@ namespace KapibaraV2.ViewModels.BIM
                 LoadModelPaths();
             }
         }
+        [RelayCommand]
+        private void Export()
+        {
+
+        }
 
     }
 }
