@@ -104,7 +104,7 @@ namespace KapibaraV2.Models.BIM.ExportModels.ExportModelsModel
         }
 
 
-        public void Execute(string directoryPath, string[] paths)
+        public void Execute(string directoryPath, List <String> paths)
         {
 
             try
@@ -120,7 +120,7 @@ namespace KapibaraV2.Models.BIM.ExportModels.ExportModelsModel
                 return;
             };
 
-
+            TaskDialog.Show("норм", "Вроде заебумба");
         }
     }
 }

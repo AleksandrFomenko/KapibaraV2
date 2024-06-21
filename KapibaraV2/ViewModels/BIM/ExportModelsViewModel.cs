@@ -10,6 +10,8 @@ using KapibaraV2.ViewModels.BIM.AddDeleteProjects;
 using System.Windows.Forms;
 using KapibaraV2.ViewModels.BIM.ExportModels;
 using KapibaraV2.Views.BIM.ExportModels;
+using KapibaraV2.Models.BIM.ExportModels.ExportModelsModel;
+using System.Windows;
 
 namespace KapibaraV2.ViewModels.BIM
 {
@@ -137,8 +139,11 @@ namespace KapibaraV2.ViewModels.BIM
             }
         }
         [RelayCommand]
-        private void Export()
+        private void Export(Window window)
         {
+            ExportModelsModel emm = new ExportModelsModel();
+            emm.Execute(SelectedProject.SavePath, SelectedProject.Paths);
+            window?.Close();
 
         }
 

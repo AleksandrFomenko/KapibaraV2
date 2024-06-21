@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KapibaraV2.Views.BIM.ExportModels"
         mc:Ignorable="d"
-        Title="Add model" Height="250" Width="500"
+        Title="Add model" Height="250" Width="600"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -65,8 +65,8 @@
 
             <Grid Grid.Row="1" Style="{StaticResource GridStyle}" Margin="10">
                 <StackPanel>
-                    <TextBlock Text="Путь к модели на Revit server" Foreground="White" FontSize="18" Width="470"/>
-                    <TextBlock Text="Пример 172.16.222.122/Folder1/Folder2/ModelName.rvt" Foreground="White" FontSize="18" Width="470"/>
+                    <TextBlock Text="Путь к модели на Revit server" Foreground="White" FontSize="18" Width="654"/>
+                    <TextBlock Text="Пример RSN://172.16.222.122/Folder1/Folder2/ModelName.rvt" Foreground="White" FontSize="18" Width="655"/>
                     <TextBox Text="{Binding ModelName, UpdateSourceTrigger=PropertyChanged}" Margin="10,10,10,5"/>
                     <Button Content="Выбрать модель на локальном диске" Style="{StaticResource MainBtn}" Template="{StaticResource MainBtnTemplate}" Background="#1DB954" Margin="100,10,100,10"
                             Command="{Binding SelectLocalModelCommand}" Width="279"/>

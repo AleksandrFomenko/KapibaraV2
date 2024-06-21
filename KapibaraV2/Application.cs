@@ -76,6 +76,12 @@ namespace KapibaraV2
                     {
                         panel.CustomPanelTitleBarBackground = panelBackgroundBrushTurquoise;
                     }
+
+                    if (panel.Source.Title == "BIM")
+                    {
+                        panel.CustomPanelTitleBarBackground = panelBackgroundBrushLightCoral;
+                    }
+
                     if (panel.Source.Title == "Отопление")
                     {
                         panel.CustomPanelTitleBarBackground = panelBackgroundBrushLightCoral;
