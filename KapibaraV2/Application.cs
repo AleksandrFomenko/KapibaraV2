@@ -8,6 +8,7 @@ using Autodesk.Windows;
 using KapibaraV2.Views;
 using KapibaraV2.Commands.MepGeneral;
 using KapibaraV2.Commands.BIM;
+using KapibaraV2.Commands.Info;
 
 namespace KapibaraV2
 {
@@ -50,7 +51,7 @@ namespace KapibaraV2
             */
             // Информация
             panelInfo.AddPushButton<KapibaraInfo>("Info");
-            panelInfo.AddPushButton<KapibaraTestMvvm>("TestMVVM");
+            panelInfo.AddPushButton<ToolsKapi>("Tools");
         
 
             Autodesk.Windows.RibbonControl ribbon = Autodesk.Windows.ComponentManager.Ribbon;

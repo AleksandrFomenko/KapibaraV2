@@ -60,7 +60,8 @@
     <ItemGroup>
         <Resource Include="Resources\Icons\SystemName.png" />
         <Resource Include="Resources\Icons\Floor.png" />
-	    <Resource Include="Resources\Icons\ActiveView.png" />
+	<Resource Include="Resources\Icons\ActiveView.png" />
+	<Resource Include="Resources\Icons\tools.jpg" />
     </ItemGroup>
 
     <ItemGroup>
