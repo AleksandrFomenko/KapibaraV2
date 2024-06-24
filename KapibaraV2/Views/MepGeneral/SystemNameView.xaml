@@ -51,7 +51,7 @@
                     <Grid Margin="350,2,2,2">
                         <Border x:Name="BackgroundBorder" Background="White" CornerRadius="13" Margin="1,0,1,0"/>
                         <Border x:Name="ThumbBorder" Background="Gray" CornerRadius="13" Margin="2,1,38,1"/>
-                    </Grid>
+                    </Grid> 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
                             <Setter TargetName="ThumbBorder" Property="Background" Value="#1DB954"/>

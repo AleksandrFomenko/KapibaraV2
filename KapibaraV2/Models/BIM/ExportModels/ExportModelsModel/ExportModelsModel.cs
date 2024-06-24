@@ -21,10 +21,10 @@ namespace KapibaraV2.Models.BIM.ExportModels.ExportModelsModel
         public Document OpenDocument(string filePath)
         {
 
+
             Autodesk.Revit.ApplicationServices.Application app = RevitApi.Document.Application;
-
             ModelPath modelPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(filePath);
-
+  
             OpenOptions openOptions = new OpenOptions();
             Document newDoc = app.OpenDocumentFile(modelPath, openOptions);
 
@@ -104,9 +104,9 @@ namespace KapibaraV2.Models.BIM.ExportModels.ExportModelsModel
         }
 
 
-        public void Execute(string directoryPath, List <String> paths)
+        public bool Execute(string directoryPath, List <String> paths)
         {
-
+            bool _isFinish = true;
             try
             {
                 foreach (string path in paths)
@@ -117,10 +117,11 @@ namespace KapibaraV2.Models.BIM.ExportModels.ExportModelsModel
             catch (Exception ex)
             {
                 TaskDialog.Show("не норм", "Что-то пошло не так ()" + ex.Message);
-                return;
+                return _isFinish;
             };
-
             TaskDialog.Show("норм", "Вроде заебумба");
+            return _isFinish;
+
         }
     }
 }

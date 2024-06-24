@@ -12,6 +12,8 @@ using KapibaraV2.ViewModels.BIM.ExportModels;
 using KapibaraV2.Views.BIM.ExportModels;
 using KapibaraV2.Models.BIM.ExportModels.ExportModelsModel;
 using System.Windows;
+using KapibaraV2.AutoClicker;
+using Autodesk.Revit.UI;
 
 namespace KapibaraV2.ViewModels.BIM
 {
@@ -34,6 +36,9 @@ namespace KapibaraV2.ViewModels.BIM
 
         [ObservableProperty]
         private string selectedModelPath;
+
+        [ObservableProperty]
+        private bool isAutoMoverEnabled;
 
         public ExportModelsViewModel()
         {
@@ -141,10 +146,35 @@ namespace KapibaraV2.ViewModels.BIM
         [RelayCommand]
         private void Export(Window window)
         {
-            ExportModelsModel emm = new ExportModelsModel();
-            emm.Execute(SelectedProject.SavePath, SelectedProject.Paths);
-            window?.Close();
+            bool isFinish = false;
+            AutoMover autoMover = null;
+            if (IsAutoMoverEnabled)
+            {
+                AutoMover.Point[] points = {
+            new AutoMover.Point(100, 100),
+            new AutoMover.Point(200, 200),
+            new AutoMover.Point(300, 300)
+        };
+                autoMover = new AutoMover(1000, points);
+                autoMover.Start();
+            }
 
+            ExportModelsModel emm = new ExportModelsModel();
+            if (SelectedProject == null || SelectedProject.Paths == null || SelectedProject.SavePath == null)
+            {
+                TaskDialog.Show("PathOrSavePathIsNull", "Проект для экспорта не выбран");
+                return;
+            }
+
+            isFinish = emm.Execute(SelectedProject.SavePath, SelectedProject.Paths);
+
+            if (IsAutoMoverEnabled && autoMover != null && isFinish)
+            {
+                autoMover.Stop();
+            }
+
+
+            window?.Close();
         }
 
     }
