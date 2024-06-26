@@ -18,6 +18,9 @@ namespace KapibaraV2.ViewModels.BIM.ExportModels
         [ObservableProperty]
         private string selectedFilePath;
 
+        [ObservableProperty]
+        private string selectedExportOption;
+
         public AddModelsViewModel(ExportModelsViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;

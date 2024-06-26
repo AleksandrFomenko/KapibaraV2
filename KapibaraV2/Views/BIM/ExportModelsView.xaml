@@ -271,13 +271,21 @@
                 </StackPanel>
             </Border>
 
-            <ComboBox Grid.Row="3" Margin="50,140,630,0" Height="30" VerticalAlignment="Top" SelectedIndex="0" FontSize="16">
+            <ComboBox Grid.Row="3"
+                      Margin="50,140,630,0"
+                      Height="30"
+                      VerticalAlignment="Top"
+                      SelectedIndex="0"
+                      FontSize="16"
+                      SelectedValue="{Binding SelectedExportOption}"
+                      SelectedValuePath="Content">
                 <ComboBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ComboBoxItem}">
                         <Setter Property="FontSize" Value="16"/>
                     </Style>
                 </ComboBox.ItemContainerStyle>
-                <ComboBoxItem Content="NavisWorks"/>
+                <ComboBoxItem Content="Navisworks"/>
+                <ComboBoxItem Content="Пересохранить модель"/>
                 <ComboBoxItem Content="Здесь будет IFC(если мне будет не лень)"/>
                 <ComboBoxItem Content="Здесь будет отсоединенка(уже лень)"/>
             </ComboBox>

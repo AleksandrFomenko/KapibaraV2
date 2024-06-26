@@ -14,6 +14,9 @@ using KapibaraV2.Models.BIM.ExportModels.ExportModelsModel;
 using System.Windows;
 using KapibaraV2.AutoClicker;
 using Autodesk.Revit.UI;
+using KapibaraV2.Models.BIM.ExportModels.ResaveModel;
+using Autodesk.Revit.DB;
+
 
 namespace KapibaraV2.ViewModels.BIM
 {
@@ -39,6 +42,11 @@ namespace KapibaraV2.ViewModels.BIM
 
         [ObservableProperty]
         private bool isAutoMoverEnabled;
+
+        [ObservableProperty]
+        private string selectedExportOption;
+
+        public bool CanAddModel => SelectedProject != null;
 
         public ExportModelsViewModel()
         {
@@ -165,8 +173,30 @@ namespace KapibaraV2.ViewModels.BIM
                 TaskDialog.Show("PathOrSavePathIsNull", "Проект для экспорта не выбран");
                 return;
             }
+            switch (SelectedExportOption)
+            {
+                case "Navisworks":
+                    emm.Execute(SelectedProject.SavePath, SelectedProject.Paths);
+                    break;
 
-            isFinish = emm.Execute(SelectedProject.SavePath, SelectedProject.Paths);
+                case "Пересохранить модель":
+                    ResaveModel rm = new ResaveModel();
+                    rm.resavingModels(SelectedProject.Paths, SelectedProject.SavePath);
+                    break;
+
+/*
+                case "Здесь будет IFC(если мне будет не лень)":
+                    emm.ExportToIFC(SelectedProject.SavePath, SelectedProject.Paths);
+                    break;
+
+                case "Здесь будет отсоединенка(уже лень)":
+                    emm.ExportToDetached(SelectedProject.SavePath, SelectedProject.Paths);
+                    break;
+*/
+                default:
+                    TaskDialog.Show("ExportOptionNotSelected", "Опция экспорта не выбрана");
+                    break;
+            }
 
             if (IsAutoMoverEnabled && autoMover != null && isFinish)
             {
