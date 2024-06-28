@@ -41,8 +41,15 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
                 worksetConfiguration.Open(worksetIds);
                 openOptions.SetOpenWorksetsConfiguration(worksetConfiguration);
             }
-           
+
+            FailureProcessorOpenDocument failureProcessor = new FailureProcessorOpenDocument();
+            app.FailuresProcessing += failureProcessor.HandleFailures;
+
             Document openDoc = app.OpenDocumentFile(modelPath, openOptions);
+
+            app.FailuresProcessing -= failureProcessor.HandleFailures;
+
+
             if (openDoc != null && openDoc.IsValidObject)
             {
                 if (deleteLinksDwg) { DeleteLinksAndDwg(openDoc); }

@@ -321,15 +321,13 @@
                 <ComboBoxItem Content="Пересохранить модель"/>
                 <ComboBoxItem Content="Сохранить как временная центральная"/>
                 <ComboBoxItem Content="Здесь будет IFC(если мне будет не лень)"/>
-                <ComboBoxItem Content="Здесь будет отсоединенка(уже лень)"/>
             </ComboBox>
 
             <TextBlock Grid.Row="4" Text="Активировать перемещение мыши"
                        FontSize="24"
                        VerticalAlignment="Top"
                        Margin="550,20,0,0"
-                       Foreground="White"
-                       />
+                       Foreground="White"/>
 
             <ToggleButton Grid.Row="4" VerticalAlignment="Top" Margin="0,25,50,0" Height="29" IsChecked="{Binding IsAutoMoverEnabled}" HorizontalAlignment="Right" Width="80">
                 <ToggleButton.Template>
