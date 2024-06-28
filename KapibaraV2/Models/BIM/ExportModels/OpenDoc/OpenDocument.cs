@@ -43,6 +43,7 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
             }
 
             FailureProcessorOpenDocument failureProcessor = new FailureProcessorOpenDocument();
+
             app.FailuresProcessing += failureProcessor.HandleFailures;
 
             Document openDoc = app.OpenDocumentFile(modelPath, openOptions);

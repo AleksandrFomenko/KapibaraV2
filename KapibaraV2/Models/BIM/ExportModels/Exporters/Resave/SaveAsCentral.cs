@@ -55,6 +55,7 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.Resave
                 ModelPath modelSavePath = ModelPathUtils.ConvertUserVisiblePathToModelPath(destFilePath);
 
                 doc.SaveAs(modelSavePath, saveAsOptions);
+                doc.Close(false);
             }
         }
 
