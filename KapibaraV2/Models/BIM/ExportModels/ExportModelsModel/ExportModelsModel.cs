@@ -20,8 +20,6 @@ namespace KapibaraV2.Models.BIM.ExportModels.ExportModelsModel
 
         public Document OpenDocument(string filePath)
         {
-
-
             Autodesk.Revit.ApplicationServices.Application app = RevitApi.Document.Application;
             ModelPath modelPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(filePath);
   
@@ -35,7 +33,6 @@ namespace KapibaraV2.Models.BIM.ExportModels.ExportModelsModel
 
             return null;
         }
-
 
         public void exportToNwc(Document doc, string directoryPath)
         {
@@ -90,7 +87,6 @@ namespace KapibaraV2.Models.BIM.ExportModels.ExportModelsModel
 
         public void ExportModel(string filePath, string directoryPath)
         {
-
             Document doc = OpenDocument(filePath);
             if (doc == null)
             {
@@ -102,7 +98,6 @@ namespace KapibaraV2.Models.BIM.ExportModels.ExportModelsModel
             bool saveChanges = false;
             doc.Close(saveChanges);
         }
-
 
         public bool Execute(string directoryPath, List <String> paths)
         {
@@ -121,7 +116,6 @@ namespace KapibaraV2.Models.BIM.ExportModels.ExportModelsModel
             };
             TaskDialog.Show("норм", "Вроде заебумба");
             return _isFinish;
-
         }
     }
 }

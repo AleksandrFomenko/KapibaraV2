@@ -9,14 +9,22 @@ using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 using System.IO;
 
-namespace KapibaraV2.Models.BIM.ExportModels.ResaveModel
+namespace KapibaraV2.Models.BIM.ExportModels.Exporters.Resave
 {
-    public class ResaveModel
+    public class ResaveModel : IExporter
     {
-        public ResaveModel() { }
+        private List<String> _paths;
+        private string _directoryPath;
+        private string _badNameWorkset;
+        public ResaveModel(List<string> paths, string directoryPath, string badNameWorkset)
+        {
+            _paths = paths;
+            _directoryPath = directoryPath;
+            _badNameWorkset = badNameWorkset;
+        }
 
 
-        private void resaving(String modelPathStr, string destFilepath)
+        private void resaving(string modelPathStr, string destFilepath)
         {
             Autodesk.Revit.ApplicationServices.Application app = RevitApi.UiApplication.Application;
             ModelPath modelPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(modelPathStr);
@@ -35,15 +43,16 @@ namespace KapibaraV2.Models.BIM.ExportModels.ResaveModel
             return Path.GetFileNameWithoutExtension(filePath);
         }
 
-        public void resavingModels (List<String> modelPaths, String destFolderPath)
+        public void Export()
         {
-            foreach (String mp in modelPaths)
+            foreach (string mp in this._paths)
             {
                 string modelName = GetModelNameFromPath(mp);
-                string destFilePath = Path.Combine(destFolderPath, modelName + ".rvt");
+                string destFilePath = Path.Combine(this._directoryPath, modelName + ".rvt");
 
                 resaving(mp, destFilePath);
             }
+
 
         }
     }

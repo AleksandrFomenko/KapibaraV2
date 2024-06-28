@@ -14,8 +14,10 @@ using KapibaraV2.Models.BIM.ExportModels.ExportModelsModel;
 using System.Windows;
 using KapibaraV2.AutoClicker;
 using Autodesk.Revit.UI;
-using KapibaraV2.Models.BIM.ExportModels.ResaveModel;
 using Autodesk.Revit.DB;
+using KapibaraV2.Models.BIM.ExportModels.Exporters;
+using KapibaraV2.Models.BIM.ExportModels.Exporters.NWC;
+using KapibaraV2.Models.BIM.ExportModels.Exporters.Resave;
 
 
 namespace KapibaraV2.ViewModels.BIM
@@ -45,6 +47,9 @@ namespace KapibaraV2.ViewModels.BIM
 
         [ObservableProperty]
         private string selectedExportOption;
+
+        [ObservableProperty]
+        private string badWorksetName;
 
         public bool CanAddModel => SelectedProject != null;
 
@@ -116,16 +121,26 @@ namespace KapibaraV2.ViewModels.BIM
             SavePath = SelectedProject?.SavePath;
         }
 
+        private void LoadBadWorksetName()
+        {
+            BadWorksetName = SelectedProject?.badNameWorkset;
+        }
+
         public void LoadProjects()
         {
             var projectsList = Config.GetProjects();
             Projects = new ObservableCollection<Project>(projectsList);
+            if (SelectedProject != null)
+            {
+                BadWorksetName = SelectedProject.badNameWorkset;
+            }
         }
 
         partial void OnSelectedProjectChanged(Project value)
         {
             LoadModelPaths();
             LoadSavePath();
+            LoadBadWorksetName();
         }
 
         public void LoadModelPaths()
@@ -151,6 +166,17 @@ namespace KapibaraV2.ViewModels.BIM
                 LoadModelPaths();
             }
         }
+
+        [RelayCommand]
+        private void SaveBadNameWorkset()
+        {
+            if (SelectedProject != null)
+            {
+                SelectedProject.badNameWorkset = BadWorksetName;
+                Config.SaveProject(SelectedProject);
+            }
+        }
+
         [RelayCommand]
         private void Export(Window window)
         {
@@ -167,7 +193,7 @@ namespace KapibaraV2.ViewModels.BIM
                 autoMover.Start();
             }
 
-            ExportModelsModel emm = new ExportModelsModel();
+            IExporter iexporter = null;
             if (SelectedProject == null || SelectedProject.Paths == null || SelectedProject.SavePath == null)
             {
                 TaskDialog.Show("PathOrSavePathIsNull", "Проект для экспорта не выбран");
@@ -176,33 +202,33 @@ namespace KapibaraV2.ViewModels.BIM
             switch (SelectedExportOption)
             {
                 case "Navisworks":
-                    emm.Execute(SelectedProject.SavePath, SelectedProject.Paths);
+                    iexporter = new ExportToNwc (SelectedProject.Paths, SelectedProject.SavePath, SelectedProject.badNameWorkset);
                     break;
 
                 case "Пересохранить модель":
-                    ResaveModel rm = new ResaveModel();
-                    rm.resavingModels(SelectedProject.Paths, SelectedProject.SavePath);
+                    iexporter = new ResaveModel (SelectedProject.Paths, SelectedProject.SavePath, SelectedProject.badNameWorkset);
+                    break;
+                    
+                case "Сохранить как временная центральная":
+                    iexporter = new SaveAsCentral(SelectedProject.Paths, SelectedProject.SavePath, SelectedProject.badNameWorkset);
                     break;
 
 /*
                 case "Здесь будет IFC(если мне будет не лень)":
                     emm.ExportToIFC(SelectedProject.SavePath, SelectedProject.Paths);
                     break;
-
-                case "Здесь будет отсоединенка(уже лень)":
-                    emm.ExportToDetached(SelectedProject.SavePath, SelectedProject.Paths);
-                    break;
 */
                 default:
                     TaskDialog.Show("ExportOptionNotSelected", "Опция экспорта не выбрана");
                     break;
             }
+            ExportManager exportManager = new ExportManager(iexporter);
+            exportManager.ExecuteExport();
 
             if (IsAutoMoverEnabled && autoMover != null && isFinish)
             {
                 autoMover.Stop();
             }
-
 
             window?.Close();
         }

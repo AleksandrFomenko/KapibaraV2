@@ -200,6 +200,39 @@
                 </StackPanel>
             </Border>
 
+            <Border Grid.Row="3"
+                    Background="Transparent"
+                    BorderBrush="#1DB954"
+                    BorderThickness="2"
+                    CornerRadius="10"
+                    Margin="600,110,25,0"
+                    Height="78"
+                    VerticalAlignment="Top">
+                <Grid>
+                    <StackPanel Margin="10,-15,0,0">
+                        <TextBox Text="Links workset don`t contains"
+                     Background="#342866"
+                     IsReadOnly="True"
+                     Foreground="White"
+                     FontSize="20"
+                     BorderThickness="0"
+                     Margin="20,0,180,20"
+                     Height="38"/>
+                    </StackPanel>
+                    <TextBox Text="{Binding BadWorksetName}"
+                               VerticalAlignment="Center"
+                               Margin="25,0,150,0"
+                               Foreground="Black"
+                               FontSize="20"/>
+                    <Button Content="Save"
+                            Style="{StaticResource MainBtn}"
+                            Template="{StaticResource MainBtnTemplate}"
+                            Background="#1DB954"
+                            VerticalAlignment="Stretch"
+                            Command="{Binding SaveBadNameWorksetCommand}" Margin="0,22,25,22" Width="110" HorizontalAlignment="Right"/>
+                </Grid>
+            </Border>
+
             <TextBlock Text="Список моделей"
                        FontSize="24" HorizontalAlignment="Center"
                        VerticalAlignment="Top"
@@ -286,6 +319,7 @@
                 </ComboBox.ItemContainerStyle>
                 <ComboBoxItem Content="Navisworks"/>
                 <ComboBoxItem Content="Пересохранить модель"/>
+                <ComboBoxItem Content="Сохранить как временная центральная"/>
                 <ComboBoxItem Content="Здесь будет IFC(если мне будет не лень)"/>
                 <ComboBoxItem Content="Здесь будет отсоединенка(уже лень)"/>
             </ComboBox>

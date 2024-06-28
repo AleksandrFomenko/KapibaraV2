@@ -1,11 +1,8 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Autodesk.Revit.UI;
 using KapibaraV2.Models.BIM.ExportModels;
-using Autodesk.Revit.DB;
 
 namespace KapibaraV2.Configuration
 {
@@ -14,10 +11,12 @@ namespace KapibaraV2.Configuration
         public string PathConfig { get; set; }
         public string SavePath { get; set; }
         public List<Project> Projects { get; set; } = new List<Project>();
+        public string badWorksetName {  get; set; } 
 
         private static readonly string dllPath = Assembly.GetExecutingAssembly().Location;
         private static readonly string dllDirectory = Path.GetDirectoryName(dllPath);
         private static readonly string ConfigFilePath = Path.Combine(dllDirectory, "config", "config.json");
+
 
         public void SaveConfig(string filePath)
         {
@@ -76,6 +75,13 @@ namespace KapibaraV2.Configuration
             config.SaveConfig(ConfigFilePath);
         }
 
+        public static void UpdateBadWorkSetName(string newBadName)
+        {
+            var config = LoadConfig(ConfigFilePath) ?? new Config();
+            config.badWorksetName = newBadName;
+            config.SaveConfig(ConfigFilePath);
+        }
+
         public static List<Project> GetProjects()
         {
             var config = LoadConfig(GetConfigPath());
@@ -124,6 +130,7 @@ namespace KapibaraV2.Configuration
                 {
                     project.Paths = updatedProject.Paths;
                     project.SavePath = updatedProject.SavePath;
+                    project.badNameWorkset = updatedProject.badNameWorkset;
                     config.SaveConfig(configPath);
                 }
             }

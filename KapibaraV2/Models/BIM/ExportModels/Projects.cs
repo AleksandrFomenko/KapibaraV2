@@ -11,6 +11,7 @@ namespace KapibaraV2.Models.BIM.ExportModels
         public string Name { get; set; }
         public string SavePath { get; set; }
         public List<string> Paths { get; set; }
+        public string badNameWorkset { get; set; }
     }
 
 }
