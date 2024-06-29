@@ -130,10 +130,7 @@ namespace KapibaraV2.ViewModels.BIM
         {
             var projectsList = Config.GetProjects();
             Projects = new ObservableCollection<Project>(projectsList);
-            if (SelectedProject != null)
-            {
-                BadWorksetName = SelectedProject.badNameWorkset;
-            }
+
         }
 
         partial void OnSelectedProjectChanged(Project value)
