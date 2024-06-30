@@ -216,7 +216,7 @@
                      Foreground="White"
                      FontSize="20"
                      BorderThickness="0"
-                     Margin="20,0,180,20"
+                     Margin="20,0,165,20"
                      Height="38"/>
                     </StackPanel>
                     <TextBox Text="{Binding BadWorksetName}"
