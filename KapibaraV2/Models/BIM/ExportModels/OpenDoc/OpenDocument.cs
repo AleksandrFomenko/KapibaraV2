@@ -19,9 +19,7 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
             // Open doc 
             OpenOptions openOptions = new OpenOptions();
 
-            BasicFileInfo basicFileInfo = BasicFileInfo.Extract(filePath);
-
-            if (basicFileInfo.IsWorkshared)
+            try
             {
                 openOptions.DetachFromCentralOption = DetachFromCentralOption.DetachAndPreserveWorksets;
                 WorksetConfiguration worksetConfiguration = new WorksetConfiguration(WorksetConfigurationOption.CloseAllWorksets);
@@ -41,6 +39,11 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
                 worksetConfiguration.Open(worksetIds);
                 openOptions.SetOpenWorksetsConfiguration(worksetConfiguration);
             }
+            catch (Exception ex)
+            {
+
+            }
+
 
             FailureProcessorOpenDocument failureProcessor = new FailureProcessorOpenDocument();
 
