@@ -319,7 +319,7 @@
                 </ComboBox.ItemContainerStyle>
                 <ComboBoxItem Content="Navisworks"/>
                 <ComboBoxItem Content="Пересохранить модель"/>
-                <ComboBoxItem Content="Сохранить как временная центральная"/>
+                <ComboBoxItem Content="Отсоединенная модель"/>
                 <ComboBoxItem Content="Здесь будет IFC(если мне будет не лень)"/>
             </ComboBox>
 

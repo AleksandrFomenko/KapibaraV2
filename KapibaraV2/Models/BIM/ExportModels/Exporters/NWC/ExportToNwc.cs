@@ -26,7 +26,9 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.NWC
             {
                 foreach (string path in this._paths)
                 {
-                    Document doc = openDocument.OpenDocumentAsDetach(path, this._badNameWorkset, true);
+                    Document doc = openDocument.OpenDocumentAsDetach(path, this._badNameWorkset, true,
+                        false);
+                    
                     if (doc != null)
                     {
                         exportToNwc(doc, this._directoryPath);

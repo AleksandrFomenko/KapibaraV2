@@ -34,7 +34,6 @@
         <RevitVersion>2025</RevitVersion>
         <TargetFramework>net8.0-windows</TargetFramework>
     </PropertyGroup>
-
     <PropertyGroup>
         <Version>$(RevitVersion)</Version>
         <StartAction>Program</StartAction>
@@ -43,12 +42,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="1.*" />
         <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
+        <PackageReference Include="Revit.AdWindows.x64" Version="2023.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -60,13 +61,12 @@
     <ItemGroup>
         <Resource Include="Resources\Icons\SystemName.png" />
         <Resource Include="Resources\Icons\Floor.png" />
-	    <Resource Include="Resources\Icons\ActiveView.png" />
+	<Resource Include="Resources\Icons\ActiveView.png" />
+	<Resource Include="Resources\Icons\tools.jpg" />
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="AdWindows">
-        <HintPath>..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2019\AdWindows.dll</HintPath>
-      </Reference>
+      <Reference Include="System.Windows.Forms" />
     </ItemGroup>
 
 </Project>

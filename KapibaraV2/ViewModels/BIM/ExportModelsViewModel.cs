@@ -206,7 +206,7 @@ namespace KapibaraV2.ViewModels.BIM
                     iexporter = new ResaveModel (SelectedProject.Paths, SelectedProject.SavePath, SelectedProject.badNameWorkset);
                     break;
                     
-                case "Сохранить как временная центральная":
+                case "Отсоединенная модель":
                     iexporter = new SaveAsCentral(SelectedProject.Paths, SelectedProject.SavePath, SelectedProject.badNameWorkset);
                     break;
 

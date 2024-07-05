@@ -27,7 +27,7 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.Resave
             OpenDocument openDocument = new OpenDocument();
             foreach (string path in _paths)
             {
-                Document doc = openDocument.OpenDocumentAsDetach(path, _badNameWorkset, false);
+                Document doc = openDocument.OpenDocumentAsDetach(path, _badNameWorkset, true, true);
 
                 if (doc == null)
                 { 
@@ -40,14 +40,16 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.Resave
                     return;
                 }
                 SaveAsOptions saveAsOptions = new SaveAsOptions();
+                saveAsOptions.OverwriteExistingFile = true;
                 
                 ModelPath modelPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(path);
 
-                if (modelPath is ServerPath)
+                if (doc.IsWorkshared)
                 {
                     WorksharingSaveAsOptions worksharingSaveAsOptions = new WorksharingSaveAsOptions();
                     worksharingSaveAsOptions.SaveAsCentral = true;
                     saveAsOptions.SetWorksharingOptions(worksharingSaveAsOptions);
+                    
                 }
 
                 string modelName = GetModelNameFromPath(path);

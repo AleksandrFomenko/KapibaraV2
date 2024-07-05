@@ -11,32 +11,35 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
 {
     public class OpenDocument
     {
-        public Document OpenDocumentAsDetach(string filePath, string badNameWorkset, bool deleteLinksDwg)
+        public Document OpenDocumentAsDetach(string filePath, string badNameWorkset, bool deleteLinksDwg, 
+            bool closeAllWorset)
         {
             Autodesk.Revit.ApplicationServices.Application app = RevitApi.Document.Application;
             ModelPath modelPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(filePath);
             
-            // Open doc 
             OpenOptions openOptions = new OpenOptions();
-
+            
             try
             {
                 openOptions.DetachFromCentralOption = DetachFromCentralOption.DetachAndPreserveWorksets;
                 WorksetConfiguration worksetConfiguration = new WorksetConfiguration(WorksetConfigurationOption.CloseAllWorksets);
-                IList<WorksetPreview> worksets = WorksharingUtils.GetUserWorksetInfo(modelPath);
-                IList<WorksetId> worksetIds;
-                if (string.IsNullOrEmpty(badNameWorkset))
+                if (!closeAllWorset)
                 {
-                    worksetIds = worksets.Select(workset => workset.Id).ToList();
+                    IList<WorksetPreview> worksets = WorksharingUtils.GetUserWorksetInfo(modelPath);
+                    IList<WorksetId> worksetIds;
+                    if (string.IsNullOrEmpty(badNameWorkset))
+                    {
+                        worksetIds = worksets.Select(workset => workset.Id).ToList();
+                    }
+                    else
+                    {
+                        worksetIds = worksets
+                            .Where(workset => !workset.Name.ToLower().Contains(badNameWorkset.ToLower()))
+                            .Select(workset => workset.Id)
+                            .ToList();
+                    }
+                    worksetConfiguration.Open(worksetIds);
                 }
-                else
-                {
-                    worksetIds = worksets
-                        .Where(workset => !workset.Name.ToLower().Contains(badNameWorkset.ToLower()))
-                        .Select(workset => workset.Id)
-                        .ToList();
-                }
-                worksetConfiguration.Open(worksetIds);
                 openOptions.SetOpenWorksetsConfiguration(worksetConfiguration);
             }
             catch (Exception ex)
