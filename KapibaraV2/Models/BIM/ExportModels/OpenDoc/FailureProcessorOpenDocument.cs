@@ -7,11 +7,11 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
 {
     public class FailureProcessorOpenDocument
     {
-        private IList<FailureDefinitionId> dimensionFailures;
+        private IList<FailureDefinitionId> relevantFailures;
 
         public FailureProcessorOpenDocument()
         {
-            dimensionFailures = GetDimensionFailureIds();
+            relevantFailures = GetRelevantFailureIds();
         }
 
         public void HandleFailures(object sender, FailuresProcessingEventArgs e)
@@ -23,7 +23,7 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
             {
                 FailureDefinitionId id = fma.GetFailureDefinitionId();
 
-                if (dimensionFailures.Contains(id))
+                if (relevantFailures.Contains(id))
                 {
                     failuresAccessor.DeleteWarning(fma);
                 }
@@ -32,10 +32,20 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
             e.SetProcessingResult(FailureProcessingResult.Continue);
         }
 
-        private IList<FailureDefinitionId> GetDimensionFailureIds()
+        private IList<FailureDefinitionId> GetRelevantFailureIds()
         {
-            Type dimensionFailuresType = typeof(BuiltInFailures.DimensionFailures);
-            PropertyInfo[] properties = dimensionFailuresType.GetProperties(BindingFlags.Public | BindingFlags.Static);
+            List<FailureDefinitionId> failureIds = new List<FailureDefinitionId>();
+
+            failureIds.AddRange(GetFailureIdsFromType(typeof(BuiltInFailures.DimensionFailures)));
+            failureIds.AddRange(GetFailureIdsFromType(typeof(BuiltInFailures.CopyMonitorFailures)));
+            failureIds.AddRange(GetFailureIdsFromType(typeof(BuiltInFailures.LinkFailures)));
+
+            return failureIds;
+        }
+
+        private IList<FailureDefinitionId> GetFailureIdsFromType(Type failureType)
+        {
+            PropertyInfo[] properties = failureType.GetProperties(BindingFlags.Public | BindingFlags.Static);
             List<FailureDefinitionId> failureIds = new List<FailureDefinitionId>();
 
             foreach (PropertyInfo property in properties)
