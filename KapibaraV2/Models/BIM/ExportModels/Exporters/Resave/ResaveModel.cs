@@ -49,11 +49,33 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.Resave
             {
                 string modelName = GetModelNameFromPath(mp);
                 string destFilePath = Path.Combine(this._directoryPath, modelName + ".rvt");
-
                 resaving(mp, destFilePath);
+                UpdateTransmissionData(destFilePath);
+            }
+        }
+        private void UpdateTransmissionData(string modelFilePath)
+        {
+            ModelPath localModelPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(modelFilePath);
+            TransmissionData transData = TransmissionData.ReadTransmissionData(localModelPath);
+
+            if (transData == null)
+            {
+                return;
             }
 
+            // Обработка всех внешних ссылок и установка их в состояние "не загружать"
+            ICollection<ElementId> externalReferences = transData.GetAllExternalFileReferenceIds();
+            foreach (ElementId refId in externalReferences)
+            {
+                ExternalFileReference extRef = transData.GetLastSavedReferenceData(refId);
+                if (extRef.ExternalFileReferenceType == ExternalFileReferenceType.RevitLink)
+                {
+                    transData.SetDesiredReferenceData(refId, extRef.GetPath(), extRef.PathType, false);
+                }
+            }
 
+            transData.IsTransmitted = true;
+            TransmissionData.WriteTransmissionData(localModelPath, transData);
         }
     }
 }

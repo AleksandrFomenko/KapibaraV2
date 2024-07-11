@@ -3,17 +3,15 @@ using KapibaraV2.Configuration;
 using KapibaraV2.Models.BIM.ExportModels;
 using KapibaraV2.Views.BIM;
 using KapibaraV2.ViewModels.BIM.AddDeleteProjects;
-using System.Windows.Forms;
 using KapibaraV2.ViewModels.BIM.ExportModels;
 using KapibaraV2.Views.BIM.ExportModels;
 using System.Windows;
 using KapibaraV2.AutoClicker;
-using Autodesk.Revit.UI;
 using KapibaraV2.Models.BIM.ExportModels.Exporters;
+using KapibaraV2.Models.BIM.ExportModels.Exporters.IFC;
 using KapibaraV2.Models.BIM.ExportModels.Exporters.NWC;
 using KapibaraV2.Models.BIM.ExportModels.Exporters.Resave;
 using Ookii.Dialogs.Wpf;
-using MessageBox = System.Windows.Forms.MessageBox;
 using TaskDialog = Autodesk.Revit.UI.TaskDialog;
 
 
@@ -227,22 +225,25 @@ namespace KapibaraV2.ViewModels.BIM
             switch (SelectedExportOption)
             {
                 case "Navisworks":
-                    iexporter = new ExportToNwc (SelectedProject.Paths, SelectedProject.SavePath, SelectedProject.badNameWorkset);
+                    iexporter = new ExportToNwc (SelectedProject.Paths, SelectedProject.SavePath,
+                        SelectedProject.badNameWorkset);
                     break;
 
                 case "Пересохранить модель":
-                    iexporter = new ResaveModel (SelectedProject.Paths, SelectedProject.SavePath, SelectedProject.badNameWorkset);
+                    iexporter = new ResaveModel (SelectedProject.Paths, SelectedProject.SavePath,
+                        SelectedProject.badNameWorkset);
                     break;
                     
                 case "Отсоединенная модель":
-                    iexporter = new SaveAsCentral(SelectedProject.Paths, SelectedProject.SavePath, SelectedProject.badNameWorkset);
+                    iexporter = new SaveAsCentral(SelectedProject.Paths, SelectedProject.SavePath,
+                        SelectedProject.badNameWorkset);
+                    break;
+                
+                case "IFC":
+                    iexporter = new ExportToIfc(SelectedProject.Paths, SelectedProject.SavePath,
+                        SelectedProject.badNameWorkset, selectedProject.IfcConfigPath);
                     break;
 
-/*
-                case "Здесь будет IFC(если мне будет не лень)":
-                    emm.ExportToIFC(SelectedProject.SavePath, SelectedProject.Paths);
-                    break;
-*/
                 default:
                     TaskDialog.Show("ExportOptionNotSelected", "Опция экспорта не выбрана");
                     break;

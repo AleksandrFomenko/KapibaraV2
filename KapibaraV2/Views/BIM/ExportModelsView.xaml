@@ -359,7 +359,7 @@
                 <ComboBoxItem Content="Navisworks"/>
                 <ComboBoxItem Content="Пересохранить модель"/>
                 <ComboBoxItem Content="Отсоединенная модель"/>
-                <ComboBoxItem Content="Здесь будет IFC(если мне будет не лень)"/>
+                <ComboBoxItem Content="IFC"/>
             </ComboBox>
 
             <TextBlock Grid.Row="4" Text="Активировать перемещение мыши"
