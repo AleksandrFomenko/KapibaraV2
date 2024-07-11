@@ -1,8 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
-using Microsoft.Win32;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using KapibaraV2.Configuration;
 using KapibaraV2.Models.BIM.ExportModels;
 using KapibaraV2.Views.BIM;
@@ -10,11 +6,9 @@ using KapibaraV2.ViewModels.BIM.AddDeleteProjects;
 using System.Windows.Forms;
 using KapibaraV2.ViewModels.BIM.ExportModels;
 using KapibaraV2.Views.BIM.ExportModels;
-using KapibaraV2.Models.BIM.ExportModels.ExportModelsModel;
 using System.Windows;
 using KapibaraV2.AutoClicker;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.DB;
 using KapibaraV2.Models.BIM.ExportModels.Exporters;
 using KapibaraV2.Models.BIM.ExportModels.Exporters.NWC;
 using KapibaraV2.Models.BIM.ExportModels.Exporters.Resave;
@@ -50,6 +44,9 @@ namespace KapibaraV2.ViewModels.BIM
 
         [ObservableProperty]
         private string badWorksetName;
+        
+        [ObservableProperty]
+        private string ifcPath;
 
         public bool CanAddModel => SelectedProject != null;
 
@@ -71,6 +68,25 @@ namespace KapibaraV2.ViewModels.BIM
                 ConfigFilePath = openFileDialog.FileName;
                 Config.UpdateConfigPath(ConfigFilePath);
                 LoadProjects();
+            }
+        }
+        
+        [RelayCommand]
+        private void SelectIFCConfigFile()
+        {
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                IfcPath = openFileDialog.FileName;
+
+                if (SelectedProject != null)
+                {
+                    SelectedProject.IfcConfigPath = IfcPath;
+                    Config.SaveProject(SelectedProject);
+                }
             }
         }
 
@@ -132,12 +148,17 @@ namespace KapibaraV2.ViewModels.BIM
             Projects = new ObservableCollection<Project>(projectsList);
 
         }
+        private void LoadIfcPath()
+        {
+            IfcPath = SelectedProject?.IfcConfigPath;
+        }
 
         partial void OnSelectedProjectChanged(Project value)
         {
             LoadModelPaths();
             LoadSavePath();
             LoadBadWorksetName();
+            LoadIfcPath();
         }
 
         public void LoadModelPaths()

@@ -9,10 +9,9 @@ namespace KapibaraV2.Configuration
     public class Config
     {
         public string PathConfig { get; set; }
-        public string SavePath { get; set; }
         public List<Project> Projects { get; set; } = new List<Project>();
         public string badWorksetName {  get; set; } 
-
+        
         private static readonly string dllPath = Assembly.GetExecutingAssembly().Location;
         private static readonly string dllDirectory = Path.GetDirectoryName(dllPath);
         private static readonly string ConfigFilePath = Path.Combine(dllDirectory, "config", "config.json");
@@ -60,34 +59,33 @@ namespace KapibaraV2.Configuration
                 return null;
             }
         }
-
+        
         public static string GetConfigPath()
         {
             Config config = LoadConfig(ConfigFilePath);
             return config?.PathConfig;
         }
-
-
+        
         public static void UpdateConfigPath(string newPath)
         {
             var config = LoadConfig(ConfigFilePath) ?? new Config();
             config.PathConfig = newPath;
             config.SaveConfig(ConfigFilePath);
         }
-
+        
         public static void UpdateBadWorkSetName(string newBadName)
         {
             var config = LoadConfig(ConfigFilePath) ?? new Config();
             config.badWorksetName = newBadName;
             config.SaveConfig(ConfigFilePath);
         }
-
+        
         public static List<Project> GetProjects()
         {
             var config = LoadConfig(GetConfigPath());
             return config?.Projects ?? new List<Project>();
         }
-
+        
         public static void AddProject(Project newProject)
         {
             var configPath = GetConfigPath();
@@ -131,6 +129,7 @@ namespace KapibaraV2.Configuration
                     project.Paths = updatedProject.Paths;
                     project.SavePath = updatedProject.SavePath;
                     project.badNameWorkset = updatedProject.badNameWorkset;
+                    project.IfcConfigPath = updatedProject.IfcConfigPath;
                     config.SaveConfig(configPath);
                 }
             }
