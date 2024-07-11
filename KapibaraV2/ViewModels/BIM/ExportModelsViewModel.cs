@@ -12,6 +12,9 @@ using Autodesk.Revit.UI;
 using KapibaraV2.Models.BIM.ExportModels.Exporters;
 using KapibaraV2.Models.BIM.ExportModels.Exporters.NWC;
 using KapibaraV2.Models.BIM.ExportModels.Exporters.Resave;
+using Ookii.Dialogs.Wpf;
+using MessageBox = System.Windows.Forms.MessageBox;
+using TaskDialog = Autodesk.Revit.UI.TaskDialog;
 
 
 namespace KapibaraV2.ViewModels.BIM
@@ -115,15 +118,19 @@ namespace KapibaraV2.ViewModels.BIM
             if (SelectedProject == null)
                 return;
 
-            using (var dialog = new FolderBrowserDialog())
+            var dialog = new VistaFolderBrowserDialog
             {
-                DialogResult result = dialog.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    SelectedProject.SavePath = dialog.SelectedPath;
-                    SavePath = dialog.SelectedPath;
-                    Config.SaveProject(SelectedProject);
-                }
+                Description = "Выберите папку для сохранения",
+                UseDescriptionForTitle = true
+            };
+
+            bool? result = dialog.ShowDialog();
+            if (result == true)
+            {
+                string folderPath = dialog.SelectedPath;
+                SelectedProject.SavePath = folderPath;
+                SavePath = folderPath;
+                Config.SaveProject(SelectedProject);
             }
         }
 
