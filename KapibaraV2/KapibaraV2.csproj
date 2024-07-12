@@ -38,7 +38,7 @@
         <Version>$(RevitVersion)</Version>
         <StartAction>Program</StartAction>
         <StartProgram>C:\Program Files\Autodesk\Revit $(RevitVersion)\Revit.exe</StartProgram>
-        <StartArguments>/language ENG</StartArguments>
+        <StartArguments>/language RUS</StartArguments>
     </PropertyGroup>
 
     <ItemGroup>
@@ -51,7 +51,7 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
         <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
         <PackageReference Include="Revit.AdWindows.x64" Version="2023.0.0" />
-        <PackageReference Include="Revit.IFC.IFCExportUIOverride" Version="2024.2.0.4" />
+        <PackageReference Include="Revit.IFC.IFCExportUIOverride" Version="$(RevitVersion).*"/>
     </ItemGroup>
 
     <ItemGroup>

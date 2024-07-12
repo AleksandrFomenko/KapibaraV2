@@ -241,7 +241,7 @@ namespace KapibaraV2.ViewModels.BIM
                 
                 case "IFC":
                     iexporter = new ExportToIfc(SelectedProject.Paths, SelectedProject.SavePath,
-                        SelectedProject.badNameWorkset, selectedProject.IfcConfigPath);
+                        SelectedProject.badNameWorkset, SelectedProject.IfcConfigPath);
                     break;
 
                 default:

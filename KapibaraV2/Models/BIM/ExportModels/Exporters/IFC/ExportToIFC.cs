@@ -60,16 +60,23 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.IFC
                 myIFCExportConfiguration = converter.ConvertFromDictionary(dict);
             }
 
-            using (Transaction t = new Transaction(doc, "ifc export"))
+            try
             {
-                t.Start();
-                IFCExportOptions ifcExportOptions = new IFCExportOptions();
-                myIFCExportConfiguration.UpdateOptions(ifcExportOptions, navisworksViewCollector.Id);
-                doc.Export(directoryPath, doc.Title, ifcExportOptions);
-                t.Commit();
-                bool saveChanges = false;
-                doc.Close(saveChanges);
+                using (Transaction t = new Transaction(doc, "ifc export"))
+                {
+                    t.Start();
+
+                    IFCExportOptions ifcExportOptions = new IFCExportOptions();
+                    myIFCExportConfiguration.UpdateOptions(ifcExportOptions, navisworksViewCollector.Id);
+                    doc.Export(directoryPath, doc.Title, ifcExportOptions);
+                    t.Commit();
+                }
             }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("а", ex.Message);
+            }
+            doc.Close(false);
         }
 
         private class IFCExportConfigurationConverter
