@@ -1,6 +1,5 @@
 ﻿using KapibaraV2.Configuration;
 using KapibaraV2.Models.BIM.ExportModels;
-using System.Collections.Generic;
 using System.Windows;
 using Microsoft.Win32;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -31,20 +30,21 @@ namespace KapibaraV2.ViewModels.BIM.ExportModels
         {
             if (_mainViewModel.SelectedProject != null)
             {
-                if (!string.IsNullOrEmpty(modelName))
+                if (!string.IsNullOrEmpty(ModelName)) // Использование свойства, а не поля
                 {
-                    _mainViewModel.SelectedProject.Paths.Add(modelName);
+                    var modelPath = new ModelPathForList { Path = ModelName, IsChecked = false };
+                    _mainViewModel.SelectedProject.Paths.Add(modelPath);
                     Config.SaveProject(_mainViewModel.SelectedProject);
                 }
 
-                if (!string.IsNullOrEmpty(selectedFilePath))
+                if (!string.IsNullOrEmpty(SelectedFilePath)) // Использование свойства, а не поля
                 {
-                    _mainViewModel.SelectedProject.Paths.Add(selectedFilePath);
+                    var modelPath = new ModelPathForList { Path = SelectedFilePath, IsChecked = false };
+                    _mainViewModel.SelectedProject.Paths.Add(modelPath);
                     Config.SaveProject(_mainViewModel.SelectedProject);
                 }
 
-
-                _mainViewModel.LoadProjects();
+                _mainViewModel.LoadModelPaths();
                 window?.Close();
             }
         }
@@ -64,7 +64,7 @@ namespace KapibaraV2.ViewModels.BIM.ExportModels
             };
             if (openFileDialog.ShowDialog() == true)
             {
-                SelectedFilePath = openFileDialog.FileName;
+                SelectedFilePath = openFileDialog.FileName; // Использование свойства, а не поля
             }
         }
     }

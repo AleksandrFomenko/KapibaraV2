@@ -29,7 +29,7 @@ namespace KapibaraV2.ViewModels.BIM.AddDeleteProjects
             var newProject = new Project
             {
                 Name = ProjectName,
-                Paths = new List<string>()
+                Paths = new List<ModelPathForList>()
             };
 
             Config.AddProject(newProject);

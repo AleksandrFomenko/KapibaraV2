@@ -11,9 +11,9 @@ using KapibaraV2.Models.BIM.ExportModels.Exporters;
 using KapibaraV2.Models.BIM.ExportModels.Exporters.IFC;
 using KapibaraV2.Models.BIM.ExportModels.Exporters.NWC;
 using KapibaraV2.Models.BIM.ExportModels.Exporters.Resave;
+using Microsoft.Win32;
 using Ookii.Dialogs.Wpf;
 using TaskDialog = Autodesk.Revit.UI.TaskDialog;
-
 
 namespace KapibaraV2.ViewModels.BIM
 {
@@ -29,13 +29,13 @@ namespace KapibaraV2.ViewModels.BIM
         private Project selectedProject;
 
         [ObservableProperty]
-        private ObservableCollection<string> modelPaths;
+        private ObservableCollection<ModelPathForList> modelPaths;
 
         [ObservableProperty]
         private string savePath;
 
         [ObservableProperty]
-        private string selectedModelPath;
+        private ModelPathForList selectedModelPath;
 
         [ObservableProperty]
         private bool isAutoMoverEnabled;
@@ -45,7 +45,7 @@ namespace KapibaraV2.ViewModels.BIM
 
         [ObservableProperty]
         private string badWorksetName;
-        
+
         [ObservableProperty]
         private string ifcPath;
 
@@ -60,7 +60,7 @@ namespace KapibaraV2.ViewModels.BIM
         [RelayCommand]
         private void SelectConfigFile()
         {
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog
+            OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*"
             };
@@ -71,11 +71,11 @@ namespace KapibaraV2.ViewModels.BIM
                 LoadProjects();
             }
         }
-        
+
         [RelayCommand]
         private void SelectIFCConfigFile()
         {
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog
+            OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*"
             };
@@ -137,6 +137,11 @@ namespace KapibaraV2.ViewModels.BIM
             ConfigFilePath = Config.GetConfigPath();
         }
 
+        public List<string> GetCheckedModelPaths()
+        {
+            return ModelPaths.Where(mp => mp.IsChecked).Select(mp => mp.Path).ToList();
+        }
+
         private void LoadSavePath()
         {
             SavePath = SelectedProject?.SavePath;
@@ -151,8 +156,8 @@ namespace KapibaraV2.ViewModels.BIM
         {
             var projectsList = Config.GetProjects();
             Projects = new ObservableCollection<Project>(projectsList);
-
         }
+
         private void LoadIfcPath()
         {
             IfcPath = SelectedProject?.IfcConfigPath;
@@ -168,7 +173,14 @@ namespace KapibaraV2.ViewModels.BIM
 
         public void LoadModelPaths()
         {
-            ModelPaths = new ObservableCollection<string>(SelectedProject?.Paths ?? new List<string>());
+            if (SelectedProject?.Paths != null)
+            {
+                ModelPaths = new ObservableCollection<ModelPathForList>(SelectedProject.Paths);
+            }
+            else
+            {
+                ModelPaths = new ObservableCollection<ModelPathForList>();
+            }
         }
 
         [RelayCommand]
@@ -208,39 +220,40 @@ namespace KapibaraV2.ViewModels.BIM
             if (IsAutoMoverEnabled)
             {
                 AutoMover.Point[] points = {
-            new AutoMover.Point(100, 100),
-            new AutoMover.Point(200, 200),
-            new AutoMover.Point(300, 300)
-        };
+                    new AutoMover.Point(100, 100),
+                    new AutoMover.Point(200, 200),
+                    new AutoMover.Point(300, 300)
+                };
                 autoMover = new AutoMover(1000, points);
                 autoMover.Start();
             }
 
             IExporter iexporter = null;
-            if (SelectedProject == null || SelectedProject.Paths == null || SelectedProject.SavePath == null)
+            var checkedModelPaths = GetCheckedModelPaths();
+            if (SelectedProject == null || checkedModelPaths == null || !checkedModelPaths.Any() || SelectedProject.SavePath == null)
             {
-                TaskDialog.Show("PathOrSavePathIsNull", "Проект для экспорта не выбран");
+                TaskDialog.Show("PathOrSavePathIsNull", "Проект для экспорта не выбран или нет выбранных путей");
                 return;
             }
             switch (SelectedExportOption)
             {
                 case "Navisworks":
-                    iexporter = new ExportToNwc (SelectedProject.Paths, SelectedProject.SavePath,
+                    iexporter = new ExportToNwc(checkedModelPaths, SelectedProject.SavePath,
                         SelectedProject.badNameWorkset);
                     break;
 
                 case "Пересохранить модель":
-                    iexporter = new ResaveModel (SelectedProject.Paths, SelectedProject.SavePath,
+                    iexporter = new ResaveModel(checkedModelPaths, SelectedProject.SavePath,
                         SelectedProject.badNameWorkset);
                     break;
-                    
+
                 case "Отсоединенная модель":
-                    iexporter = new SaveAsCentral(SelectedProject.Paths, SelectedProject.SavePath,
+                    iexporter = new SaveAsCentral(checkedModelPaths, SelectedProject.SavePath,
                         SelectedProject.badNameWorkset);
                     break;
-                
+
                 case "IFC":
-                    iexporter = new ExportToIfc(SelectedProject.Paths, SelectedProject.SavePath,
+                    iexporter = new ExportToIfc(checkedModelPaths, SelectedProject.SavePath,
                         SelectedProject.badNameWorkset, SelectedProject.IfcConfigPath);
                     break;
 
@@ -258,6 +271,5 @@ namespace KapibaraV2.ViewModels.BIM
 
             window?.Close();
         }
-
     }
 }

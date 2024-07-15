@@ -286,7 +286,10 @@
                      Background="Transparent" Margin="25,60,25,0" Height="NaN">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" FontSize="18"/>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding IsChecked}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Path}" FontSize="18" Margin="5,0,0,0"/>
+                        </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
