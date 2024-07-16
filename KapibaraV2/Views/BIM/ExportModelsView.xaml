@@ -3,18 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local="clr-namespace:KapibaraV2.Views.BIM"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Width="1400" Height="900" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
         Background="Black">
-
     <Window.Resources>
-        <Style x:Key="SidePanelStyle" TargetType="StackPanel">
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="DeepPurple" SecondaryColor="LightGreen" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" /> 
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="SidePanelStyle" TargetType="StackPanel">
             <Setter Property="Background" Value="#252828"/>
             <Setter Property="Width" Value="300"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
         </Style>
+            
 
         <Style x:Key="SidePanelTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
@@ -24,23 +29,50 @@
         </Style>
 
         <Style x:Key="ListBoxStyle" TargetType="ListBox">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="#1DB954"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="Margin" Value="10,30,10,10"/>
-            <Setter Property="Height" Value="580"/>
-            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderBrush" Value="#1DB954"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+                            <Setter Property="Margin" Value="10,30,10,10"/>
+                            <Setter Property="Height" Value="580"/>
+                            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBox">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}">
+                                            <ScrollViewer Focusable="false">
+                                                <ItemsPresenter/>
+                                            </ScrollViewer>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+        <Style x:Key="CustomCheckBoxStyle" TargetType="CheckBox">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ListBox">
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                            <ScrollViewer Focusable="false">
-                                <ItemsPresenter/>
-                            </ScrollViewer>
-                        </Border>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Width="20" Height="20" BorderBrush="Gray" BorderThickness="2" CornerRadius="4">
+                                <Grid>
+                                    <Rectangle Fill="Transparent"/>
+                                    <Path x:Name="CheckMark"
+                                          Data="M0,0 L1,1 M1,0 L0,1"
+                                          Stroke="Gray"
+                                          StrokeThickness="2"
+                                          Stretch="Uniform"
+                                          Visibility="Collapsed"/>
+                                </Grid>
+                            </Border>
+                            <ContentPresenter VerticalAlignment="Center" Margin="5,0,0,0"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -106,6 +138,7 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
+        </ResourceDictionary>
     </Window.Resources>
 
     <Grid>
@@ -222,7 +255,7 @@
                     <TextBox Text="{Binding BadWorksetName}"
                                VerticalAlignment="Center"
                                Margin="25,0,150,0"
-                               Foreground="Black"
+                               Foreground="White"
                                FontSize="20"/>
                     <Button Content="Save"
                             Style="{StaticResource MainBtn}"
@@ -277,7 +310,7 @@
                        VerticalAlignment="Top"
                        Margin="0,20,0,0"
                        Foreground="White"
-                       FontWeight="Bold" Height="32" Grid.RowSpan="2" Width="194"/>
+                       FontWeight="Bold" Height="32" Grid.Row="0" Grid.RowSpan="2" Width="194"/>
 
             <ListBox Grid.Row="1"
                      Style="{StaticResource ListBoxStyle}"
@@ -287,8 +320,18 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding IsChecked}" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding Path}" FontSize="18" Margin="5,0,0,0"/>
+                            <CheckBox IsChecked="{Binding IsChecked}"
+                                      Content="Выгрузить"
+                                      Style="{StaticResource MaterialDesignFilterChipSecondaryCheckBox}"
+                                      Width = "150"
+                                      Foreground="Lavender"
+                                      Background="DarkGreen"
+                                      FontSize="18"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Path}"
+                                       FontSize="18"
+                                       VerticalAlignment="Center"
+                                       Margin="5,0,0,0"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -329,7 +372,7 @@
                                  Foreground="White"
                                  FontSize="20"
                                  BorderThickness="0"
-                                 Cursor="Hand" Margin="0,-2,0,-1">
+                                 Cursor="Hand" Margin="0,-7,0,-1">
                             <TextBox.InputBindings>
                                 <MouseBinding Gesture="LeftClick" Command="{Binding SelectSavePathCommand}" />
                             </TextBox.InputBindings>
@@ -351,18 +394,21 @@
                       Height="30"
                       VerticalAlignment="Top"
                       SelectedIndex="0"
+                      Foreground="White"
                       FontSize="16"
                       SelectedValue="{Binding SelectedExportOption}"
-                      SelectedValuePath="Content">
+                      SelectedValuePath="Content"
+                      Background="Transparent">
                 <ComboBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ComboBoxItem}">
                         <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="Background" Value="DarkSlateBlue"/>
                     </Style>
                 </ComboBox.ItemContainerStyle>
-                <ComboBoxItem Content="Navisworks"/>
-                <ComboBoxItem Content="Пересохранить модель"/>
-                <ComboBoxItem Content="Отсоединенная модель"/>
-                <ComboBoxItem Content="IFC"/>
+                <ComboBoxItem Foreground="White" Content="Navisworks"/>
+                <ComboBoxItem Foreground="White" Content="Пересохранить модель"/>
+                <ComboBoxItem Foreground="White" Content="Отсоединенная модель"/>
+                <ComboBoxItem Foreground="White" Content="IFC"/>
             </ComboBox>
 
             <TextBlock Grid.Row="4" Text="Активировать перемещение мыши"

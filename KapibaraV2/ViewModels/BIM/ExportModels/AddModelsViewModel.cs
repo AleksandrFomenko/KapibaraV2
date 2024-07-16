@@ -64,7 +64,7 @@ namespace KapibaraV2.ViewModels.BIM.ExportModels
             };
             if (openFileDialog.ShowDialog() == true)
             {
-                SelectedFilePath = openFileDialog.FileName; // Использование свойства, а не поля
+                SelectedFilePath = openFileDialog.FileName; 
             }
         }
     }
