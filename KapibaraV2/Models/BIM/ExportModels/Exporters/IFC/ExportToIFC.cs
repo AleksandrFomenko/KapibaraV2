@@ -75,7 +75,7 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.IFC
                     t.Start();
                     IFCExportOptions ifcExportOptions = new IFCExportOptions ();
                     myIFCExportConfiguration.ActiveViewId = navisworksViewCollector.Id.IntegerValue;
-                    myIFCExportConfiguration.ActivePhaseId = navisworksViewCollector.Id.IntegerValue;
+                    myIFCExportConfiguration.ActivePhaseId = ElementId.InvalidElementId.IntegerValue;;
                     myIFCExportConfiguration.UpdateOptions(ifcExportOptions, navisworksViewCollector.Id);
                     doc.Export(directoryPath, doc.Title, ifcExportOptions);
                     t.Commit();
