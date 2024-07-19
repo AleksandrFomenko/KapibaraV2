@@ -2,6 +2,8 @@
 using Autodesk.Revit.UI;
 using BIM.IFC.Export.UI;
 using System.IO;
+using System.Reflection;
+using KapibaraV2.Core;
 using Newtonsoft.Json;
 
 namespace KapibaraV2.Models.BIM.ExportModels.Exporters.IFC
@@ -48,10 +50,12 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.IFC
                 .WhereElementIsNotElementType()
                 .OfClass(typeof(View3D))
                 .Cast<View3D>()
-                .FirstOrDefault(v => v.Name.ToLower().Contains("navisworks"));
-
+                .FirstOrDefault(v => v.Name.ToLower().Contains("navis"));
+            if (navisworksViewCollector == null)
+            {
+                return;
+            }
             IFCExportConfiguration myIFCExportConfiguration = IFCExportConfiguration.CreateDefaultConfiguration();
-
             using (StreamReader r = new StreamReader(jsonConfigPath))
             {
                 string json = r.ReadToEnd();
@@ -59,14 +63,19 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.IFC
                 var converter = new IFCExportConfigurationConverter();
                 myIFCExportConfiguration = converter.ConvertFromDictionary(dict);
             }
-
             try
             {
+                if (doc == null)
+                {
+                    throw new ArgumentNullException(nameof(doc), "Документ null");
+                }
+                
                 using (Transaction t = new Transaction(doc, "ifc export"))
                 {
                     t.Start();
-
-                    IFCExportOptions ifcExportOptions = new IFCExportOptions();
+                    IFCExportOptions ifcExportOptions = new IFCExportOptions ();
+                    myIFCExportConfiguration.ActiveViewId = navisworksViewCollector.Id.IntegerValue;
+                    myIFCExportConfiguration.ActivePhaseId = navisworksViewCollector.Id.IntegerValue;
                     myIFCExportConfiguration.UpdateOptions(ifcExportOptions, navisworksViewCollector.Id);
                     doc.Export(directoryPath, doc.Title, ifcExportOptions);
                     t.Commit();
@@ -74,7 +83,8 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.IFC
             }
             catch (Exception ex)
             {
-                TaskDialog.Show("а", ex.Message);
+                doc.Close(false);
+                TaskDialog.Show("Ошибка", ex.Message + "\n" + ex.StackTrace);
             }
             doc.Close(false);
         }
@@ -83,7 +93,6 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.IFC
         {
             public IFCExportConfiguration ConvertFromDictionary(Dictionary<string, object> dict)
             {
-                // Логика для конвертации словаря в объект IFCExportConfiguration
                 var json = JsonConvert.SerializeObject(dict);
                 return JsonConvert.DeserializeObject<IFCExportConfiguration>(json);
             }

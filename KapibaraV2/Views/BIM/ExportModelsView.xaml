@@ -357,7 +357,7 @@
             </Grid>
 
 
-            <Border Grid.Row="3" Background="Transparent" BorderBrush="#1DB954" BorderThickness="2" CornerRadius="10" Margin="25,10,25,0" Height="78" VerticalAlignment="Top">
+            <Border Grid.Row="3" Background="Transparent" BorderBrush="#1DB954" BorderThickness="2" CornerRadius="12" Margin="25,10,25,0" Height="78" VerticalAlignment="Top">
                 <StackPanel Margin="10,-18,0,0">
                     <Border Background="#1DB954"
                     CornerRadius="10"
@@ -367,7 +367,7 @@
                     HorizontalAlignment="Center"
                     Width="300" Height="35">
                         <TextBox Text=" Сохранить в указанную папку"
-                                 Background="#1DB954"
+                                 Background="Transparent"
                                  IsReadOnly="True"
                                  Foreground="White"
                                  FontSize="20"

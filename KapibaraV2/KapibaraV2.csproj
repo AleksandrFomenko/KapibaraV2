@@ -56,7 +56,7 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
         <PackageReference Include="Revit.AdWindows.x64" Version="2023.0.0" />
-        <PackageReference Include="Revit.IFC.IFCExportUIOverride" Version="$(RevitVersion).*" />
+        <PackageReference Include="Revit.IFC.IFCExportUIOverride" Version="$(RevitVersion).*"/>
     </ItemGroup>
 
     <ItemGroup>
