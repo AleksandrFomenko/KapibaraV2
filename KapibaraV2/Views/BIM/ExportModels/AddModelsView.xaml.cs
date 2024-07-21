@@ -13,6 +13,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MaterialDesignColors;
+using MaterialDesignThemes.Wpf;
 
 namespace KapibaraV2.Views.BIM.ExportModels
 {
@@ -20,8 +22,14 @@ namespace KapibaraV2.Views.BIM.ExportModels
     {
         public AddModelsView(AddModelsViewModel vm)
         {
+            InitializeMaterialDesign();
             DataContext = vm;
             InitializeComponent();
+        }
+        private void InitializeMaterialDesign()
+        {
+            var card = new Card();
+            var hue = new Hue("Dummy", Colors.Black, Colors.White);
         }
     }
 }
