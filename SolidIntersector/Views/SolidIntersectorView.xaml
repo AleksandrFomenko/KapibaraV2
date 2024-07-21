@@ -16,17 +16,11 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <materialDesign:BundledTheme PrimaryColor="Green" SecondaryColor="Pink">
+                <materialDesign:BundledTheme PrimaryColor="Green" SecondaryColor="Lime">
                     <materialDesign:BundledTheme.BaseTheme>Light</materialDesign:BundledTheme.BaseTheme>
                 </materialDesign:BundledTheme>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" /> 
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="SidePanelStyle" TargetType="StackPanel">
-                <Setter Property="Background" Value="#252828"/>
-                <Setter Property="Width" Value="300"/>
-                <Setter Property="HorizontalAlignment" Value="Left"/>
-                <Setter Property="VerticalAlignment" Value="Stretch"/>
-            </Style>
         </ResourceDictionary>
     </Window.Resources>
     
@@ -94,12 +88,11 @@
                         DropDownElevation="Dp0"
                         FontSize="18"
                         Foreground="White"
-                        
+                        BorderBrush="Pink"
                         Style="{StaticResource MaterialDesignOutlinedAutoSuggestBox}"
                         Suggestions="{Binding AutoSuggestBox2Suggestions}"
                         Text="{Binding AutoSuggestBox2Text,
                         UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                        
                         ValueMember="Key"
                     >
                         <materialDesign:AutoSuggestBox.ItemTemplate>
@@ -141,8 +134,17 @@
             </Grid>
             
             <ListBox Grid.Column="1" 
-                     Style="{StaticResource MaterialDesignNavigationListBox}"
-                     ItemContainerStyle="{StaticResource MaterialDesignToolToggleListBoxItem}">
+                     Margin="5,5,10,10"
+                     Style="{StaticResource MaterialDesignListBox}"
+                     BorderBrush="Green"
+                     BorderThickness="3"
+                     Foreground="White"
+                     FontSize="14">
+                <ListBox.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </ListBox.Resources>
                 <ListBoxItem Content="Элемент 1"/>
                 <ListBoxItem Content="Элемент 2"/>
                 <ListBoxItem Content="Элемент 3"/>
