@@ -38,6 +38,9 @@ namespace KapibaraV2
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
 
             //MEP общие
+            panelMepGeneral.AddPushButton<SolidIntersector.Commands.SolidIntersector>("Solid Intersector")
+                .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/kapibwrite.png");
             panelMepGeneral.AddPushButton<SystemNameCommand>("Имя системы")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
