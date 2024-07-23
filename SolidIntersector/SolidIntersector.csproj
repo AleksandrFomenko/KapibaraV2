@@ -54,10 +54,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Models" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Reference Include="MaterialDesignThemes.Wpf">
         <HintPath>..\..\..\..\..\.nuget\packages\materialdesignthemes\5.1.1-ci691\lib\net462\MaterialDesignThemes.Wpf.dll</HintPath>
       </Reference>

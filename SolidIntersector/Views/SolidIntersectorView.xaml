@@ -57,13 +57,21 @@
                 </Grid.RowDefinitions>
                 
                 <ComboBox Grid.Row="0"
+                          ItemsSource="{Binding Parameters}"
+                          SelectedItem = "{Binding SelectedParameter}"
                           Margin="20,100,20,20"
                           MinWidth="72"
                           Foreground="White"
-                          materialDesign:HintAssist.Hint="(editable)"
+                          materialDesign:HintAssist.Hint="Необходимо выбрать параметр "
                           IsEditable="True"
                           FontSize="18"
                 >
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Setter Property="FontSize" Value="16"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
                     <ComboBox.Text>
                         <Binding Mode="TwoWay" Path="SelectedTextTwo"
                                  UpdateSourceTrigger="PropertyChanged">
@@ -91,7 +99,7 @@
                         BorderBrush="Pink"
                         Style="{StaticResource MaterialDesignOutlinedAutoSuggestBox}"
                         Suggestions="{Binding AutoSuggestBox2Suggestions}"
-                        Text="{Binding AutoSuggestBox2Text,
+                        Text="{Binding Value,
                         UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         ValueMember="Key"
                     >
@@ -133,7 +141,8 @@
                 </StackPanel>
             </Grid>
             
-            <ListBox Grid.Column="1" 
+            <ListBox Grid.Column="1"
+                     ItemsSource="{Binding SelectedItemsList}"
                      Margin="5,5,10,10"
                      Style="{StaticResource MaterialDesignListBox}"
                      BorderBrush="Green"
@@ -145,9 +154,24 @@
                         <Setter Property="CornerRadius" Value="10"/>
                     </Style>
                 </ListBox.Resources>
-                <ListBoxItem Content="Элемент 1"/>
-                <ListBoxItem Content="Элемент 2"/>
-                <ListBoxItem Content="Элемент 3"/>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding IsChecked}"
+                                      Content="Выгрузить"
+                                      Style="{StaticResource MaterialDesignFilterChipSecondaryCheckBox}"
+                                      Width = "150"
+                                      Foreground="Lavender"
+                                      Background="DarkGreen"
+                                      FontSize="18"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding NameItem}"
+                                       FontSize="18"
+                                       VerticalAlignment="Center"
+                                       Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
         </Grid>
     </Grid>

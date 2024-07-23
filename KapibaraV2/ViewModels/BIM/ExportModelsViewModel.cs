@@ -262,7 +262,6 @@ namespace KapibaraV2.ViewModels.BIM
                     break;
             }
             ExportManager exportManager = new ExportManager(iexporter);
-            //TaskDialog.Show("аыв", checkedModelPaths.Count().ToString());
             exportManager.ExecuteExport();
 
             if (IsAutoMoverEnabled && autoMover != null && isFinish)
