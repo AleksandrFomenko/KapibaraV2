@@ -8,11 +8,10 @@
     xmlns:viewModel="clr-namespace:SolidIntersector.ViewModels"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModel:SolidIntersectorViewModel}"
-    ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
     Title="SolidIntersector"
     Height="450"
-    Width="800">
+    Width="1000">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -61,7 +60,7 @@
                           SelectedItem = "{Binding SelectedParameter}"
                           Margin="20,100,20,20"
                           MinWidth="72"
-                          Foreground="White"
+                          Foreground="Black"
                           materialDesign:HintAssist.Hint="Необходимо выбрать параметр "
                           IsEditable="True"
                           FontSize="18"
@@ -79,14 +78,13 @@
                     </ComboBox.Text>
                 </ComboBox>
                 <TextBlock Grid.Row="0"
-                           Margin="0,0,20,20"
-                           Width="330"
+                           Margin="20,0,120,20"
+                           Width="Auto"
                            Text="Выбор параметра"
-                           HorizontalAlignment="Center"
+                           HorizontalAlignment="Left"
                            VerticalAlignment="Center"
                            Foreground="Azure"
                            FontSize="20"/>
-                    
                 
                 <StackPanel Grid.Row="1">
                     <materialDesign:AutoSuggestBox
@@ -142,13 +140,13 @@
             </Grid>
             
             <ListBox Grid.Column="1"
-                     ItemsSource="{Binding SelectedItemsList}"
+                     ItemsSource="{Binding ItemsList}"
                      Margin="5,5,10,10"
                      Style="{StaticResource MaterialDesignListBox}"
+                     SelectedItem="{Binding SelectedItem}"
                      BorderBrush="Green"
                      BorderThickness="3"
-                     Foreground="White"
-                     FontSize="14">
+                     Foreground="White">
                 <ListBox.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="10"/>
@@ -158,17 +156,20 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <CheckBox IsChecked="{Binding IsChecked}"
-                                      Content="Выгрузить"
-                                      Style="{StaticResource MaterialDesignFilterChipSecondaryCheckBox}"
-                                      Width = "150"
-                                      Foreground="Lavender"
-                                      Background="DarkGreen"
-                                      FontSize="18"
-                                      VerticalAlignment="Center"/>
+                                      Style="{StaticResource MaterialDesignLightCheckBox}"
+                                      Width="15"
+                                      Height="15"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center">
+                                <CheckBox.LayoutTransform>
+                                    <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                </CheckBox.LayoutTransform>
+                            </CheckBox>
                             <TextBlock Text="{Binding NameItem}"
-                                       FontSize="18"
+                                       FontSize="14"
                                        VerticalAlignment="Center"
-                                       Margin="5,0,0,0"/>
+                                       Margin="30,0,0,0"
+                                       />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

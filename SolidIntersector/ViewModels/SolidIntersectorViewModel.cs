@@ -1,6 +1,11 @@
-﻿using SolidIntersector.Models;
+﻿using Autodesk.Revit.DB;
+using CommunityToolkit.Mvvm.ComponentModel;
+using SolidIntersector.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SolidIntersector.ViewModels;
+
 
 public partial class SolidIntersectorViewModel : ObservableObject
 {
@@ -8,7 +13,10 @@ public partial class SolidIntersectorViewModel : ObservableObject
     private string value;
 
     [ObservableProperty]
-    private List<SelectedItems> selectedItemsList;
+    private List<SelectedItems> itemsList= new ();
+    
+    [ObservableProperty]
+    private SelectedItems selectedItem= new ();
 
     [ObservableProperty]
     private List<string> parameters = new();
@@ -18,10 +26,11 @@ public partial class SolidIntersectorViewModel : ObservableObject
 
     public SolidIntersectorViewModel()
     {
-        WinLoaded();
+        LoadedParameters();
+        LoadedFamilies();
     }
 
-    private void WinLoaded()
+    private void LoadedParameters()
     {
         BindingMap bindingMap = Context.Document.ParameterBindings;
         DefinitionBindingMapIterator iterator = bindingMap.ForwardIterator();
@@ -63,5 +72,21 @@ public partial class SolidIntersectorViewModel : ObservableObject
                 Parameters = new List<string>();
             }
         }
+    }
+
+    private void LoadedFamilies()
+    {
+        var families = new FilteredElementCollector(Context.Document)
+            .OfCategory(BuiltInCategory.OST_GenericModel)
+            .WhereElementIsNotElementType()
+            .ToElements()
+            .ToList();
+        ItemsList = families
+            .Select(f => new SelectedItems
+            {
+                NameItem = f.Name,
+                IsChecked = false
+            })
+            .ToList();
     }
 }
