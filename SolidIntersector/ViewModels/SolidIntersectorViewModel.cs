@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using SolidIntersector.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
+using Autodesk.Revit.UI;
 
 namespace SolidIntersector.ViewModels;
 
@@ -88,5 +90,40 @@ public partial class SolidIntersectorViewModel : ObservableObject
                 IsChecked = false
             })
             .ToList();
+    }
+    private List<Element> FindIntersectingElementsBoundingBox(string elementName)
+    {
+        var element = new FilteredElementCollector(Context.Document)
+            .OfCategory(BuiltInCategory.OST_GenericModel)
+            .WhereElementIsNotElementType()
+            .FirstOrDefault(e => e.Name.Equals(elementName));
+
+        if (element == null)
+        {
+            TaskDialog.Show("Ошибка", $"Элемент '{elementName}' не найден.");
+            return new List<Element>();
+        }
+
+        var boundingBox = element.get_BoundingBox(null);
+        
+        Outline outline = new Outline(boundingBox.Min, boundingBox.Max);
+        BoundingBoxIntersectsFilter filter = new BoundingBoxIntersectsFilter(outline);
+
+        var elements = new FilteredElementCollector(Context.Document)
+            .WherePasses(filter)
+            .WhereElementIsNotElementType()
+            .ToList();
+
+        return elements;
+    }
+    [RelayCommand]
+    private void Execute(Window window)
+    {
+        var selectedItems = ItemsList.FirstOrDefault(item => item.IsChecked);
+        
+        if (selectedItems == null)
+        {
+            TaskDialog.Show("Ошибка", "Выберите элемент.");
+        }
     }
 }

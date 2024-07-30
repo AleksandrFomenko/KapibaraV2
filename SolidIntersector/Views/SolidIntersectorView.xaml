@@ -121,10 +121,12 @@
 
 
                 <StackPanel Grid.Row="2">
+                    
                     <Grid
                         Width="100"
                     >
                         <Button
+                            Command="{Binding ExecuteCommand}"
                             Height="30"
                             materialDesign:ButtonAssist.CornerRadius="10"
                             IsEnabled="{Binding DataContext.ControlsEnabled,
@@ -157,7 +159,7 @@
                         <StackPanel Orientation="Horizontal">
                             <CheckBox IsChecked="{Binding IsChecked}"
                                       Style="{StaticResource MaterialDesignLightCheckBox}"
-                                      Width="15"
+                                      Width="20"
                                       Height="15"
                                       HorizontalAlignment="Center"
                                       VerticalAlignment="Center">
@@ -168,7 +170,7 @@
                             <TextBlock Text="{Binding NameItem}"
                                        FontSize="14"
                                        VerticalAlignment="Center"
-                                       Margin="30,0,0,0"
+                                       Margin="20,0,0,0"
                                        />
                         </StackPanel>
                     </DataTemplate>
