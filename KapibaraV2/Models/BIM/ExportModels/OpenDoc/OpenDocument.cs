@@ -50,11 +50,11 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
 
             FailureProcessorOpenDocument failureProcessor = new FailureProcessorOpenDocument();
 
-            app.FailuresProcessing += failureProcessor.HandleFailures;
+            app.FailuresProcessing += failureProcessor.ApplicationOnFailuresProcessing;
 
             Document openDoc = app.OpenDocumentFile(modelPath, openOptions);
 
-            app.FailuresProcessing -= failureProcessor.HandleFailures;
+            app.FailuresProcessing -= failureProcessor.ApplicationOnFailuresProcessing;
 
 
             if (openDoc != null && openDoc.IsValidObject)

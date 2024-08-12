@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using System.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB.Events;
@@ -7,57 +7,31 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
 {
     public class FailureProcessorOpenDocument
     {
-        private IList<FailureDefinitionId> relevantFailures;
 
-        public FailureProcessorOpenDocument()
+        
+        public void ApplicationOnFailuresProcessing(object sender, FailuresProcessingEventArgs e)
         {
-            relevantFailures = GetRelevantFailureIds();
-        }
+            FailuresAccessor accessor = e.GetFailuresAccessor();
 
-        public void HandleFailures(object sender, FailuresProcessingEventArgs e)
-        {
-            FailuresAccessor failuresAccessor = e.GetFailuresAccessor();
-            IList<FailureMessageAccessor> failureMessages = failuresAccessor.GetFailureMessages();
+  
+            accessor.DeleteAllWarnings();
+            
+            accessor.ResolveFailures(accessor.GetFailureMessages());
+            
+            ElementId[] elementIds = accessor.GetFailureMessages()
+                .SelectMany(item => item.GetFailingElementIds())
+                .ToArray();
 
-            foreach (FailureMessageAccessor fma in failureMessages)
+
+            if (elementIds.Length > 0)
             {
-                FailureDefinitionId id = fma.GetFailureDefinitionId();
-
-                if (relevantFailures.Contains(id))
-                {
-                    failuresAccessor.DeleteWarning(fma);
-                }
+                accessor.DeleteElements(elementIds);
+                e.SetProcessingResult(FailureProcessingResult.ProceedWithCommit); 
             }
-
-            e.SetProcessingResult(FailureProcessingResult.Continue);
-        }
-
-        private IList<FailureDefinitionId> GetRelevantFailureIds()
-        {
-            List<FailureDefinitionId> failureIds = new List<FailureDefinitionId>();
-
-            failureIds.AddRange(GetFailureIdsFromType(typeof(BuiltInFailures.DimensionFailures)));
-            failureIds.AddRange(GetFailureIdsFromType(typeof(BuiltInFailures.CopyMonitorFailures)));
-            failureIds.AddRange(GetFailureIdsFromType(typeof(BuiltInFailures.LinkFailures)));
-
-            return failureIds;
-        }
-
-        private IList<FailureDefinitionId> GetFailureIdsFromType(Type failureType)
-        {
-            PropertyInfo[] properties = failureType.GetProperties(BindingFlags.Public | BindingFlags.Static);
-            List<FailureDefinitionId> failureIds = new List<FailureDefinitionId>();
-
-            foreach (PropertyInfo property in properties)
+            else
             {
-                if (property.PropertyType == typeof(FailureDefinitionId))
-                {
-                    FailureDefinitionId failureId = (FailureDefinitionId)property.GetValue(null);
-                    failureIds.Add(failureId);
-                }
+                e.SetProcessingResult(FailureProcessingResult.Continue); 
             }
-
-            return failureIds;
         }
     }
 }
