@@ -5,6 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using Autodesk.Revit.UI;
+using CommunityToolkit.Mvvm.Input;
+using Helper.Models;
+using Nice3point.Revit.Toolkit;
+
 
 namespace SolidIntersector.ViewModels;
 
@@ -124,17 +128,31 @@ public partial class SolidIntersectorViewModel : ObservableObject
     [RelayCommand]
     private void Execute(Window window)
     {
-        var selectedItems = ItemsList.FirstOrDefault(item => item.IsChecked);
         
-        if (selectedItems == null)
+        var selectedItems = ItemsList.Where(item => item.IsChecked);
+        
+        if (selectedItems.Count() == 0)
         {
             TaskDialog.Show("Ошибка", "Выберите элемент");
         }
-        foreach (Element elem in selectedItems)
-        {
-            List<Element> intersectorItems = FindIntersectingElements(elem.Name);
-        }
         
+        HelperParameters helperParameters = new HelperParameters(Context.Document);
+        using (Transaction t = new Transaction(Context.Document, "Set Intersectored elements"))
+        {
+            t.Start();
+            foreach (SelectedItems selectedItem in selectedItems)
+            {
+                List<Element> intersectorItems = FindIntersectingElements(selectedItem.NameItem);
+            
+                foreach (Element elem in intersectorItems)
+                {
+                    helperParameters.SetParameter(selectedParameter, elem, value);
+                }
+            }
+            
+            t.Commit();
+
+        }
     }
 
     private Solid GetSolid(Element element)
