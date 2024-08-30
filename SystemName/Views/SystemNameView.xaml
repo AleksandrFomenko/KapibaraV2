@@ -1,0 +1,185 @@
+﻿<Window
+    x:Class="SystemName.Views.SystemNameView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:viewModel="clr-namespace:SystemName.ViewModels"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance viewModel:SystemNameViewModel}"
+    WindowStartupLocation="CenterScreen"
+    Title="System_name"
+    Height="700"
+    Width="1200">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme PrimaryColor="DeepPurple" SecondaryColor="LightBlue">
+                    <materialDesign:BundledTheme.BaseTheme>Light</materialDesign:BundledTheme.BaseTheme>
+                </materialDesign:BundledTheme>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" /> 
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="1,0" EndPoint="1,3">
+                <GradientStop Color="#4682B4" Offset="0"/>
+                <GradientStop Color="#DEB887" Offset="0.5"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0"
+                   Margin="0,30,0,0"
+                   Text="Имя системы"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Foreground="White"
+                   FontSize="24"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="55" />  
+                    <RowDefinition Height="50" /> 
+                    <RowDefinition Height="55" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="100" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                           Margin="25,20,0,0"
+                           Text="Выбор системного параметра"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Foreground="White"
+                           FontSize="18"/>
+                <ComboBox Grid.Row="1"
+                          ItemsSource="{Binding SystemParameter}"
+                          SelectedItem = "{Binding SelectedSystemParameter}"
+                          Margin="25,0,0,0"
+                          MinWidth="50"
+                          Foreground="Black"
+                          materialDesign:HintAssist.Hint="Необходимо выбрать параметр "
+                          IsEditable="True"
+                          FontSize="18">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Setter Property="FontSize" Value="16"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBox.Text>
+                        <Binding Mode="TwoWay" Path="SelectedTextTwo"
+                                 UpdateSourceTrigger="PropertyChanged">
+                        </Binding>
+                    </ComboBox.Text>
+                </ComboBox>
+                <TextBlock Grid.Row="2"
+                           Margin="25,20,0,0"
+                           Text="Выбор пользовательского параметра"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Foreground="White"
+                           FontSize="18"/>
+                <ComboBox Grid.Row="3"
+                          ItemsSource="{Binding Parameters}"
+                          SelectedItem = "{Binding SelectedParameter}"
+                          Margin="25,0,0,0"
+                          MinWidth="72"
+                          Foreground="Black"
+                          materialDesign:HintAssist.Hint="Необходимо выбрать параметр "
+                          IsEditable="True"
+                          FontSize="18">
+                    <ComboBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ComboBoxItem}">
+                            <Setter Property="FontSize" Value="16"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                        </Style>
+                    </ComboBox.ItemContainerStyle>
+                    <ComboBox.Text>
+                        <Binding Mode="TwoWay" Path="SelectedTextTwo"
+                                 UpdateSourceTrigger="PropertyChanged">
+                        </Binding>
+                    </ComboBox.Text>
+                </ComboBox>
+                <CheckBox Grid.Row="4"
+                          Margin="25,25,0,0"
+                          Content="Создать фильтры и 3D виды"
+                          VerticalAlignment="Top"
+                          IsChecked="{Binding CreateFilters}"
+                          FontSize="18"
+                          Style="{StaticResource MaterialDesignFilterChipPrimaryCheckBox}"/>
+                <CheckBox Grid.Row="4"
+                          Margin="25,75,0,0"
+                          Content="Выбрать все системы в проекте"
+                          VerticalAlignment="Top"
+                          IsChecked="{Binding IsAllSystemsSelected}"
+                          FontSize="18"
+                          Style="{StaticResource MaterialDesignFilterChipPrimaryCheckBox}"/>
+
+                <CheckBox Grid.Row="4"
+                          Margin="25,125,0,0"
+                          Content="Переписать систему элементам только на активном виде"
+                          VerticalAlignment="Top"
+                          IsChecked= "{Binding OnlyActiveView}"
+                          FontSize="18"
+                          Style="{StaticResource MaterialDesignFilterChipPrimaryCheckBox}"/>
+                <Button Grid.Row="5"
+                        Width="120"
+                        Height="50"
+                        materialDesign:ButtonAssist.CornerRadius="25"
+                        Content="Запустить"
+                        Command="{Binding ExecuteCommand}"
+                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                        Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}"
+                        ToolTip="Resource name: MaterialDesignRaisedLightButton"
+                />
+            </Grid>
+            <Grid Grid.Column="1">
+                <ListBox Grid.Column="1"
+                         ItemsSource="{Binding SystemList}"
+                         Margin="30,0,30,30"
+                         Style="{StaticResource MaterialDesignListBox}"
+                         SelectedItem="{Binding SelectedSystem}"
+                         BorderBrush="MistyRose"
+                         BorderThickness="3"
+                         Foreground="White">
+                    <ListBox.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="10"/>
+                        </Style>
+                    </ListBox.Resources>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding IsChecked}"
+                                          Style="{StaticResource MaterialDesignLightCheckBox}"
+                                          Width="20"
+                                          Height="15"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center">
+                                    <CheckBox.LayoutTransform>
+                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                    </CheckBox.LayoutTransform>
+                                </CheckBox>
+                                <TextBlock Text="{Binding NameSystem}"
+                                           FontSize="14"
+                                           VerticalAlignment="Center"
+                                           Margin="20,0,0,0" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
