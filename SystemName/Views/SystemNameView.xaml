@@ -141,45 +141,111 @@
                         Command="{Binding ExecuteCommand}"
                         IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                         Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}"
-                        ToolTip="Resource name: MaterialDesignRaisedLightButton"
-                />
+                        ToolTip="Resource name: MaterialDesignRaisedLightButton"/>
             </Grid>
-            <Grid Grid.Column="1">
-                <ListBox Grid.Column="1"
+            <Grid Grid.Column="1" Margin="30,0,30,30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"/> 
+                        <ColumnDefinition Width="2.5*"/> 
+                        <ColumnDefinition Width="1.5*"/> 
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Text="Имя системы" 
+                               Foreground="White"
+                               VerticalAlignment="Center" 
+                               HorizontalAlignment="Center" 
+                               Margin="5,0"
+                               Grid.Column="1"/>
+                    
+                    <TextBlock Text="Сокращение системы" 
+                               Foreground="White"
+                               VerticalAlignment="Center" 
+                               HorizontalAlignment="Center"
+                               Margin="5,0"
+                               Grid.Column="2"/>
+                    
+                    <TextBlock Text="ID системы" 
+                               Foreground="White"
+                               VerticalAlignment="Center" 
+                               HorizontalAlignment="Center"
+                               Margin="5,0"
+                               Grid.Column="3"/>
+                </Grid>
+                
+                <ListBox Grid.Row="1"
                          ItemsSource="{Binding SystemList}"
-                         Margin="30,0,30,30"
                          Style="{StaticResource MaterialDesignListBox}"
                          SelectedItem="{Binding SelectedSystem}"
                          BorderBrush="MistyRose"
                          BorderThickness="3"
                          Foreground="White">
-                    <ListBox.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="10"/>
+                    
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         </Style>
-                    </ListBox.Resources>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <CheckBox IsChecked="{Binding IsChecked}"
-                                          Style="{StaticResource MaterialDesignLightCheckBox}"
-                                          Width="20"
-                                          Height="15"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center">
-                                    <CheckBox.LayoutTransform>
-                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
-                                    </CheckBox.LayoutTransform>
-                                </CheckBox>
-                                <TextBlock Text="{Binding NameSystem}"
-                                           FontSize="14"
-                                           VerticalAlignment="Center"
-                                           Margin="20,0,0,0" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                    </ListBox.ItemContainerStyle>
+    
+                    <ListBox.Resources>
+        <Style TargetType="Border">
+            <Setter Property="CornerRadius" Value="10"/>
+        </Style>
+    </ListBox.Resources>
+    
+    <ListBox.ItemTemplate>
+        <DataTemplate>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="2.5*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+
+                <CheckBox IsChecked="{Binding IsChecked}"
+                          Style="{StaticResource MaterialDesignLightCheckBox}"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Width="20"
+                          Height="15"
+                          Grid.Column="0">
+                    <CheckBox.LayoutTransform>
+                        <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                    </CheckBox.LayoutTransform>
+                </CheckBox>
+
+                <TextBlock Text="{Binding NameSystem}"
+                           FontSize="14"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Grid.Column="1"/>
+                
+                <TextBlock Text="{Binding CutSystemName}"
+                           FontSize="14"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Grid.Column="2"/>
+                
+                <TextBlock Text="{Binding SystemId}"
+                           FontSize="14"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Grid.Column="3"/>
             </Grid>
+        </DataTemplate>
+    </ListBox.ItemTemplate>
+</ListBox>
+
+    
+    
+</Grid>
         </Grid>
     </Grid>
 </Window>

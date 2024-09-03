@@ -23,7 +23,7 @@ public static class Filter
         
         while (iterator.MoveNext())
         {
-            Definition definition = iterator.Key;
+            var definition = iterator.Key;
             
             if (definition != null && definition.Name == name)
             {
