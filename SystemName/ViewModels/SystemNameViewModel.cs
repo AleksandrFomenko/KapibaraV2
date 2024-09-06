@@ -4,10 +4,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using System_name.Models.CoreModels;
 using System_name.Models.GetElements;
 using System_name.Models.View3D;
-using SystemName.Models;
+using System.Windows;
 using SystemName.Models.Entitis;
 using Transaction = Autodesk.Revit.DB.Transaction;
 using View3D = System_name.Models.View3D.View3D;
+
 
 namespace SystemName.ViewModels;
 
@@ -170,7 +171,6 @@ public partial class SystemNameViewModel : ObservableObject
                     .Select(system => system.NameSystem)
                     .ToList();
             }
-            
             return SystemList
                     .Select(system => system.CutSystemName)
                     .ToList();
@@ -183,7 +183,7 @@ public partial class SystemNameViewModel : ObservableObject
                 .Select(system => system.NameSystem)
                 .ToList();
         }
-
+        
         return SystemList
             .Where(system => system.IsChecked)
             .Select(system => system.CutSystemName)
@@ -197,7 +197,7 @@ public partial class SystemNameViewModel : ObservableObject
         
         if (!_elements.Any())
         {
-            _elements = GetElements.GetElementsInSystem(GetCheckedSystemNames());
+            _elements = GetElements.GetElementsInSystem(GetCheckedSystemNames(), !IsSystemNameSelected);
         }
 
         using var t = new Transaction(Context.Document, "Kapibara system name");
@@ -207,12 +207,12 @@ public partial class SystemNameViewModel : ObservableObject
 
         if (_createFilters)
         {
-            foreach (var systemName in GetCheckedSystemNames())
-            {
+            foreach (var systemName in GetCheckedSystemNames()) 
+            { 
                 var view = View3D.createView3D(systemName);
                 var filter = Filter.createFilter(GetElements.MEP_cats, _selectedParameter, systemName);
                 view.AddFilter(filter.Id);
-                view.SetFilterVisibility(filter.Id, false);
+               view.SetFilterVisibility(filter.Id, false);
             }
         }
         t.Commit();
@@ -229,7 +229,6 @@ public partial class SystemNameViewModel : ObservableObject
         {
             TaskDialog.Show("Error", e.ToString());
         }
-        
         window?.Close();
     }
 }

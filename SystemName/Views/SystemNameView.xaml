@@ -139,6 +139,7 @@
                         materialDesign:ButtonAssist.CornerRadius="25"
                         Content="Запустить"
                         Command="{Binding ExecuteCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                         IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                         Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}"
                         ToolTip="Resource name: MaterialDesignRaisedLightButton"/>

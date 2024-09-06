@@ -13,7 +13,9 @@ public static class Filter
 
         var categoryIds = categories.Select(cat => new ElementId(cat)).ToList();
         var filter = new ElementParameterFilter(rule, true);
-        return ParameterFilterElement.Create(Context.Document, value, categoryIds, filter);
+        
+        var uniqueName = GetUniqueFilterName(value);
+        return ParameterFilterElement.Create(Context.Document, uniqueName, categoryIds, filter);
     }
 
     private static ElementId searchParameter(string name)
@@ -30,8 +32,20 @@ public static class Filter
                 return (definition as InternalDefinition)?.Id;
             }
         }
+        return null; 
+    }
+    private static string GetUniqueFilterName(string baseName, int suffix = 0)
+    {
+        var filterCollector = new FilteredElementCollector(Context.Document)
+            .OfClass(typeof(ParameterFilterElement))
+            .Cast<ParameterFilterElement>();
         
-        return null;
+        var newName = suffix == 0 ? baseName : $"{baseName}_{suffix}";
+        
+        var nameExists = filterCollector.Any(f => f.Name == newName);
+        
+        return nameExists ? GetUniqueFilterName(baseName, suffix + 1) :
+            newName;
     }
     
 }

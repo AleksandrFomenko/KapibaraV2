@@ -2,6 +2,7 @@
 using Autodesk.Revit.DB.Plumbing;
 using Autodesk.Revit.UI;
 
+
 namespace System_name.Models.GetElements;
 
 public static class GetElements
@@ -44,7 +45,7 @@ public static class GetElements
         return elements;
     }
 
-    private static Element getSystem(string systemName)
+    private static Element getSystemByName(string systemName)
     {
         var cats = new List<BuiltInCategory>
         {
@@ -58,7 +59,47 @@ public static class GetElements
             .WherePasses(catFilter)
             .WhereElementIsNotElementType()
             .FirstOrDefault(elem => elem.Name == systemName);
-        return mepSystem ?? null;
+        return mepSystem;
+    }
+    
+    private static Element getSystemTypeByCutName(string systemName)
+    {
+        var cats = new List<BuiltInCategory>
+        {
+            BuiltInCategory.OST_PipingSystem,
+            BuiltInCategory.OST_DuctSystem
+        };
+        
+        var catFilter = new ElementMulticategoryFilter(cats);
+
+        var mepSystemType = new FilteredElementCollector(Context.Document)
+            .WherePasses(catFilter)
+            .WhereElementIsElementType()
+            .FirstOrDefault(e =>
+                e.get_Parameter(BuiltInParameter.RBS_SYSTEM_ABBREVIATION_PARAM)?.AsString() == systemName);
+        return mepSystemType;
+    }
+
+    private static List<Element> getSystemByCutName(string name)
+    {
+        var mepSystemType = getSystemTypeByCutName(name);
+        var cats = new List<BuiltInCategory>
+        {
+            BuiltInCategory.OST_PipingSystem, BuiltInCategory.OST_Alignments,
+            BuiltInCategory.OST_DuctSystem
+        };
+        
+        var catFilter = new ElementMulticategoryFilter(cats);
+        
+        var elementIds = mepSystemType.GetDependentElements(catFilter);
+        
+        var elements = elementIds
+            .Select(id => Context.Document.GetElement(id)) 
+            .Where(el => el != null)  
+            .ToList();
+
+        return elements;
+
     }
 
     private static List<Element> getElementsInSystem(Element mepSystem)
@@ -70,11 +111,39 @@ public static class GetElements
             _ => null
         };
     }
-
-    public static List<Element> GetElementsInSystem(List<string> systemsName)
+    private static List<Element> getElementsInSystems(List<Element> mepSystem)
     {
-        return systemsName
-            .SelectMany(name => getElementsInSystem(getSystem(name)))
-            .ToList();
+        var result = new List<Element>(400); 
+
+        foreach (var sys in mepSystem)
+        {
+            switch (sys)
+            {
+                case PipingSystem pipingSystem:
+                    result.AddRange(pipingSystem.PipingNetwork.Cast<Element>().Where(e => e != null)); 
+                    break;
+                
+                case MechanicalSystem ductSystem:
+                    result.AddRange(ductSystem.DuctNetwork.Cast<Element>().Where(e => e != null));
+                    break;
+            }
+        }
+
+        return result;
+    }
+    
+    
+    // если cut - сокращения, иначе имена
+    public static List<Element> GetElementsInSystem(List<string> systemsName, bool cut)
+    { 
+        return cut
+            ?  systemsName
+            .SelectMany(name => getElementsInSystems(getSystemByCutName(name)))
+            .ToList() 
+            
+            : systemsName
+                .SelectMany(name => getElementsInSystem(getSystemByName(name)))
+                .ToList();
+        
     }
 }
