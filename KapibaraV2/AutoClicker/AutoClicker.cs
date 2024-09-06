@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
-internal static class NativeMethods
+public class NativeMethods
 {
     // Import SetThreadExecutionState Win32 API and necessary flags
     [DllImport("kernel32.dll")]
@@ -11,6 +11,7 @@ internal static class NativeMethods
 
     public const uint ES_CONTINUOUS = 0x80000000;
     public const uint ES_SYSTEM_REQUIRED = 0x00000001;
+    public const uint ES_DISPLAY_REQUIRED = 0x00000001;
 }
 
 public class AutoClicker
@@ -25,6 +26,7 @@ public class AutoClicker
 
     private const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
     private const uint MOUSEEVENTF_LEFTUP = 0x0004;
+    
 
     public AutoClicker(int interval)
     {

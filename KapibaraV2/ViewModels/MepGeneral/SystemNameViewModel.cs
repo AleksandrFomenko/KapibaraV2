@@ -158,7 +158,7 @@ namespace KapibaraV2.ViewModels.MepGeneral
                 .WhereElementIsNotElementType()
                 .ToElements();
 
-            using (Transaction t = new Transaction(RevitApi.Document, "System name"))
+            using (Transaction t = new Transaction(RevitApi.Document, "SystemName"))
             {
                 t.Start();
                 SystemNameModel snm = new SystemNameModel(elements, _isActiveView, _selectedSystemParameter, _selectedUserParameter);

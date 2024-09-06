@@ -123,8 +123,7 @@
                 <StackPanel Grid.Row="2">
                     
                     <Grid
-                        Width="100"
-                    >
+                        Width="100">
                         <Button
                             Command="{Binding ExecuteCommand}"
                             Height="30"
@@ -132,8 +131,7 @@
                             IsEnabled="{Binding DataContext.ControlsEnabled,
                         RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                             Style="{StaticResource MaterialDesignRaisedDarkButton}"
-                            ToolTip="MaterialDesignRaisedDarkButton with Round Corners"
-                        >
+                            ToolTip="MaterialDesignRaisedDarkButton with Round Corners">
                             <TextBlock
                                 Text="Execute" />
                         </Button>

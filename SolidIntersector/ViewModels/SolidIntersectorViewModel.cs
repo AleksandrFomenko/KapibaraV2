@@ -149,9 +149,7 @@ public partial class SolidIntersectorViewModel : ObservableObject
                     helperParameters.SetParameter(selectedParameter, elem, value);
                 }
             }
-            
             t.Commit();
-
         }
     }
 

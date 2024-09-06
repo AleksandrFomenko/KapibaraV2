@@ -17,6 +17,7 @@ namespace KapibaraV2.ViewModels.Tools
         private readonly System.Timers.Timer timer;
         private readonly Random random = new Random();
         private readonly int interval = 3000;
+        private NativeMethods nativeMethods;
 
         public ToolsKapiViewModel()
         {
@@ -70,12 +71,14 @@ namespace KapibaraV2.ViewModels.Tools
 
         private void EnableAutoMover()
         {
+            NativeMethods.SetThreadExecutionState(NativeMethods.ES_CONTINUOUS | NativeMethods.ES_SYSTEM_REQUIRED | NativeMethods.ES_DISPLAY_REQUIRED);
             autoMover.Start();
             timer.Start();
         }
 
         private void DisableAutoMover()
         {
+            NativeMethods.SetThreadExecutionState(NativeMethods.ES_CONTINUOUS);
             autoMover.Stop();
             timer.Stop();
         }
@@ -87,6 +90,7 @@ namespace KapibaraV2.ViewModels.Tools
         [RelayCommand]
         private void CloseWindow(Window window)
         {
+            NativeMethods.SetThreadExecutionState(NativeMethods.ES_CONTINUOUS);
             DisableAutoMover();
             window?.Close();
         }

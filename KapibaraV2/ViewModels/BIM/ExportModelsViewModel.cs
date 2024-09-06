@@ -96,7 +96,7 @@ namespace KapibaraV2.ViewModels.BIM
         {
             var vmAddProject = new AddProjectViewModel(this);
             var view = new AddProjectView(vmAddProject);
-
+            int qwe = 555;
             view.ShowDialog();
         }
 
