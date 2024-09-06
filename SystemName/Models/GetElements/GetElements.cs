@@ -22,7 +22,6 @@ public static class GetElements
         BuiltInCategory.OST_PipeInsulations,
         BuiltInCategory.OST_PipeAccessory,
         BuiltInCategory.OST_PipeFitting,
-        BuiltInCategory.OST_MechanicalEquipment,
         BuiltInCategory.OST_Sprinklers,
         BuiltInCategory.OST_PlumbingFixtures,
         BuiltInCategory.OST_FlexPipeCurves

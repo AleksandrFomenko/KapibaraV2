@@ -4,6 +4,7 @@ public static class Filter
 {
     public static ParameterFilterElement createFilter(List <BuiltInCategory> categories, string nameParameter, string value)
     {
+        /*
         var parameterId = searchParameter(nameParameter);
         var pvp = new ParameterValueProvider(parameterId);
         var rule = new FilterStringRule(
@@ -15,6 +16,18 @@ public static class Filter
         var filter = new ElementParameterFilter(rule, true);
         
         var uniqueName = GetUniqueFilterName(value);
+        return ParameterFilterElement.Create(Context.Document, uniqueName, categoryIds, filter);
+        */
+        var parameterId = searchParameter(nameParameter);
+
+        List<FilterRule> filterRule = new List<FilterRule>();
+        
+        filterRule.Add(ParameterFilterRuleFactory.CreateNotContainsRule(parameterId, value, true));
+        var categoryIds = categories.Select(cat => new ElementId(cat)).ToList();
+        
+        var uniqueName = GetUniqueFilterName(value);
+        
+        var filter = new ElementParameterFilter(filterRule);
         return ParameterFilterElement.Create(Context.Document, uniqueName, categoryIds, filter);
     }
 
