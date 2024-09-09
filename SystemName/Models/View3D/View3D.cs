@@ -16,6 +16,17 @@ public static class View3D
         
         var uniqueName = GetUniqueViewName(name);
         view.Name = uniqueName;
+        view.DetailLevel = ViewDetailLevel.Fine;
+        view.Discipline = ViewDiscipline.Mechanical;
+        view.DisplayStyle = DisplayStyle.HLR;
+        
+        var lvl = Category.GetCategory(Context.Document,BuiltInCategory.OST_Levels);
+        var links = Category.GetCategory(Context.Document,BuiltInCategory.OST_RvtLinks);
+        
+        view.SetCategoryHidden(lvl.Id, true);
+        view.SetCategoryHidden(links.Id, true);
+        
+        
         
         return view;
     }
