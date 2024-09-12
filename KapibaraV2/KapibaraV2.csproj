@@ -73,6 +73,10 @@
         <Resource Include="Resources\Icons\ActiveView.png" />
         <Resource Include="Resources\Icons\tools.jpg" />
         <Resource Include="Resources\Icons\kapibwrite.png" />
+        <Resource Include="Resources\Icons\CleaningFamily.png" />
+        <Resource Include="Resources\Icons\ai.png" />
+        <Resource Include="Resources\Icons\github.png" />
+        <Resource Include="Resources\Icons\mouse.png" />
     </ItemGroup>
 
     <ItemGroup>

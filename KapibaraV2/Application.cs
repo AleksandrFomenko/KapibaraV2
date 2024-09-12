@@ -33,7 +33,9 @@ namespace KapibaraV2
                 .SetImage("/KapibaraV2;component/Resources/Icons/ActiveView.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
             
-            panelBIM.AddPushButton<FamilyCleaner.Commands.StartupCommand>("Export models");
+            panelBIM.AddPushButton<FamilyCleaner.Commands.StartupCommand>("CleaningFamily")
+                .SetImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png");
 
             //MEP общие
             panelMepGeneral.AddPushButton<SolidIntersector.Commands.SolidIntersector>("Solid Intersector")
@@ -51,9 +53,15 @@ namespace KapibaraV2
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
             */
             // Информация
-            panelInfo.AddPushButton<KapibaraInfo>("Info");
-            panelInfo.AddPushButton<ToolsKapi>("Tools");
-            panelInfo.AddPushButton<ChatGPT.Commands.ChatGpt>("ChatGPT");
+            panelInfo.AddPushButton<KapibaraInfo>("GitHub/Tg")
+                .SetImage("/KapibaraV2;component/Resources/Icons/github.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/github.png");
+            panelInfo.AddPushButton<ToolsKapi>("Tools")
+                .SetImage("/KapibaraV2;component/Resources/Icons/mouse.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/mouse.png");
+            panelInfo.AddPushButton<ChatGPT.Commands.ChatGpt>("ChatGPT")
+                .SetImage("/KapibaraV2;component/Resources/Icons/ai.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ai.png");
 
 
             Autodesk.Windows.RibbonControl ribbon = Autodesk.Windows.ComponentManager.Ribbon;
