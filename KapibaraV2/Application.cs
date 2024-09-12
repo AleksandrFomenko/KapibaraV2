@@ -32,6 +32,8 @@ namespace KapibaraV2
             panelBIM.AddPushButton<ExportModels>("Export models")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ActiveView.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
+            
+            panelBIM.AddPushButton<FamilyCleaner.Commands.StartupCommand>("Export models");
 
             //MEP общие
             panelMepGeneral.AddPushButton<SolidIntersector.Commands.SolidIntersector>("Solid Intersector")

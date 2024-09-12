@@ -7,7 +7,6 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
 {
     public class FailureProcessorOpenDocument
     {
-
         
         public void ApplicationOnFailuresProcessing(object sender, FailuresProcessingEventArgs e)
         {

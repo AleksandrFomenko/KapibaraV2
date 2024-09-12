@@ -1,0 +1,153 @@
+﻿<Window
+    x:Class="FamilyCleaner.Views.FamilyCleanerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:viewModel="clr-namespace:FamilyCleaner.ViewModels"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance viewModel:FamilyCleanerViewModel}"
+    WindowStartupLocation="CenterScreen"
+    Title="FamilyCleaner"
+    Height="800"
+    Width="800">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme PrimaryColor="DeepPurple" SecondaryColor="LightBlue">
+                    <materialDesign:BundledTheme.BaseTheme>Light</materialDesign:BundledTheme.BaseTheme>
+                </materialDesign:BundledTheme>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" /> 
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="1,0" EndPoint="1,3">
+                <GradientStop Color="#4682B4" Offset="0"/>
+                <GradientStop Color="#DEB887" Offset="0.5"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="400" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0"
+                   Margin="0,30,0,0"
+                   Text="Очистка семейств"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Foreground="White"
+                   FontSize="24"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    Width="230"
+                    Height="50"
+                    materialDesign:ButtonAssist.CornerRadius="25"
+                    Content="Выбор папки с семействами"
+                    Command="{Binding SetFolderFromCommand}"
+                    IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                    Style="{StaticResource MaterialDesignPaperButton}"
+                    ToolTip="MaterialDesignOutlinedButton" />
+            <TextBox Grid.Column="1" Text="{Binding FolderPathFrom}"
+                     Margin="10, 10, 10, 10"
+                     Background="Transparent"
+                     IsReadOnly="True"
+                     Foreground="White"
+                     FontSize="14"
+                     BorderThickness="0"
+                     />
+        </Grid>
+        
+        <materialDesign:Card Grid.Row="2" Margin="10">
+            <TabControl
+                VerticalContentAlignment="Bottom"
+                materialDesign:ColorZoneAssist.Mode="PrimaryMid"
+                Style="{StaticResource MaterialDesignNavigationRailTabControl}">
+            <TabItem>
+              <TabItem.Header>
+                <StackPanel
+                  Width="auto"
+                  Height="auto">
+                  <materialDesign:PackIcon
+                    Width="24"
+                    Height="24"
+                    HorizontalAlignment="Center"
+                    Kind="Folder" />
+                  <TextBlock
+                    HorizontalAlignment="Center"
+                    Text="All Files" />
+                </StackPanel>
+              </TabItem.Header>
+              <StackPanel
+                Margin="16">
+                <TextBlock
+                  Margin="0,0,0,8"
+                  Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                  Text="Семейства в папке" />
+                <DataGrid ItemsSource="{Binding RfaFiles}"
+                          AutoGenerateColumns="False"
+                          Height="250"
+                          CanUserAddRows="False"
+                          Margin="0,16,0,0"
+                          Background="Transparent"
+                          Foreground="Black"
+                          FontSize="14">
+                    <DataGrid.Columns>
+                        <DataGridCheckBoxColumn Header="Выбрать" 
+                                                Binding="{Binding IsSelected, Mode=TwoWay}" 
+                                                Width="150" />
+                        
+                        <DataGridTextColumn Header="Имя файла" 
+                                            Binding="{Binding FileName}" 
+                                            Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+              </StackPanel>
+            </TabItem>
+          </TabControl>
+        </materialDesign:Card>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    Width="230"
+                    Height="50"
+                    materialDesign:ButtonAssist.CornerRadius="25"
+                    Content="Выбор папки для сохранения"
+                    Command="{Binding SetFolderToCommand}"
+                    IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                    Style="{StaticResource MaterialDesignPaperButton}"
+                    ToolTip="MaterialDesignOutlinedButton" />
+            <TextBox Grid.Column="1" Text="{Binding FolderPathTo}"
+                     Margin="10, 10, 10,10"
+                     Background="Transparent"
+                     IsReadOnly="True"
+                     Foreground="White"
+                     FontSize="14"
+                     BorderThickness="0"
+            />
+        </Grid>
+            <Button Grid.Row="4"
+                Width="150"
+                Height="40"
+                materialDesign:ButtonAssist.CornerRadius="25"
+                Content="Execute"
+                Command="{Binding ExecuteCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                ToolTip="MaterialDesignOutlinedButton" />
+    </Grid>
+</Window>

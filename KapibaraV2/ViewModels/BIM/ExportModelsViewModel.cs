@@ -96,7 +96,6 @@ namespace KapibaraV2.ViewModels.BIM
         {
             var vmAddProject = new AddProjectViewModel(this);
             var view = new AddProjectView(vmAddProject);
-            int qwe = 555;
             view.ShowDialog();
         }
 
@@ -137,7 +136,7 @@ namespace KapibaraV2.ViewModels.BIM
             ConfigFilePath = Config.GetConfigPath();
         }
 
-        public List<string> GetCheckedModelPaths()
+        private List<string> GetCheckedModelPaths()
         {
             return ModelPaths.Where(mp => mp.IsChecked).Select(mp => mp.Path).ToList();
         }

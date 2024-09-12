@@ -20,12 +20,13 @@ public static class View3D
         view.Discipline = ViewDiscipline.Mechanical;
         view.DisplayStyle = DisplayStyle.HLR;
         
-        var lvl = Category.GetCategory(Context.Document,BuiltInCategory.OST_Levels);
-        var links = Category.GetCategory(Context.Document,BuiltInCategory.OST_RvtLinks);
+        var lvl = Category.GetCategory(Context.Document, BuiltInCategory.OST_Levels);
+        var links = Category.GetCategory(Context.Document, BuiltInCategory.OST_RvtLinks);
+        var grids = Category.GetCategory(Context.Document, BuiltInCategory.OST_Grids);
         
         view.SetCategoryHidden(lvl.Id, true);
         view.SetCategoryHidden(links.Id, true);
-        
+        view.SetCategoryHidden(grids.Id, true);
         
         
         return view;
