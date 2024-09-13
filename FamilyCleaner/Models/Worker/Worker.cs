@@ -23,12 +23,17 @@ public class Worker
         _app.FailuresProcessing += _failureProcessor.ApplicationOnFailuresProcessing; 
         var doc  = Open.FamilyOpener.OpenFamily(pathDownload);
         
-        var t = new Transaction(doc, "CleaningFamily");
-        t.Start();
+       var t = new Transaction(doc, "CleaningFamily");
+       t.Start();
         
         CleaningManager.CleaningFamily(doc);
         
         t.Commit();
+        var cm = new CleaningManager();
+        cm.test(doc);
+        cm.test(doc);
+        cm.test(doc);
+
         doc.SaveAs(pathSave); 
         doc.Close(false); 
         
