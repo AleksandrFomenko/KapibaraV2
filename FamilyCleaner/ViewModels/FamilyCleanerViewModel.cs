@@ -38,7 +38,7 @@ public sealed partial class FamilyCleanerViewModel : ObservableObject
         {
             FileName = Path.GetFileName(f),   
             FullPath = f,                      
-            IsSelected = false
+            IsSelected = true
         }).ToList();
     }
     

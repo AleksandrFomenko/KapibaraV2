@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
+using Autodesk.Revit.UI;
 using FamilyCleaner.Models.FamilyCleaning;
 using FamilyCleaner.Models.Open;
 
@@ -20,24 +21,31 @@ public class Worker
 
     public void Execute(string pathDownload, string pathSave)
     {
-        _app.FailuresProcessing += _failureProcessor.ApplicationOnFailuresProcessing; 
-        var doc  = Open.FamilyOpener.OpenFamily(pathDownload);
+        _app.FailuresProcessing += _failureProcessor.ApplicationOnFailuresProcessing;
+        var doc = Open.FamilyOpener.OpenFamily(pathDownload);
         
-       var t = new Transaction(doc, "CleaningFamily");
-       t.Start();
-        
-        CleaningManager.CleaningFamily(doc);
-        
-        t.Commit();
-        var cm = new CleaningManager();
-        cm.test(doc);
-        cm.test(doc);
-        cm.test(doc);
+        try
+        {
+            var t = new Transaction(doc, "CleaningFamily");
 
-        doc.SaveAs(pathSave); 
-        doc.Close(false); 
-        
-        
-        _app.FailuresProcessing -= _failureProcessor.ApplicationOnFailuresProcessing;
+            t.Start();
+
+            CleaningManager.CleaningFamily(doc);
+
+            t.Commit();
+
+            var cm = new CleaningManager();
+            cm.DeleteUnused(doc);
+
+            doc.SaveAs(pathSave);
+            doc.Close(false);
+            _app.FailuresProcessing -= _failureProcessor.ApplicationOnFailuresProcessing;
+        }
+        catch (Exception e)
+        {
+            TaskDialog.Show("Err", e.ToString());
+            doc.Close(false);
+            _app.FailuresProcessing -= _failureProcessor.ApplicationOnFailuresProcessing;
+        }
     }
 }

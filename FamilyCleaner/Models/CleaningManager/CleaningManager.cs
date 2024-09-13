@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Autodesk.Revit.UI;
+using Transaction = Autodesk.Revit.DB.Transaction;
 
 namespace FamilyCleaner.Models.FamilyCleaning
 {
     public class CleaningManager
     {
-        public static int modifiedByDeleteMaterial = 0;
-        public static bool checkForPurgeMaterials = false;
-        public static Document _doc = null;
-        public static string materialName = "";
         public int TryCount { get; set; } = 5;
         public bool WithThermals { get; set; } = true;
         public bool WithMaterials { get; set; } = true;
@@ -76,14 +74,16 @@ namespace FamilyCleaner.Models.FamilyCleaning
 
         public static void CleaningFamily(Document doc)
         {
-            DeleteUnnecessaryElements(doc);
+           // DeleteUnnecessaryElements(doc);
             Purge(doc);
         }
         
-        public void test(Document doc)
+        public void DeleteUnused(Document doc)
         {
             var document = doc;
-            for(var i = 1; i <= TryCount; i++) {
+            for(var i = 1; i <= TryCount; i++)
+            {
+                DeleteAppearanceAsset(doc);
                 
                 using(var transaction = new Transaction(document)) {
                     transaction.Start($"BIM: Remove unused [{i}].");
@@ -95,7 +95,6 @@ namespace FamilyCleaner.Models.FamilyCleaning
                            
                         }
                     }
-
                     transaction.Commit();
                 }
             }
@@ -153,6 +152,44 @@ namespace FamilyCleaner.Models.FamilyCleaning
                     BindingFlags.Instance | BindingFlags.NonPublic);
             }
         }
-        
+
+        private void DeleteAppearanceAsset(Document doc)
+        {
+            var materials = new FilteredElementCollector(doc)
+                .OfClass(typeof(Material))
+                .Cast<Material>()
+                .ToList();
+
+           
+            var usedAppearanceAssetIds = new HashSet<ElementId>(
+                materials.Select(m => m.AppearanceAssetId)
+            );
+            
+            var appearanceAssetElements = new FilteredElementCollector(doc)
+                .OfClass(typeof(AppearanceAssetElement))
+                .Cast<AppearanceAssetElement>()
+                .ToList();
+            
+            var unusedAppearanceAssetElements = appearanceAssetElements
+                .Where(a => !usedAppearanceAssetIds.Contains(a.Id))
+                .ToList();
+          
+            {
+                using (Transaction tx = new Transaction(doc, "Удаление неиспользуемых Appearance Assets"))
+                {
+                    var idsToDelete = unusedAppearanceAssetElements.Select(a => a.Id).ToList();
+                    try
+                    {
+                        tx.Start();
+                        doc.Delete(idsToDelete);
+                        tx.Commit();
+                    }
+                    catch
+                    {
+                        
+                    }
+                }
+            }
+        }
     }
 }
