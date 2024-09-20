@@ -20,5 +20,4 @@ public class StartupCommand : ExternalCommand
         var view = new FsmModulesView(viewModel);
         view.ShowDialog();
     }
-    
 }
