@@ -17,7 +17,8 @@ namespace FsmModules.ViewModels
             var selectedReference = sel.PickObject(objectType, status);
             var selectedElement = Context.ActiveDocument.GetElement(selectedReference);
 
-            var wallType = Context.ActiveDocument.GetElement(new ElementId(6291));
+            var wallType = Context.ActiveDocument.GetElement(new ElementId(398));
+            var wallType2 = Context.ActiveDocument.GetElement(new ElementId(401));
 
             var lvl = new FilteredElementCollector(Context.Document)
                 .OfClass(typeof(Level))
@@ -28,7 +29,9 @@ namespace FsmModules.ViewModels
             double wallHeight = heightParam != null ? heightParam.AsDouble() : 10.0;
             
             var contours = FindContours(selectedElement);
-
+            
+            Dictionary<Wall, Curve> walls = new Dictionary<Wall, Curve>();
+            
             using (var t = new Transaction(Context.Document, "Create Walls"))
             {
                 t.Start();
@@ -36,8 +39,32 @@ namespace FsmModules.ViewModels
                 {
                     foreach (var curve in contour)
                     {
-                        Wall.Create(Context.Document, curve, wallType.Id, lvl.Id, wallHeight, 0, false, false);
+                        Wall x = Wall.Create(Context.Document, curve, wallType.Id, lvl.Id, wallHeight, 0, false, false);
+                        walls.Add(x, curve);
                     }
+                }
+                t.Commit();
+            }
+            
+            using (var t = new Transaction(Context.Document, "Create Walls"))
+            {
+                t.Start();
+                foreach (var wal in walls)
+                {
+                    Wall existingWall = wal.Key;
+                    Curve curve = wal.Value;
+
+                    var vector = existingWall.Orientation;
+                    double offsetDistance1 = Context.ActiveDocument.GetElement(wal.Key.GetTypeId())
+                        .get_Parameter(BuiltInParameter.WALL_ATTR_WIDTH_PARAM).AsDouble()/2;
+                    double offsetDistance2 = wallType2.get_Parameter(BuiltInParameter.WALL_ATTR_WIDTH_PARAM).AsDouble()/2;
+                    double offsetDistance = offsetDistance1 + offsetDistance2;
+
+                    Transform translation = Transform.CreateTranslation(vector * offsetDistance);
+
+                    Curve newCurve = curve.CreateTransformed(translation);
+
+                    Wall newWall = Wall.Create(Context.Document, newCurve, wallType2.Id, lvl.Id, wallHeight, 0, false, false);
                 }
                 t.Commit();
             }
