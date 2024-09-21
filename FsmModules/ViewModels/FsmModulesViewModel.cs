@@ -31,6 +31,7 @@ namespace FsmModules.ViewModels
             var contours = FindContours(selectedElement);
             
             Dictionary<Wall, Curve> walls = new Dictionary<Wall, Curve>();
+            List<Wall> newWalls = new List<Wall>();
             
             using (var t = new Transaction(Context.Document, "Create Walls"))
             {
@@ -45,7 +46,7 @@ namespace FsmModules.ViewModels
                 }
                 t.Commit();
             }
-            
+
             using (var t = new Transaction(Context.Document, "Create Walls"))
             {
                 t.Start();
@@ -56,18 +57,31 @@ namespace FsmModules.ViewModels
 
                     var vector = existingWall.Orientation;
                     double offsetDistance1 = Context.ActiveDocument.GetElement(wal.Key.GetTypeId())
-                        .get_Parameter(BuiltInParameter.WALL_ATTR_WIDTH_PARAM).AsDouble()/2;
-                    double offsetDistance2 = wallType2.get_Parameter(BuiltInParameter.WALL_ATTR_WIDTH_PARAM).AsDouble()/2;
+                        .get_Parameter(BuiltInParameter.WALL_ATTR_WIDTH_PARAM).AsDouble() / 2;
+                    double offsetDistance2 = wallType2.get_Parameter(BuiltInParameter.WALL_ATTR_WIDTH_PARAM).AsDouble() / 2;
                     double offsetDistance = offsetDistance1 + offsetDistance2;
 
                     Transform translation = Transform.CreateTranslation(vector * offsetDistance);
 
-                    Curve newCurve = curve.CreateTransformed(translation);
+                    Curve translatedCurve = curve.CreateTransformed(translation);
+                    
 
-                    Wall newWall = Wall.Create(Context.Document, newCurve, wallType2.Id, lvl.Id, wallHeight, 0, false, false);
+                    if (translatedCurve is Line translatedLine)
+                    {
+                        XYZ direction = translatedLine.Direction.Normalize();
+                        XYZ newStart = translatedLine.GetEndPoint(0) + (direction * offsetDistance1);
+                        XYZ newEnd = translatedLine.GetEndPoint(1) - (direction * (offsetDistance1 + offsetDistance2));
+                        translatedCurve = Line.CreateBound(newStart, newEnd);
+                    }
+
+                    Wall newWall = Wall.Create(Context.Document, translatedCurve, wallType2.Id, lvl.Id, wallHeight, 0, false, false);
+                    WallUtils.AllowWallJoinAtEnd(newWall, 0);
+                    WallUtils.AllowWallJoinAtEnd(newWall, 1);
+
                 }
                 t.Commit();
             }
+            
         }
 
         private static IEnumerable<CurveLoop> FindContours(Element element)
@@ -136,5 +150,6 @@ namespace FsmModules.ViewModels
                 return Enumerable.Empty<CurveLoop>();
             }
         }
+        
     }
 }
