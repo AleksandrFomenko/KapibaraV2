@@ -24,7 +24,8 @@ public static class GetElements
         BuiltInCategory.OST_PipeFitting,
         BuiltInCategory.OST_Sprinklers,
         BuiltInCategory.OST_PlumbingFixtures,
-        BuiltInCategory.OST_FlexPipeCurves
+        BuiltInCategory.OST_FlexPipeCurves,
+        BuiltInCategory.OST_GenericModel
     };
     
     public static List<Element> getElements(bool IsActiveView)

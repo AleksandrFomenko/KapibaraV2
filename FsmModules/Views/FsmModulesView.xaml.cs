@@ -1,4 +1,7 @@
 ﻿using FsmModules.ViewModels;
+using System.Windows.Media;
+using MaterialDesignColors;
+using MaterialDesignThemes.Wpf;
 
 namespace FsmModules.Views;
 
@@ -8,5 +11,11 @@ public sealed partial class FsmModulesView
     {
         DataContext = viewModel;
         InitializeComponent();
+        InitializeMaterialDesign();
+    }
+    private void InitializeMaterialDesign()
+    {
+        var card = new Card();
+        var hue = new Hue("Dummy", Colors.Black, Colors.White);
     }
 }

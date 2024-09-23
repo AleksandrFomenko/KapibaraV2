@@ -1,155 +1,50 @@
-﻿using Autodesk.Revit.Attributes;
+﻿using System.Windows;
+using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using FsmModules.Modules.FacadeModule;
+
 
 namespace FsmModules.ViewModels
 {
     public partial class FsmModulesViewModel : ObservableObject
     {
+        private Document _doc = Context.Document;
+        private const ObjectType objectType = ObjectType.Element;
+        private const string status = "Выбери ФСМ модуль";
         [RelayCommand]
-        private void Execute()
+        private void Execute(Window window)
         {
-            var uidoc = new UIDocument(Context.ActiveDocument);
+            window?.Close();
+            var uidoc = new UIDocument(_doc);
             var sel = uidoc.Selection;
-            var objectType = ObjectType.Element;
-            var status = "Выбери ФСМ модуль";
-            var selectedReference = sel.PickObject(objectType, status);
-            var selectedElement = Context.ActiveDocument.GetElement(selectedReference);
+            var selectedReference = sel.PickObjects(objectType, status);
 
-            var wallType = Context.ActiveDocument.GetElement(new ElementId(398));
-            var wallType2 = Context.ActiveDocument.GetElement(new ElementId(401));
+            var wallType = Context.ActiveDocument.GetElement(new ElementId(398)).Cast<WallType>();
+            var wallType2 = Context.ActiveDocument.GetElement(new ElementId(401)).Cast<WallType>();
+            var wallType3 = Context.ActiveDocument.GetElement(new ElementId(400)).Cast<WallType>();
 
+            
             var lvl = new FilteredElementCollector(Context.Document)
                 .OfClass(typeof(Level))
                 .WhereElementIsNotElementType()
                 .FirstOrDefault() as Level;
-            
-            var heightParam = selectedElement.LookupParameter("Высота"); 
-            double wallHeight = heightParam != null ? heightParam.AsDouble() : 10.0;
-            
-            var contours = FindContours(selectedElement);
-            
-            Dictionary<Wall, Curve> walls = new Dictionary<Wall, Curve>();
-            List<Wall> newWalls = new List<Wall>();
-            
-            using (var t = new Transaction(Context.Document, "Create Walls"))
+            var q = new FacadeModule(_doc);
+
+            using var t = new Transaction(Context.Document, "Create Walls");
+            foreach (var selectedRef in selectedReference)
             {
                 t.Start();
-                foreach (var contour in contours)
-                {
-                    foreach (var curve in contour)
-                    {
-                        Wall x = Wall.Create(Context.Document, curve, wallType.Id, lvl.Id, wallHeight, 0, false, false);
-                        walls.Add(x, curve);
-                    }
-                }
+                var selectedElement = _doc.GetElement(selectedRef);
+                var dic = q.CreateExternalWalls(selectedElement, wallType, lvl, 500);
                 t.Commit();
-            }
-
-            using (var t = new Transaction(Context.Document, "Create Walls"))
-            {
-                t.Start();
-                foreach (var wal in walls)
-                {
-                    Wall existingWall = wal.Key;
-                    Curve curve = wal.Value;
-
-                    var vector = existingWall.Orientation;
-                    double offsetDistance1 = Context.ActiveDocument.GetElement(wal.Key.GetTypeId())
-                        .get_Parameter(BuiltInParameter.WALL_ATTR_WIDTH_PARAM).AsDouble() / 2;
-                    double offsetDistance2 = wallType2.get_Parameter(BuiltInParameter.WALL_ATTR_WIDTH_PARAM).AsDouble() / 2;
-                    double offsetDistance = offsetDistance1 + offsetDistance2;
-
-                    Transform translation = Transform.CreateTranslation(vector * offsetDistance);
-
-                    Curve translatedCurve = curve.CreateTransformed(translation);
-                    
-
-                    if (translatedCurve is Line translatedLine)
-                    {
-                        XYZ direction = translatedLine.Direction.Normalize();
-                        XYZ newStart = translatedLine.GetEndPoint(0) + (direction * offsetDistance1);
-                        XYZ newEnd = translatedLine.GetEndPoint(1) - (direction * (offsetDistance1 + offsetDistance2));
-                        translatedCurve = Line.CreateBound(newStart, newEnd);
-                    }
-
-                    Wall newWall = Wall.Create(Context.Document, translatedCurve, wallType2.Id, lvl.Id, wallHeight, 0, false, false);
-                    WallUtils.AllowWallJoinAtEnd(newWall, 0);
-                    WallUtils.AllowWallJoinAtEnd(newWall, 1);
-
-                }
-                t.Commit();
-            }
-            
-        }
-
-        private static IEnumerable<CurveLoop> FindContours(Element element)
-        {
-            return GetSolids(element)
-                .SelectMany(solid => GetContours(solid, element));
-        }
-
-        private static IEnumerable<Solid> GetSolids(Element element)
-        {
-            var options = new Options
-            {
-                ComputeReferences = true,
-                IncludeNonVisibleObjects = true,
-                DetailLevel = ViewDetailLevel.Fine
-            };
-            var geometry = element.get_Geometry(options);
-
-            if (geometry == null)
-                return Enumerable.Empty<Solid>();
-
-            return GetSolids(geometry).Where(s => s.Volume > 0);
-        }
-
-        private static IEnumerable<Solid> GetSolids(IEnumerable<GeometryObject> geometryObjects)
-        {
-            foreach (var geomObj in geometryObjects)
-            {
-                if (geomObj is Solid solid && solid.Volume > 0)
-                {
-                    yield return solid;
-                }
-                else if (geomObj is GeometryInstance instance)
-                {
-                    var instanceGeometry = instance.GetInstanceGeometry();
-                    foreach (var instSolid in GetSolids(instanceGeometry))
-                    {
-                        yield return instSolid;
-                    }
-                }
-                else if (geomObj is GeometryElement geomElement)
-                {
-                    foreach (var elemSolid in GetSolids(geomElement))
-                    {
-                        yield return elemSolid;
-                    }
-                }
+                var dic2 = q.CreateInternalWalls(dic, wallType2, lvl, 500);
+                var dic3 = q.CreateInternalWalls(dic2, wallType3, lvl, 500);
             }
         }
-
-        private static IEnumerable<CurveLoop> GetContours(Solid solid, Element element)
-        {
-            try
-            {
-                var bbox = element.get_BoundingBox(null);
-                var minPoint = bbox.Min;
-                var plane = Plane.CreateByNormalAndOrigin(XYZ.BasisZ, minPoint);
-
-                var analyzer = ExtrusionAnalyzer.Create(solid, plane, XYZ.BasisZ);
-                var face = analyzer.GetExtrusionBase();
-
-                return face.GetEdgesAsCurveLoops();
-            }
-            catch (Autodesk.Revit.Exceptions.InvalidOperationException)
-            {
-                return Enumerable.Empty<CurveLoop>();
-            }
-        }
-        
     }
 }
+
+
+
