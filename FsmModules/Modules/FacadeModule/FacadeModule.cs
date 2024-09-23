@@ -1,4 +1,6 @@
-﻿namespace FsmModules.Modules.FacadeModule;
+﻿using Autodesk.Revit.UI;
+
+namespace FsmModules.Modules.FacadeModule;
 
 using FsmModules.Modules;
 
@@ -27,6 +29,7 @@ internal class FacadeModule : ModulesBase
     internal override Dictionary<Wall, Curve> CreateInternalWalls(Dictionary<Wall, Curve> dictionary, WallType wallType, Level lvl, double wallHeight)
     {
         var walls = new Dictionary<Wall, Curve>();
+        
         using var t = new Transaction(_doc, "Create Walls");
         t.Start();
         foreach (var wal in  dictionary)
@@ -43,12 +46,11 @@ internal class FacadeModule : ModulesBase
             var translation = Transform.CreateTranslation(vector * offsetDistance);
 
             var translatedCurve = curve.CreateTransformed(translation);
-
-
+            
             if (translatedCurve is not Line translatedLine) continue;
             var direction = translatedLine.Direction.Normalize();
-            var newStart = translatedLine.GetEndPoint(0);// + (direction * offsetDistance1); 
-            var newEnd = translatedLine.GetEndPoint(1);//- (direction * (offsetDistance1 + offsetDistance2)); 
+            var newStart = translatedLine.GetEndPoint(0) + (direction * (offsetDistance1+offsetDistance2)); 
+            var newEnd = translatedLine.GetEndPoint(1) - (direction * offsetDistance); 
             var curveResult = Line.CreateBound(newStart, newEnd);
             var newWall = Wall.Create(_doc, curveResult, wallType.Id, lvl.Id, wallHeight, 0, false, false);
             walls.Add(newWall, curveResult);

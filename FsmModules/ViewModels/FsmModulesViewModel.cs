@@ -3,6 +3,7 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using FsmModules.Modules;
 using FsmModules.Modules.FacadeModule;
 
 
@@ -24,23 +25,27 @@ namespace FsmModules.ViewModels
             var wallType = Context.ActiveDocument.GetElement(new ElementId(398)).Cast<WallType>();
             var wallType2 = Context.ActiveDocument.GetElement(new ElementId(401)).Cast<WallType>();
             var wallType3 = Context.ActiveDocument.GetElement(new ElementId(400)).Cast<WallType>();
+            var wallType4 = Context.ActiveDocument.GetElement(new ElementId(9426)).Cast<WallType>();
+            
 
             
             var lvl = new FilteredElementCollector(Context.Document)
                 .OfClass(typeof(Level))
                 .WhereElementIsNotElementType()
                 .FirstOrDefault() as Level;
-            var q = new FacadeModule(_doc);
+            ModulesBase q = new FacadeModule(_doc);
 
             using var t = new Transaction(Context.Document, "Create Walls");
             foreach (var selectedRef in selectedReference)
             {
                 t.Start();
                 var selectedElement = _doc.GetElement(selectedRef);
-                var dic = q.CreateExternalWalls(selectedElement, wallType, lvl, 500);
+                var dic = q.CreateExternalWalls(selectedElement, wallType, lvl, 100);
+                
                 t.Commit();
-                var dic2 = q.CreateInternalWalls(dic, wallType2, lvl, 500);
-                var dic3 = q.CreateInternalWalls(dic2, wallType3, lvl, 500);
+                dic = q.CreateInternalWalls(dic, wallType2, lvl, 100);
+                dic = q.CreateInternalWalls(dic, wallType3, lvl, 100);
+                dic = q.CreateInternalWalls(dic, wallType4, lvl, 100);
             }
         }
     }
