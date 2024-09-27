@@ -1,6 +1,18 @@
-﻿namespace FsmModules.FacadeModule.ViewModel;
+﻿using Autodesk.Revit.UI;
+using FsmModules.Model;
 
-public class FacadeModuleVIewModel
+namespace FsmModules.FacadeModule.ViewModel;
+
+public class FacadeModuleViewModel : IWorker
 {
-    
+    private Document _doc;
+
+    internal FacadeModuleViewModel()
+    {
+        
+    }
+    public void Start()
+    {
+        TaskDialog.Show("ЫА", "Фасад");
+    }
 }

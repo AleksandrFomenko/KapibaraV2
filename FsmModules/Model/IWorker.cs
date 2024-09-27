@@ -2,5 +2,6 @@
 
 public interface IWorker
 {
-    
+    internal void Start();
+
 }

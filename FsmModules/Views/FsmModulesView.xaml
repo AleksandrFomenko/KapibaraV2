@@ -6,13 +6,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:viewModel="clr-namespace:FsmModules.ViewModels"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:view="clr-namespace:FsmModules.FacadeModule.View"
+    xmlns:view1="clr-namespace:FsmModules.WallDecoration.View"
+    xmlns:view2="clr-namespace:FsmModules.WaterSupply.View"
+    xmlns:view3="clr-namespace:FsmModules.MineModule.View"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModel:FsmModulesViewModel}"
-    ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
-    Title="FsmModules"
-    Height="450"
-    Width="800">
+    Title="Prefub модули"
+    Height="1000"
+    Width="1200">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -81,6 +84,32 @@
                 </TextBox.InputBindings>
             </TextBox>
         </Grid>
+        
+        <materialDesign:Card Grid.Row="2" Margin="20">
+            <TabControl
+                HorizontalAlignment="Stretch"
+                Width="Auto"
+                materialDesign:ColorZoneAssist.Mode="PrimaryDark"
+                Style="{StaticResource MaterialDesignFilledTabControl}"
+                SelectedItem="{Binding SelectedTab}">
+                
+                <TabItem Header="Шахты">
+                    <view3:MineModuleView DataContext="{Binding MineModuleVM}"/>
+                </TabItem>
+
+                <TabItem Header="ФСМ">
+                    <view:FacadeModuleView DataContext="{Binding FacadeModuleVm}"/>
+                </TabItem>
+
+                <TabItem Header="Отделка">
+                    <view1:WallDecorationView DataContext="{Binding WallDecorationVm}"/>
+                </TabItem>
+
+                <TabItem Header="Сантехника" DataContext="{Binding WaterSupplyVM}" >
+                    <view2:WaterSupplyView/>
+                </TabItem>
+            </TabControl>
+        </materialDesign:Card>
         <Button Grid.Row="3"
                 Width="120"
                 Height="50"
@@ -88,8 +117,7 @@
                 Content="Запустить"
                 Command="{Binding ExecuteCommand}"
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                 Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}"
-                ToolTip="Resource name: Нажать бы сюда"/>
+                ToolTip="Нажать бы сюда"/>
     </Grid>
 </Window>

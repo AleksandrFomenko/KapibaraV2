@@ -1,11 +1,20 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Media;
+using MaterialDesignColors;
+using MaterialDesignThemes.Wpf;
 
 namespace FsmModules.MineModule.View;
 
-public partial class MineModelView : UserControl
+public partial class MineModuleView : UserControl
 {
-    public MineModelView()
+    public MineModuleView()
     {
         InitializeComponent();
+        InitializeMaterialDesign();
+    }
+    private void InitializeMaterialDesign()
+    {
+        var card = new Card();
+        var hue = new Hue("Dummy", Colors.Black, Colors.White);
     }
 }

@@ -1,6 +1,17 @@
-﻿namespace FsmModules.WaterSupply.ViewModel;
+﻿using Autodesk.Revit.UI;
+using FsmModules.Model;
 
-public class WaterSupplyViewModel
+namespace FsmModules.WaterSupply.ViewModel;
+
+public class WaterSupplyViewModel : IWorker
 {
-    
+    private Document _doc;
+
+    internal WaterSupplyViewModel()
+    {
+    }
+    public void Start()
+    {
+        TaskDialog.Show("ываы", "это вк");
+    }
 }
