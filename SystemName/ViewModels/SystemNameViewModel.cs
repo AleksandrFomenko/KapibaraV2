@@ -30,10 +30,10 @@ public partial class SystemNameViewModel : ObservableObject
 
     // Системы труб или воздуховодов в проекте
     [ObservableProperty]
-    private List<SelectedSystemName> _systemList= new ();
+    private List<SelectedSystemName> _systemList = new ();
     
     [ObservableProperty]
-    private SelectedSystemName _selectedSystem= new ();
+    private SelectedSystemName _selectedSystem = new ();
 
     [ObservableProperty]
     private bool _isAllSystemsSelected = false;
@@ -94,18 +94,18 @@ public partial class SystemNameViewModel : ObservableObject
                     paramType == ParameterType.Integer ||
                     paramType == ParameterType.Number)
                 {
-                    Parameters.Add(definition.Name);
+                    _parameters.Add(definition.Name);
                 }
             }
 #endif
-            foreach (var par in Parameters.Where(par => !Parameters.Contains(par)))
+            foreach (var par in _parameters.Where(par => !_parameters.Contains(par)))
             {
-                Parameters.Add(par);
+                _parameters.Add(par);
             }
 
-            if (!Parameters.Any())
+            if (!_parameters.Any())
             {
-                Parameters = new List<string>();
+                _parameters = new List<string>();
             }
         }
     }
@@ -130,7 +130,7 @@ public partial class SystemNameViewModel : ObservableObject
             .WhereElementIsNotElementType()
             .ToElements();
 
-        SystemList = families
+        _systemList = families
             .Select(f => new SelectedSystemName
             {
                 NameSystem = f?.Name ?? SystemNameMissing,
@@ -154,10 +154,11 @@ public partial class SystemNameViewModel : ObservableObject
         var par = typeSystem?.get_Parameter(BuiltInParameter.RBS_SYSTEM_ABBREVIATION_PARAM);
         return par?.AsString() == "" ? null : par?.AsString();
     }
+
     partial void OnSelectedSystemParameterChanged(string value)
     {
-        IsSystemNameSelected = value == SystemName;
-        IsSystemCutNameSelected = value == SystemNameCut;
+        _isSystemNameSelected = value == SystemName;
+        _isSystemCutNameSelected = value == SystemNameCut;
     }
 
 
@@ -167,24 +168,24 @@ public partial class SystemNameViewModel : ObservableObject
         {
             if (_isSystemNameSelected)
             {
-                return SystemList
+                return _systemList
                     .Select(system => system.NameSystem)
                     .ToList();
             }
-            return SystemList
+            return _systemList
                     .Select(system => system.CutSystemName)
                     .ToList();
         }
 
         if (_isSystemNameSelected)
         {
-            return SystemList
+            return _systemList
                 .Where(system => system.IsChecked)
                 .Select(system => system.NameSystem)
                 .ToList();
         }
         
-        return SystemList
+        return _systemList
             .Where(system => system.IsChecked)
             .Select(system => system.CutSystemName)
             .ToList();
@@ -197,13 +198,13 @@ public partial class SystemNameViewModel : ObservableObject
         
         if (!_elements.Any())
         {
-            _elements = GetElements.GetElementsInSystem(GetCheckedSystemNames(), !IsSystemNameSelected);
+            _elements = GetElements.GetElementsInSystem(GetCheckedSystemNames(), !_isSystemNameSelected);
         }
 
         using var t = new Transaction(Context.Document, "Kapibara system name");
         t.Start();
         var coreSystem = new CoreSystem();
-        coreSystem.Execute(_elements, _selectedParameter, IsSystemNameSelected);
+        coreSystem.Execute(_elements, _selectedParameter, _isSystemNameSelected);
 
         if (_createFilters)
         {

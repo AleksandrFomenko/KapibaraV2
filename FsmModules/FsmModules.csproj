@@ -35,7 +35,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MahApps.Metro" Version="2.4.10" />
         <PackageReference Include="MaterialDesignColors" Version="3.1.1-ci691" />
+        <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
         <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci691" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
@@ -56,10 +58,6 @@
       <Reference Include="MaterialDesignThemes.Wpf">
         <HintPath>..\..\..\..\.nuget\packages\materialdesignthemes\5.1.1-ci691\lib\net462\MaterialDesignThemes.Wpf.dll</HintPath>
       </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="WaterSupply\Model\" />
     </ItemGroup>
 
 </Project>

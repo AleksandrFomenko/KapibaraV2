@@ -1,17 +1,11 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Selection;
-using FsmModules.FacadeModule.View;
 using FsmModules.FacadeModule.ViewModel;
-using FsmModules.MineModule.Model.MineModel;
 using FsmModules.MineModule.ViewModel;
 using FsmModules.Model;
-using FsmModules.WallDecoration.View;
 using FsmModules.WallDecoration.ViewModel;
-using FsmModules.WaterSupply.View;
 using FsmModules.WaterSupply.ViewModel;
-using Microsoft.EntityFrameworkCore;
+
 
 
 namespace FsmModules.ViewModels
@@ -27,6 +21,8 @@ namespace FsmModules.ViewModels
         public FacadeModuleViewModel FacadeModuleVm { get; }
         public WallDecorationViewModel WallDecorationVm { get; }
         public WaterSupplyViewModel WaterSupplyVM { get; }
+        
+        
 
         
         public FsmModulesViewModel()
@@ -34,7 +30,7 @@ namespace FsmModules.ViewModels
             MineModuleVM = new MineModuleViewModel(_doc);
             FacadeModuleVm = new FacadeModuleViewModel();
             WallDecorationVm = new WallDecorationViewModel(_doc);
-            WaterSupplyVM = new WaterSupplyViewModel();
+            WaterSupplyVM = new WaterSupplyViewModel(_doc);
         }
         
         [RelayCommand]

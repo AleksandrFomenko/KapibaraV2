@@ -247,9 +247,7 @@
         </DataTemplate>
     </ListBox.ItemTemplate>
 </ListBox>
-
-    
-    
+                
 </Grid>
         </Grid>
     </Grid>

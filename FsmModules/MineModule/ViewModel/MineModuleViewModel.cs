@@ -2,7 +2,6 @@
 using FsmModules.Model;
 using Autodesk.Revit.UI.Selection;
 using FsmModules.MineModule.Model.MineModel;
-using Microsoft.EntityFrameworkCore;
 
 namespace FsmModules.MineModule.ViewModel;
 

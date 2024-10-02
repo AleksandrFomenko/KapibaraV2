@@ -36,6 +36,10 @@ namespace KapibaraV2
             panelBIM.AddPushButton<FamilyCleaner.Commands.StartupCommand>("CleaningFamily")
                 .SetImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png");
+            
+            panelBIM.AddPushButton<FsmModules.Command.StartupCommand>("Prefab")
+                .SetImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png");
 
             //MEP общие
             panelMepGeneral.AddPushButton<SolidIntersector.Commands.SolidIntersector>("Solid Intersector")

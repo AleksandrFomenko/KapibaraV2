@@ -37,7 +37,6 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="25" />
             <RowDefinition Height="*" />
-
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0"
                    Margin="0,30,0,0"
@@ -52,7 +51,7 @@
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Foreground="Black"
-                   FontSize="18"/>
+                   FontSize="14"/>
         <ComboBox Grid.Row="2"
                   ItemsSource="{Binding Levels}"
                   SelectedItem = "{Binding FirstLevel}"
@@ -62,14 +61,14 @@
                   Foreground="Black"
                   materialDesign:HintAssist.Hint="Необходимо выбрать первый уровень "
                   IsEditable="True"
-                  FontSize="12"/>
+                  FontSize="14"/>
         <TextBlock Grid.Row="3"
                    Text="Выбор первого типа модуля"
                    Margin="25, 0,0, 0"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Foreground="Black"
-                   FontSize="18"/>
+                   FontSize="14"/>
         <ComboBox Grid.Row="4"
                   ItemsSource="{Binding PrefabFamilies}"
                   SelectedItem = "{Binding FirstPrefabFamilies}"
@@ -86,7 +85,7 @@
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Foreground="Black"
-                   FontSize="18"/>
+                   FontSize="14"/>
         <ComboBox Grid.Row="6"
                   ItemsSource="{Binding Levels}"
                   SelectedItem = "{Binding SecondLevel}"
@@ -103,7 +102,7 @@
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Foreground="Black"
-                   FontSize="18"/>
+                   FontSize="14"/>
         <ComboBox Grid.Row="8"
                   ItemsSource="{Binding PrefabFamilies}"
                   SelectedItem = "{Binding SecondPrefabFamilies}"
@@ -120,7 +119,7 @@
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    Foreground="Black"
-                   FontSize="18"/>
+                   FontSize="14"/>
         <ComboBox Grid.Row="10"
                   ItemsSource="{Binding PrefabFamilies}"
                   SelectedItem = "{Binding TransferPrefabFamilies}"

@@ -1,13 +1,23 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Media;
 using FsmModules.WaterSupply.ViewModel;
+using MaterialDesignColors;
+using MaterialDesignThemes.Wpf;
+using MahApps.Metro.Controls;
 
 namespace FsmModules.WaterSupply.View;
 
-public partial class WaterSupplyView : UserControl
+public partial class WaterSupplyView :  UserControl
 {
     public WaterSupplyView()
     {
-        DataContext = new WaterSupplyViewModel();
+        InitializeMaterialDesign();
         InitializeComponent();
+    }
+    
+    private void InitializeMaterialDesign()
+    {
+        var card = new Card();
+        var hue = new Hue("Dummy", Colors.Black, Colors.White);
     }
 }

@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:viewModel="clr-namespace:FsmModules.ViewModels"
+    WindowStyle="None" AllowsTransparency="True" Background="Transparent"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:view="clr-namespace:FsmModules.FacadeModule.View"
     xmlns:view1="clr-namespace:FsmModules.WallDecoration.View"
@@ -13,9 +14,7 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModel:FsmModulesViewModel}"
     WindowStartupLocation="CenterScreen"
-    Title="Prefub модули"
-    Height="1000"
-    Width="1200">
+    Title="Prefub модули" Height="900" Width="1000">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -26,28 +25,65 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid>
-        <Grid.Background>
-            <LinearGradientBrush StartPoint="1,0" EndPoint="1,3">
-                <GradientStop Color="#4682B4" Offset="0"/>
-                <GradientStop Color="#DEB887" Offset="0.5"/>
-            </LinearGradientBrush>
-        </Grid.Background>
-        
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
-            <RowDefinition Height="50" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="100" />
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0"
-                   Margin="0,10,0,0"
-                   Text="Prefub модули"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Top"
-                   Foreground="#F0F8FF"
-                   FontSize="24"/>
-        <Grid Grid.Row = "1">
+    <Border CornerRadius="20" Background="#808080" ClipToBounds="True" >
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Background="#303030" CornerRadius="20,20,0,0">
+                <Grid FlowDirection="RightToLeft" MouseLeftButtonDown="TopBar_MouseLeftButtonDown"  Background="Transparent">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon Grid.Column="1" 
+                                             Background="Transparent"
+                                             Kind="CloseCircleOutline"
+                                             Width="40"
+                                             Height="40"
+                                             Foreground="#A9A9A9"
+                                             Cursor="Hand"
+                                             ToolTip="Закрыть"
+                                             MouseLeftButtonDown="CloseIcon_MouseLeftButtonDown"/>
+                    <materialDesign:PackIcon Grid.Column="2"
+                                             Background="Transparent"
+                                             Kind="Fullscreen" 
+                                             Width="40"
+                                             Height="40"
+                                             Cursor="Hand"
+                                             Foreground="#A9A9A9"
+                                             ToolTip="Полноэкранный режим"
+                                             MouseLeftButtonDown="FullscreenIcon_MouseLeftButtonDown"/>
+                    <materialDesign:PackIcon Grid.Column="3" 
+                                             Background="Transparent"
+                                             Kind="WindowMinimize" 
+                                             Width="30"
+                                             Height="30"
+                                             Foreground="#A9A9A9"
+                                             Margin="0,15,0,0"
+                                             Cursor="Hand"
+                                             ToolTip="Свернуть"
+                                             MouseLeftButtonDown="MinimizeIcon_MouseLeftButtonDown"/>
+                    <TextBlock Grid.Column="4" Foreground="Azure" HorizontalAlignment="Right"
+                               VerticalAlignment="Center" Margin="0,0,20,0"  FontSize="18"
+                               Text="Prefab модули"/>
+                </Grid>
+            </Border>
+            <TextBlock Grid.Row="1"
+                       Margin="0,10,0,0"
+                       Text="Выбор модуля"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       Foreground="#F0F8FF"
+                       FontSize="24"/>
+        <Grid Grid.Row = "2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
                 <ColumnDefinition Width="*"/>
@@ -59,7 +95,6 @@
                                      VerticalAlignment="Center"
                                      Width="35"
                                      Height="35"/>
-            
             <TextBox Grid.Column="1" Text="Подключиться к базе данных"
                      Background= "Transparent"
                      IsReadOnly="True"
@@ -84,8 +119,7 @@
                 </TextBox.InputBindings>
             </TextBox>
         </Grid>
-        
-        <materialDesign:Card Grid.Row="2" Margin="20">
+        <materialDesign:Card Grid.Row="3" Margin="20">
             <TabControl
                 HorizontalAlignment="Stretch"
                 Width="Auto"
@@ -110,7 +144,7 @@
                 </TabItem>
             </TabControl>
         </materialDesign:Card>
-        <Button Grid.Row="3"
+        <Button Grid.Row="4"
                 Width="120"
                 Height="50"
                 materialDesign:ButtonAssist.CornerRadius="25"
@@ -120,4 +154,5 @@
                 Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}"
                 ToolTip="Нажать бы сюда"/>
     </Grid>
+    </Border>
 </Window>
