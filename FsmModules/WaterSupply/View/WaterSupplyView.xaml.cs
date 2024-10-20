@@ -3,7 +3,6 @@ using System.Windows.Media;
 using FsmModules.WaterSupply.ViewModel;
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
-using MahApps.Metro.Controls;
 
 namespace FsmModules.WaterSupply.View;
 
