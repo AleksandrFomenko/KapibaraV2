@@ -1,8 +1,13 @@
-﻿namespace FsmModules.WaterSupply.Model.Entities;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public class Rooms
+namespace FsmModules.WaterSupply.Model.Entities
 {
-    public bool IsChecked { get; set; }
-    public string RoomName { get; set; }
-    public int RoomId { get; set; }
+    public partial class Rooms : ObservableObject
+    {
+        [ObservableProperty]
+        private bool isChecked;
+
+        public string RoomName { get; set; }
+        public int RoomId { get; set; }
+    }
 }

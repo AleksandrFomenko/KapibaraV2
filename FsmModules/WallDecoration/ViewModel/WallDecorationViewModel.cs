@@ -17,6 +17,8 @@ public class WallDecorationViewModel : IWorker
         _doc = doc;
         
     }
+    
+    /*
     public void Start()
     {
         
@@ -31,13 +33,13 @@ public class WallDecorationViewModel : IWorker
 
 
 
-        var lvl = new FilteredElementCollector(Context.Document)
+        var lvl = new FilteredElementCollector(_doc)
             .OfClass(typeof(Level))
             .WhereElementIsNotElementType()
             .FirstOrDefault() as Level;
         ModulesBase q = new Modules.FacadeModule.FacadeModule(_doc);
 
-        using var t = new Transaction(Context.Document, "Create Walls");
+        using var t = new Transaction(_doc, "Create Walls");
         foreach (var selectedRef in selectedReference)
         {
             t.Start();
@@ -50,5 +52,10 @@ public class WallDecorationViewModel : IWorker
             dic = q.CreateInternalWalls(dic, wallType4, lvl, 100);
         }
 
+    }
+    */
+    public void Start()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -14,9 +14,11 @@ public sealed partial class ChatGPTView
         DataContext = viewModel;
         InitializeComponent();
     }
+    
     private void InitializeMaterialDesign()
     {
         var card = new Card();
         var hue = new Hue("Dummy", Colors.Black, Colors.White);
     }
+    
 }

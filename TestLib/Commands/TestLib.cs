@@ -1,22 +1,22 @@
 ﻿using Autodesk.Revit.Attributes;
-using Autodesk.Revit.UI;
 using Nice3point.Revit.Toolkit.External;
-using FamilyCleaner.ViewModels;
-using FamilyCleaner.Views;
+using TestLib.ViewModels;
+using TestLib.Views;
 
-namespace FamilyCleaner.Commands;
+
+namespace TestLib.Commands;
 
 /// <summary>
 ///     External command entry point invoked from the Revit interface
 /// </summary>
 [UsedImplicitly]
 [Transaction(TransactionMode.Manual)]
-public class StartupCommand : ExternalCommand, IExternalCommand
+public class TestLib : ExternalCommand
 {
     public override void Execute()
     {
-        var viewModel = new FamilyCleanerViewModel();
-        var view = new FamilyCleanerView(viewModel);
+        var viewModel = new TestLibViewModel();
+        var view = new TestLibView(viewModel);
         view.ShowDialog();
     }
 }

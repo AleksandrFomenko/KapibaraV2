@@ -1,0 +1,40 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Color x:Key="OceanBlue">#5bc3ff</Color>
+    <Color x:Key="PrimaryBlue">#3aa0ff</Color>
+    <Color x:Key="HoneyAmber">#ffc554</Color>
+    <Color x:Key="GoldenSunset">#ffb73a</Color>
+    <Color x:Key="TuscanPurple">#844eff</Color>
+    <Color x:Key="MarineBlue">#4e99ff</Color>
+    <Color x:Key="ForestOlive">#ecff4e</Color>
+    <Color x:Key="PearlPink">#E0FFFF</Color>
+    <Color x:Key="MistyRose">#FFE4E1</Color>
+    
+    <SolidColorBrush x:Key="OceanBlueBrush" Color="{StaticResource OceanBlue}" />
+    <SolidColorBrush x:Key="PrimaryBlueBrush" Color="{StaticResource PrimaryBlue}" />
+    <SolidColorBrush x:Key="HoneyAmberBrush" Color="{StaticResource HoneyAmber}" />
+    <SolidColorBrush x:Key="GoldenSunsetBrush" Color="{StaticResource GoldenSunset}" />
+    <SolidColorBrush x:Key="TuscanPurpleBrush" Color="{StaticResource TuscanPurple}" />
+    <SolidColorBrush x:Key="MarineBlueBrush" Color="{StaticResource MarineBlue}" />
+    <SolidColorBrush x:Key="ForestOliveBrush" Color="{StaticResource ForestOlive}" />
+    <SolidColorBrush x:Key="PearlPinkBrush" Color="{StaticResource PearlPink}" />
+    <SolidColorBrush x:Key="MistyRoseBrush" Color="{StaticResource MistyRose}" />
+    
+    <LinearGradientBrush x:Key="BlueBackgroundGradient" StartPoint="0,0" EndPoint="1,2">
+        <GradientStop Color="{StaticResource OceanBlue}" Offset="0" />
+        <GradientStop Color="{StaticResource PrimaryBlue}" Offset="1" />
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="SunSetBackgroundGradient" StartPoint="0,0" EndPoint="1,2">
+        <GradientStop Color="{StaticResource HoneyAmber}" Offset="0" />
+        <GradientStop Color="{StaticResource GoldenSunset}" Offset="1" />
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="RosewaterGlowBackgroundGradient" StartPoint="1,0" EndPoint="1,3">
+        <GradientStop Color="{StaticResource PearlPink}" Offset="0" />
+        <GradientStop Color="{StaticResource MistyRose}" Offset="0.35" />
+    </LinearGradientBrush>
+
+    
+</ResourceDictionary>

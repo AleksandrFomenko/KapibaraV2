@@ -32,7 +32,7 @@ namespace KapibaraV2
             panelBIM.AddPushButton<ExportModels>("Export models")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ActiveView.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
-            
+
             panelBIM.AddPushButton<FamilyCleaner.Commands.StartupCommand>("CleaningFamily")
                 .SetImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png");

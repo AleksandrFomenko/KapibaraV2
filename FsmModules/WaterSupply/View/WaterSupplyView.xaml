@@ -5,13 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:FsmModules.WaterSupply.View"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <materialDesign:BundledTheme PrimaryColor="DeepPurple" SecondaryColor="LightBlue">
+                <materialDesign:BundledTheme PrimaryColor="DeepPurple" SecondaryColor="Purple">
                     <materialDesign:BundledTheme.BaseTheme>Light</materialDesign:BundledTheme.BaseTheme>
                 </materialDesign:BundledTheme>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
@@ -49,7 +48,7 @@
                 <ColumnDefinition Width="*"/> 
             </Grid.ColumnDefinitions>
             <GroupBox Grid.Column="0"
-                      Margin="25"
+                      Margin="25,5,25,25"
                       materialDesign:ColorZoneAssist.Background="#CD853F"
                       materialDesign:ColorZoneAssist.Foreground="White"
                       materialDesign:ColorZoneAssist.Mode="Custom"
@@ -104,32 +103,79 @@
             </GroupBox>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/> 
+                    <RowDefinition Height="125"/> 
+                    <RowDefinition Height="80"/> 
                     <RowDefinition Height="*"/> 
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
+                <GroupBox Grid.Column="0"
+                          Margin="5"
+                          materialDesign:ColorZoneAssist.Background="#4682B4"
+                          materialDesign:ColorZoneAssist.Foreground="White"
+                          materialDesign:ColorZoneAssist.Mode="Custom"
+                          Header="Фильтр по наименованию"
+                          Style="{StaticResource MaterialDesignCardGroupBox}">
+                <GroupBox.HeaderTemplate>
+                    <DataTemplate>
+                        <StackPanel
+                            Orientation="Horizontal" Height="25">
+                            <materialDesign:PackIcon
+                                Width="20"
+                                Height="20"
+                                VerticalAlignment="Center"
+                                Kind="FilterCogOutline" />
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupBox.HeaderTemplate>
+                    <Grid>
+                        <TextBox Style="{StaticResource MaterialDesignFilledTextBox}"
+                                 materialDesign:TextFieldAssist.UnderlineBrush="#2c0675"
+                                 SelectionBrush="#2c0675"
+                                 Text="{Binding FilterByName, UpdateSourceTrigger=PropertyChanged}"
+                                 FontSize="14">
+                        </TextBox>
+                    </Grid>
+            </GroupBox>
+                <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/> 
                         <ColumnDefinition Width="2.5*"/> 
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
+                    <CheckBox Grid.Column="0"
+                              Margin="27,5,0,0"
+                              IsChecked="{Binding SelectAllRooms, Mode=TwoWay}"
+                              Style="{StaticResource MaterialDesignLightCheckBox}"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Width="20"
+                              Height="15">
+                        <CheckBox.LayoutTransform>
+                            <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                        </CheckBox.LayoutTransform>
+                        
+                    </CheckBox>
                     <TextBlock Text="Имя помещения" 
                                Foreground="Black"
                                VerticalAlignment="Center" 
                                HorizontalAlignment="Center" 
-                               FontSize="14"
+                               FontSize="16"
                                Margin="5,0"
                                Grid.Column="1"/>
                     <TextBlock Text="ID помещения" 
                                Foreground="Black"
-                               FontSize="14"
+                               FontSize="16"
                                VerticalAlignment="Center" 
                                HorizontalAlignment="Center"
                                Margin="5,0"
                                Grid.Column="2"/>
                 </Grid>
-                <ListBox Grid.Row="1"
-                         ItemsSource="{Binding Rooms}"
+                <ListBox Grid.Row="2"
+                         ItemsSource="{Binding Rooms, UpdateSourceTrigger=PropertyChanged}"
                          Style="{StaticResource MaterialDesignListBox}"
                          SelectedItem="{Binding SelectedRoom}"
                          BorderBrush="Black"

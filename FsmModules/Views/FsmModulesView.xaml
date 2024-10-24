@@ -32,7 +32,7 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="100"/>
+                <RowDefinition Height="60"/>
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Background="#303030" CornerRadius="20,20,0,0">
                 <Grid FlowDirection="RightToLeft" MouseLeftButtonDown="TopBar_MouseLeftButtonDown"  Background="Transparent">
@@ -142,11 +142,14 @@
                 <TabItem Header="Сантехника" DataContext="{Binding WaterSupplyVM}" >
                     <view2:WaterSupplyView/>
                 </TabItem>
+                
             </TabControl>
         </materialDesign:Card>
         <Button Grid.Row="4"
                 Width="120"
                 Height="50"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
                 materialDesign:ButtonAssist.CornerRadius="25"
                 Content="Запустить"
                 Command="{Binding ExecuteCommand}"

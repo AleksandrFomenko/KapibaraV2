@@ -1,7 +1,11 @@
 ﻿using FsmModules.Model;
 using FsmModules.WaterSupply.Model.Entities;
 using Autodesk.Revit.DB.Architecture;
+using Autodesk.Revit.UI;
 using FsmModules.WaterSupply.Model;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FsmModules.WaterSupply.ViewModel;
 
@@ -21,13 +25,16 @@ public partial class WaterSupplyViewModel : ObservableObject, IWorker
     [ObservableProperty]
     private string _selectedCategory;
     
-
+    [ObservableProperty]
+    private bool _selectAllRooms;
+    
+    [ObservableProperty]
+    private string _filterByName = "";
 
     private const string RoomNameMissing = "Имя помещения отсутствует";
 
     internal WaterSupplyViewModel(Document doc)
     {
-
         _doc = doc;
         loadRooms();
         loadCategory();
@@ -35,7 +42,7 @@ public partial class WaterSupplyViewModel : ObservableObject, IWorker
 
     private void loadRooms()
     {
-        var rooms = new List<Room>();
+        List<Room> rooms = new();
         var fixtures = new FilteredElementCollector(_doc)
             .OfCategory(BuiltInCategory.OST_PlumbingFixtures)
             .WhereElementIsNotElementType()
@@ -43,12 +50,20 @@ public partial class WaterSupplyViewModel : ObservableObject, IWorker
         foreach (FamilyInstance fixture in fixtures)
         {
             var room = fixture.Room;
-            if (!rooms.Contains(room))
+            
+            if (room == null)
+                continue;
+            if (rooms.Any(r => r.Id.IntegerValue == room.Id.IntegerValue))
+                continue;
+            if (room.Name.ToLower().Contains("кухня")) continue;
+            if (room.Name.ToLower().Contains("пуи")) continue;
+            if (room.Name.ToLower().Contains("бкфн")) continue;
+            if (room.Name.Contains(_filterByName))
             {
                 rooms.Add(room);
             }
         }
-
+        
         _rooms = rooms
             .Select(f => new Rooms
             {
@@ -66,17 +81,15 @@ public partial class WaterSupplyViewModel : ObservableObject, IWorker
             .Cast<Category>()
             .Where(i => i.IsVisibleInUI)
             .Where(i => i.AllowsBoundParameters)
-            .Where((i => i.CategoryType == CategoryType.Model))
+            .Where(i => i.CategoryType == CategoryType.Model)
             .Select(c => c.Name)
             .ToList();
-
     }
 
     private List<string> getSelectedRooms()
     {
-        return _rooms.Where(r => r.IsChecked).Select(r=>r.RoomName).ToList();
+        return _rooms.Where(r => r.IsChecked).Select(r => r.RoomName).ToList();
     }
-
 
     public void Start()
     {
@@ -95,5 +108,20 @@ public partial class WaterSupplyViewModel : ObservableObject, IWorker
         }
 
         t.Commit();
+    }
+
+    partial void OnSelectAllRoomsChanged(bool value)
+    {
+        foreach (var room in Rooms)
+        {
+            room.IsChecked = value;
+        }
+        OnPropertyChanged(nameof(Rooms));
+    }
+    
+    partial void OnFilterByNameChanged(string value)
+    {
+        loadRooms();
+        OnPropertyChanged(nameof(Rooms));
     }
 }

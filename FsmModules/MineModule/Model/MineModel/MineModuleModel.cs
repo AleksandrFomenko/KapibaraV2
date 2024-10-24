@@ -1,5 +1,6 @@
 ﻿using FsmModules.Model.solidHandler;
 using Autodesk.Revit.DB.Structure;
+using Autodesk.Revit.UI;
 
 namespace FsmModules.MineModule.Model.MineModel;
 
@@ -129,18 +130,18 @@ public class MineModuleModel
             var end1 =  higherLevels[i+1].get_Parameter(BuiltInParameter.LEVEL_ELEV).AsDouble();
             
             var end = end1 - start1;
-            var res = 0.0;
+            var res = 0;
             if (i == 0)
             {
-                res = Math.Floor((end- stepTransfer)/ step);
+                res = (int)Math.Floor((end - stepTransfer)/ step)+1;
             }
             else
             {
-                res = Math.Floor(end/ step);
+                res = (int)Math.Floor(end/ step);
             }
             
             var height = 0.0;  
-            for (double z = 0; z < res; z++)
+            for (var z = 0; z < res; z++)
             {
                 var xyz = new XYZ(centroid.X, centroid.Y, height);
                 
@@ -150,7 +151,6 @@ public class MineModuleModel
                     RotateElement(familyInstance, newTransfer);
                     height += stepTransfer;
                     continue;
-
                 }
                 var newInstance = _doc.Create.NewFamilyInstance(xyz, searchFamily(nameFamilyEnd), higherLevels[i], _structuralType);
                 RotateElement(familyInstance, newInstance);
