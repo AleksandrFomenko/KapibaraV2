@@ -129,7 +129,7 @@
                             Height="30"
                             materialDesign:ButtonAssist.CornerRadius="10"
                             IsEnabled="{Binding DataContext.ControlsEnabled,
-                        RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                            RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                             Style="{StaticResource MaterialDesignRaisedDarkButton}"
                             ToolTip="MaterialDesignRaisedDarkButton with Round Corners">
                             <TextBlock
