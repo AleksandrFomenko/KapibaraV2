@@ -3,7 +3,7 @@ using Nice3point.Revit.Toolkit.External;
 using KapibaraV2.Commands.MepGeneral;
 using KapibaraV2.Commands.BIM;
 using KapibaraV2.Commands.Info;
-
+using View = System.Windows.Forms.View;
 
 
 namespace KapibaraV2
@@ -49,6 +49,10 @@ namespace KapibaraV2
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
             panelMepGeneral.AddPushButton<FloorFillerCommand>("Этаж")
+                .SetImage("/KapibaraV2;component/Resources/Icons/Floor.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/Floor.png");
+            
+            panelMepGeneral.AddPushButton<ViewManager.Commands.StartupCommand>("ViewManager")
                 .SetImage("/KapibaraV2;component/Resources/Icons/Floor.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/Floor.png");
             /*
