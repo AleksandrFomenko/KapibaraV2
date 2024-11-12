@@ -27,6 +27,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
+                                Padding="{TemplateBinding Padding}"
                                 SnapsToDevicePixels="True" >
                                     
                             <ScrollViewer x:Name="PART_ContentHost" 
