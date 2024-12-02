@@ -1,18 +1,18 @@
 ﻿using System.Windows.Media;
-using ChatGPT.ViewModels;
-
+using ColorsByParameters.ViewModels;
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 
-namespace ChatGPT.Views;
 
-public sealed partial class ChatGPTView
+namespace ColorsByParameters.Views;
+
+public sealed partial class ColorsByParametersView
 {
-    public ChatGPTView(ChatGptViewModel viewModel)
+    public ColorsByParametersView(ColorsByParametersViewModel viewModel)
     {
-        InitializeMaterialDesign();
         DataContext = viewModel;
         InitializeComponent();
+        InitializeMaterialDesign();
     }
     
     private void InitializeMaterialDesign()

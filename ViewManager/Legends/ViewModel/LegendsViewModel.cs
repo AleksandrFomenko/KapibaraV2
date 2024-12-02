@@ -1,15 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Input;
-using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
 using ViewManager.Legends.Model;
 using ViewManager.Models.Entites;
 using ViewManager.ViewModels;
-using RelayCommand = CommunityToolkit.Mvvm.Input.RelayCommand;
 
 namespace ViewManager.Legends.ViewModel;
 

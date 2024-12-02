@@ -44,7 +44,6 @@ internal class LegendsModel
             }
             catch
             {
-                
             }
         }
     }

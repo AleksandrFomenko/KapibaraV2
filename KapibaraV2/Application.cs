@@ -120,6 +120,5 @@ namespace KapibaraV2
                 }
             }
         }
-
     }
 }
