@@ -37,19 +37,7 @@ public sealed class ColorsByParametersViewModel : ObservableObject
         "Левый верхний"
     };
     
-    public ObservableCollection<string> FirstComboBoxItems { get; } = new ObservableCollection<string>()
-    {
-        "1",
-        "2",
-        "3"
-    };
-    
-    public ObservableCollection<string> SecondComboBoxItems { get; } = new ObservableCollection<string>()
-    {
-        "4",
-        "5",
-        "6"
-    };
+
     
     public ObservableCollection<string> Conditions { get; } = new ObservableCollection<string>();
     
