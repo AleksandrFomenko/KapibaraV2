@@ -14,4 +14,4 @@ internal class ColorByParametersModel
         return "а";
     }
     
-}s
+}

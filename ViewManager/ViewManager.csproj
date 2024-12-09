@@ -48,6 +48,7 @@
 
     <ItemGroup>
         <Folder Include="Kinds\Model\" />
+        <Folder Include="Sheets\Tabs\CreateSheets\Model\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -58,6 +59,14 @@
       <Reference Include="MaterialDesignThemes.Wpf">
         <HintPath>..\..\..\..\.nuget\packages\materialdesignthemes\5.1.1-ci691\lib\net462\MaterialDesignThemes.Wpf.dll</HintPath>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Sheets\View\SheetsView.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
     </ItemGroup>
 
 </Project>

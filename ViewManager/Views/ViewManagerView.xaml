@@ -11,6 +11,7 @@
     xmlns:view1="clr-namespace:ViewManager.Kinds.View"
     xmlns:viewModel1="clr-namespace:ViewManager.Kinds.ViewModel"
     xmlns:viewModel2="clr-namespace:ViewManager.Legends.ViewModel"
+    xmlns:viewModel11="clr-namespace:ViewManager.Sheets.ViewModel"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModel:ViewManagerViewModel}"
     ResizeMode="NoResize"
@@ -33,6 +34,9 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel1:KindsViewModel}">
                 <view1:KindsView />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel11:SheetsViewModel}">
+                <viewModel11:SheetsView />
             </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>

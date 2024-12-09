@@ -236,7 +236,7 @@
                                 HorizontalAlignment="Center"
                                 Command="{Binding StartCommand}">
                             <TextBlock
-                                                                   Text="Execute" />
+                                Text="Execute" />
                         </Button>
                     </Grid>
             </Grid>

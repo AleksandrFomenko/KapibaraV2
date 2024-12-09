@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Autodesk.Revit.DB.Events;
 using ViewManager.Kinds.ViewModel;
 using ViewManager.Legends.ViewModel;
+using ViewManager.Sheets.ViewModel;
 
 namespace ViewManager.ViewModels;
 
@@ -52,8 +52,9 @@ public sealed class ViewManagerViewModel : INotifyPropertyChanged
     {
         Panels = new ObservableCollection<PanelItem>
         {
-            new PanelItem { Name = "Легенды", ViewModel = new LegendsViewModel(doc) },
-            new PanelItem { Name = "Виды", ViewModel = new KindsViewModel() }
+            new PanelItem { Name = "Легенды", ViewModel = new LegendsViewModel(doc)},
+            new PanelItem { Name = "Виды", ViewModel = new KindsViewModel()},
+            new PanelItem { Name = "Листы", ViewModel = new SheetsViewModel(doc)}
         };
         
         SelectedPanel = Panels.FirstOrDefault();
