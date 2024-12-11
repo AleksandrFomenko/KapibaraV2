@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using ViewManager.ViewModels;
 
 namespace ViewManager.Sheets.Tabs.CreateSheets.VM;
@@ -20,6 +21,65 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
             {
                 _titleBlocks = value;
                 OnPropertyChanged();
+            }
+        }
+    }
+
+    private bool _isSystemParameter = true;
+    public bool IsSystemParameter
+    {
+        get => _isSystemParameter;
+        set
+        {
+            if (_isSystemParameter != value)
+            {
+                _isSystemParameter = value;
+                OnPropertyChanged(nameof(IsSystemParameter));
+                UpdateRowHeights();
+            }
+        }
+    }
+
+    private bool _userParameterIsVisible = false;
+    public bool UserParameterIsVisible
+    {
+        get => _userParameterIsVisible;
+        set
+        {
+            if (_userParameterIsVisible != value)
+            {
+                _userParameterIsVisible = value;
+                OnPropertyChanged(nameof(UserParameterIsVisible));
+                UpdateRowHeights();
+                UpdateVisibleUserParameter();
+            }
+        }
+    }
+    
+    private GridLength _myRowHeight = new GridLength(90);
+    public GridLength MyRowHeight
+    {
+        get => _myRowHeight;
+        set
+        {
+            if (_myRowHeight != value)
+            {
+                _myRowHeight = value;
+                OnPropertyChanged(nameof(MyRowHeight));
+            }
+        }
+    }
+
+    private GridLength _myRow2Height = new GridLength(0);
+    public GridLength MyRow2Height
+    {
+        get => _myRow2Height;
+        set
+        {
+            if (_myRow2Height != value)
+            {
+                _myRow2Height = value;
+                OnPropertyChanged(nameof(MyRow2Height));
             }
         }
     }
@@ -73,7 +133,32 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
         }
         TitleBlocks = sheetsTypes; 
     }
+    
+    private void UpdateRowHeights()
+    {
+        if (IsSystemParameter)
+        {
+            MyRowHeight = new GridLength(90);
+            MyRow2Height = new GridLength(0);
+        }
+        else
+        {
+            MyRowHeight = new GridLength(180);
+            MyRow2Height = new GridLength(1, GridUnitType.Star);
+        }
+    }
 
+    private void UpdateVisibleUserParameter()
+    {
+        if (IsSystemParameter)
+        {
+            UserParameterIsVisible = true;
+        }
+        else
+        {
+            UserParameterIsVisible = false;
+        }
+    }
     
     public event PropertyChangedEventHandler PropertyChanged;
 

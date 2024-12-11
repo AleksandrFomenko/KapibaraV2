@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:ViewManager.Sheets.Tabs.CreateSheets.View"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="1000">
+    
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -23,6 +24,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="90" />
                 <RowDefinition Height="90" />
+                <RowDefinition Height="{Binding MyRowHeight}"/>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Border Grid.Row="0" CornerRadius="10"
@@ -72,9 +74,99 @@
                                                   HorizontalAlignment="Left"
                                                   Background="Azure"
                                                   Foreground="{StaticResource LineBrush}"
-                                                  FontSize="16"/>
+                                                  FontSize="16"
+                                                  PreviewTextInput="NumberValidationTextBox"/>
                 </Grid>
             </Border>
+            <Border Grid.Row="2" CornerRadius="10"
+                    Background="{StaticResource CharcoalGrayBrush}"
+                    Margin="20,5,20,5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="45"/>
+                        <RowDefinition Height="{Binding MyRow2Height}"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0"
+                               Text="Нумерация"
+                               Foreground="{DynamicResource TextBrush}"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Left"
+                               Style="{StaticResource MaterialDesignTextBlock}"
+                               Margin="25,5,10,5"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="230"/>
+                            <ColumnDefinition Width="55"/>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0"
+                                   Text="Записать в системный параметр"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"
+                                   Style="{StaticResource MaterialDesignTextBlock}"
+                                   Margin="25,10,10,10"/>
+                        <ToggleButton Grid.Column="1"
+                                      VerticalAlignment="Center"
+                                      IsChecked="{Binding IsSystemParameter, Mode=TwoWay}"
+                                      Style="{StaticResource MaterialDesignSwitchDarkToggleButton}"
+                                      ToolTip="MaterialDesignSwitchDarkToggleButton" />
+                        <TextBlock Grid.Column="2"
+                                   Text="Начать с"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Center"
+                                   Style="{StaticResource MaterialDesignTextBlock}"
+                                   Margin="50,10,10,10"/>
+                        <TextBox Grid.Column="3"
+                                 Text="{Binding ЙЦУ}"
+                                 Style="{StaticResource SimpleTextBox}"
+                                 Height="35"
+                                 HorizontalContentAlignment="Left"
+                                 HorizontalAlignment="Left"
+                                 Width="55"
+                                 PreviewTextInput="NumberValidationTextBox">
+                        </TextBox>
+                    </Grid>
+                    <Grid Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Visibility="{Binding UserParameterIsVisible}"
+                                   Text="Выбор пользовательского параметра"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Left"
+                                   Style="{StaticResource MaterialDesignTextBlock}"
+                                   Margin="25,5,10,5"/>
+                        <ComboBox Grid.Row="1"
+                                  Visibility="{Binding UserParameterIsVisible}"
+                                  Margin="25,0,25,10"
+                                  VerticalAlignment="Center"
+                                  Style="{StaticResource MaterialDesignComboBox}"
+                                  ItemsSource="{Binding TitleBlocks}"
+                                  SelectedItem="{Binding TitleBlock}"
+                                  Foreground="{StaticResource LineBrush}"
+                                  DisplayMemberPath="Name">
+                        </ComboBox>
+                    </Grid>
+                </Grid>
+            </Border>
+            <Button Grid.Row="3"
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                    ToolTip="Нажать бы"
+                    Background="{StaticResource LineBrush}"
+                    Margin="10"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Center"
+                    Command="{Binding StartCommand}">
+                <TextBlock
+                    Text="Execute" />
+            </Button>
         </Grid>
     </Border>
 </UserControl>
