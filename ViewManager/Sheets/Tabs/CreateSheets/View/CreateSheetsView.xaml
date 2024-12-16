@@ -26,6 +26,7 @@
                 <RowDefinition Height="90" />
                 <RowDefinition Height="{Binding MyRowHeight}"/>
                 <RowDefinition Height="*" />
+                <RowDefinition Height="100" />
             </Grid.RowDefinitions>
             <Border Grid.Row="0" CornerRadius="10"
                     Background="{StaticResource CharcoalGrayBrush}"
@@ -148,15 +149,15 @@
                                   Margin="25,0,25,10"
                                   VerticalAlignment="Center"
                                   Style="{StaticResource MaterialDesignComboBox}"
-                                  ItemsSource="{Binding TitleBlocks}"
-                                  SelectedItem="{Binding TitleBlock}"
+                                  ItemsSource="{Binding Parameters}"
+                                  SelectedItem="{Binding Parameter}"
                                   Foreground="{StaticResource LineBrush}"
                                   DisplayMemberPath="Name">
                         </ComboBox>
                     </Grid>
                 </Grid>
             </Border>
-            <Button Grid.Row="3"
+            <Button Grid.Row="4"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     ToolTip="Нажать бы"
                     Background="{StaticResource LineBrush}"

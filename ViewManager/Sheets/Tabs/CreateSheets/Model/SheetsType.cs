@@ -1,4 +1,4 @@
-﻿namespace ViewManager.Sheets.Tabs.CreateSheets.VM;
+﻿namespace ViewManager.Sheets.Tabs.CreateSheets.Model;
 
 internal class SheetsType
 {

@@ -1,7 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using ViewManager.Sheets.Tabs.CreateSheets.Model;
 using ViewManager.ViewModels;
+using Element = SharpVectors.Dom.Element;
 
 namespace ViewManager.Sheets.Tabs.CreateSheets.VM;
 
@@ -11,6 +14,18 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
     public string Header => "Создание листов";
     private RelCommand StartCommand { get; }
     private List<SheetsType> _titleBlocks;
+    private CreateSheetsModel _model;
+    
+    public CreateSheetsVM(Document doc)
+    {
+        _doc = doc;
+        StartCommand = new RelCommand(
+            execute: _ => Execute(),
+            canExecute: _ => CanExecute()
+        );
+        _model = new CreateSheetsModel(_doc);
+        LoadTitleBlocks();
+    }
 
     public List<SheetsType> TitleBlocks
     {
@@ -25,6 +40,21 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
         }
     }
 
+    private SheetsType _titleBlock;
+    public SheetsType TitleBlock
+    {
+        get => _titleBlock;
+        set
+        {
+            if (_titleBlock != value)
+            {
+                _titleBlock = value;
+                OnPropertyChanged();
+                LoadParametersTitleBlock(_titleBlock.Id);
+            }
+        }
+    }
+
     private bool _isSystemParameter = true;
     public bool IsSystemParameter
     {
@@ -34,8 +64,37 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
             if (_isSystemParameter != value)
             {
                 _isSystemParameter = value;
-                OnPropertyChanged(nameof(IsSystemParameter));
+                OnPropertyChanged();
                 UpdateRowHeights();
+            }
+        }
+    }
+
+    private List<string> _parameters;
+    public List<string> Parameters
+    {
+        get => _parameters;
+        set
+        {
+            if (_parameters != value)
+            {
+                _parameters = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    private string _parameter;
+
+    public string Parameter
+    {
+        get => _parameter;
+        set
+        {
+            if (_parameter != value)
+            {
+                _parameter = value;
+                OnPropertyChanged();
             }
         }
     }
@@ -49,7 +108,7 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
             if (_userParameterIsVisible != value)
             {
                 _userParameterIsVisible = value;
-                OnPropertyChanged(nameof(UserParameterIsVisible));
+                OnPropertyChanged();
                 UpdateRowHeights();
                 UpdateVisibleUserParameter();
             }
@@ -65,7 +124,7 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
             if (_myRowHeight != value)
             {
                 _myRowHeight = value;
-                OnPropertyChanged(nameof(MyRowHeight));
+                OnPropertyChanged();
             }
         }
     }
@@ -79,22 +138,22 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
             if (_myRow2Height != value)
             {
                 _myRow2Height = value;
-                OnPropertyChanged(nameof(MyRow2Height));
+                OnPropertyChanged();
             }
         }
     }
 
-    public CreateSheetsVM(Document doc)
+    private void LoadTitleBlocks()
     {
-        _doc = doc;
-        StartCommand = new RelCommand(
-            execute: _ => Execute(),
-            canExecute: _ => CanExecute()
-        );
-        LoadTitleBlocks();
+        TitleBlocks = _model._data.TitleBlocks();
     }
-
-    
+    private void LoadParametersTitleBlock(int titleBlockId)
+    {
+        var elemId = new ElementId(titleBlockId);
+        var element = _doc.GetElement(elemId);
+        Parameters = KapibaraCore.Parameters.Parameters.GetParameters(element)
+            .Select(x => x.Definition.Name).ToList();
+    }
     private bool CanExecute()
     {
         return true;
@@ -105,34 +164,7 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
         ViewManagerViewModel.CloseWindow?.Invoke();
     }
 
-    private void LoadTitleBlocks()
-    {
-        var x = new FilteredElementCollector(_doc)
-            .OfCategory(BuiltInCategory.OST_TitleBlocks)
-            .WhereElementIsElementType()
-            .ToElements();
-        List<SheetsType> sheetsTypes = new List<SheetsType>();
-        if (x.Any())
-        {
-            foreach (var element in x)
-            {
-                var familyNameParameter = element.get_Parameter(BuiltInParameter.SYMBOL_FAMILY_NAME_PARAM);
-                if (familyNameParameter == null || string.IsNullOrEmpty(familyNameParameter.AsString()))
-                {
-                    continue;
-                }
-                var typeNameParameter = element.get_Parameter(BuiltInParameter.ALL_MODEL_TYPE_NAME);
-                if (typeNameParameter == null || string.IsNullOrEmpty(typeNameParameter.AsString()))
-                {
-                    continue;
-                }
 
-                var result = $"{familyNameParameter.AsString()} : {typeNameParameter.AsString()}";
-                sheetsTypes.Add(new SheetsType() { Id = element.Id.IntegerValue, Name = result });
-            }
-        }
-        TitleBlocks = sheetsTypes; 
-    }
     
     private void UpdateRowHeights()
     {
@@ -150,14 +182,7 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
 
     private void UpdateVisibleUserParameter()
     {
-        if (IsSystemParameter)
-        {
-            UserParameterIsVisible = true;
-        }
-        else
-        {
-            UserParameterIsVisible = false;
-        }
+        UserParameterIsVisible = IsSystemParameter;
     }
     
     public event PropertyChangedEventHandler PropertyChanged;

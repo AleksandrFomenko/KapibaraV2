@@ -9,6 +9,21 @@
         <Configurations>$(Configurations);Release R20;Release R21;Release R22;Release R23;Release R24;Release R25</Configurations>
     </PropertyGroup>
 
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="1.*" />
+        <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
+    </ItemGroup>
+
     <PropertyGroup Condition="$(Configuration.Contains('R20'))">
         <RevitVersion>2020</RevitVersion>
         <TargetFramework>net48</TargetFramework>
@@ -33,40 +48,4 @@
         <RevitVersion>2025</RevitVersion>
         <TargetFramework>net8.0-windows</TargetFramework>
     </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="MaterialDesignColors" Version="3.1.1-ci691" />
-        <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
-        <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci691" />
-        <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="2.*" />
-        <PackageReference Include="Nice3point.Revit.Toolkit" Version="2022.2.3" />
-        <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*" />
-        <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="2022.1.21" />
-        <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Kinds\Model\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\KapibaraCore\KapibaraCore.csproj" />
-      <ProjectReference Include="..\WpfResources\WpfResources.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="MaterialDesignThemes.Wpf">
-        <HintPath>..\..\..\..\.nuget\packages\materialdesignthemes\5.1.1-ci691\lib\net462\MaterialDesignThemes.Wpf.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Page Update="Sheets\View\SheetsView.xaml">
-        <Generator>MSBuild:Compile</Generator>
-        <XamlRuntime>Wpf</XamlRuntime>
-        <SubType>Designer</SubType>
-      </Page>
-    </ItemGroup>
-
 </Project>
