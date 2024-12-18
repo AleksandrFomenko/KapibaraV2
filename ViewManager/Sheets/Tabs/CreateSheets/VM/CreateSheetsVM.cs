@@ -98,7 +98,7 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
         }
     }
     
-    private int _startValue;
+    private int _startValue = 1;
     public int StartValue
     {
         get => _startValue;
@@ -196,9 +196,48 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
     {
         var elemId = new ElementId(titleBlockId);
         var element = _doc.GetElement(elemId);
-        Parameters = KapibaraCore.Parameters.Parameters.GetParameterFromFamily(_doc, element)
-            .Select(x => x.Definition.Name).ToList();
+        Parameters = GetProjectParametersByCategory(_doc, BuiltInCategory.OST_Sheets);
     }
+    
+    public static List<string> GetProjectParametersByCategory(Document doc, BuiltInCategory cat)
+    {
+        List<string> result = new List<string>();
+        
+        BindingMap bindingMap = doc.ParameterBindings;
+        var iterator = bindingMap.ForwardIterator();
+
+        while (iterator.MoveNext())
+        {
+            Definition definition = iterator.Key as Definition;
+            Binding binding = bindingMap.get_Item(definition);
+            
+            CategorySet categories = null;
+
+            if (binding is InstanceBinding instanceBinding)
+            {
+                categories = instanceBinding.Categories;
+            }
+            else if (binding is TypeBinding typeBinding)
+            {
+                categories = typeBinding.Categories;
+            }
+            
+            if (categories != null)
+            {
+                foreach (Category c in categories)
+                {
+                    if (c != null && c.Id.IntegerValue == (int)cat)
+                    {
+                        result.Add(definition.Name);
+                        break; 
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
     private bool CanExecute()
     {
         return true;
@@ -207,7 +246,7 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
     private void Execute()
     {
         var title = new ElementId(_titleBlock.Id);
-        Action q = () => _model.Make(title, _count, _startValue);
+        Action q = () => _model.Make(title, _count, _startValue, !_isSystemParameter, _parameter);
         _model.MakeSheets(q, "Create Sheets");
     }
     

@@ -1,5 +1,5 @@
 ﻿using Autodesk.Revit.DB.Events;
-using Autodesk.Revit.UI;
+
 
 namespace ViewManager.Sheets.Tabs.CreateSheets.Model;
 
@@ -14,25 +14,17 @@ internal class FailureProcessorNumerator
         {
             BuiltInFailures.SheetFailures.SheetNumberDuplicated
         };
-
-        bool handled = false;
+        
         foreach (var message in failureMessages)
         {
             FailureDefinitionId failId = message.GetFailureDefinitionId();
             if (sheetFailureDefIds.Contains(failId))
             {
+                accessor.GetFailureHandlingOptions().SetClearAfterRollback(true);
                 accessor.DeleteWarning(message);
-                handled = true;
+                accessor.RollBackPendingTransaction();
+                e.SetProcessingResult(FailureProcessingResult.ProceedWithRollBack);
             }
-        }
-        
-        if (handled)
-        {
-            e.SetProcessingResult(FailureProcessingResult.ProceedWithCommit);
-        }
-        else
-        {
-            e.SetProcessingResult(FailureProcessingResult.Continue);
         }
     }
 }
