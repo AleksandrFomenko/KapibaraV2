@@ -1,10 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using ViewManager.Sheets.Tabs.CreateSheets.Model;
-using ViewManager.ViewModels;
-using Element = SharpVectors.Dom.Element;
+
 
 namespace ViewManager.Sheets.Tabs.CreateSheets.VM;
 
@@ -12,7 +11,7 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
 {
     private Document _doc;
     public string Header => "Создание листов";
-    private RelCommand StartCommand { get; }
+    public RelCommand StartCommand { get; }
     private List<SheetsType> _titleBlocks;
     private CreateSheetsModel _model;
     
@@ -98,6 +97,35 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
             }
         }
     }
+    
+    private int _startValue;
+    public int StartValue
+    {
+        get => _startValue;
+        set
+        {
+            if (_startValue != value)
+            {
+                _startValue = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    private int _count;
+
+    public int Count
+    {
+        get => _count;
+        set
+        {
+            if (_count != value)
+            {
+                _count = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     private bool _userParameterIsVisible = false;
     public bool UserParameterIsVisible
@@ -142,30 +170,6 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
             }
         }
     }
-
-    private void LoadTitleBlocks()
-    {
-        TitleBlocks = _model._data.TitleBlocks();
-    }
-    private void LoadParametersTitleBlock(int titleBlockId)
-    {
-        var elemId = new ElementId(titleBlockId);
-        var element = _doc.GetElement(elemId);
-        Parameters = KapibaraCore.Parameters.Parameters.GetParameters(element)
-            .Select(x => x.Definition.Name).ToList();
-    }
-    private bool CanExecute()
-    {
-        return true;
-    }
-    
-    private void Execute()
-    {
-        ViewManagerViewModel.CloseWindow?.Invoke();
-    }
-
-
-    
     private void UpdateRowHeights()
     {
         if (IsSystemParameter)
@@ -179,10 +183,32 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
             MyRow2Height = new GridLength(1, GridUnitType.Star);
         }
     }
-
     private void UpdateVisibleUserParameter()
     {
         UserParameterIsVisible = IsSystemParameter;
+    }
+
+    private void LoadTitleBlocks()
+    {
+        TitleBlocks = _model._data.TitleBlocks();
+    }
+    private void LoadParametersTitleBlock(int titleBlockId)
+    {
+        var elemId = new ElementId(titleBlockId);
+        var element = _doc.GetElement(elemId);
+        Parameters = KapibaraCore.Parameters.Parameters.GetParameterFromFamily(_doc, element)
+            .Select(x => x.Definition.Name).ToList();
+    }
+    private bool CanExecute()
+    {
+        return true;
+    }
+    
+    private void Execute()
+    {
+        var title = new ElementId(_titleBlock.Id);
+        Action q = () => _model.Make(title, _count, _startValue);
+        _model.MakeSheets(q, "Create Sheets");
     }
     
     public event PropertyChangedEventHandler PropertyChanged;

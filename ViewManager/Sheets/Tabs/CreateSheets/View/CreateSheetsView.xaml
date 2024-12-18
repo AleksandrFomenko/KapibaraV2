@@ -76,6 +76,7 @@
                                                   Background="Azure"
                                                   Foreground="{StaticResource LineBrush}"
                                                   FontSize="16"
+                                                  Value="{Binding Count}"
                                                   PreviewTextInput="NumberValidationTextBox"/>
                 </Grid>
             </Border>
@@ -122,7 +123,7 @@
                                    Style="{StaticResource MaterialDesignTextBlock}"
                                    Margin="50,10,10,10"/>
                         <TextBox Grid.Column="3"
-                                 Text="{Binding ЙЦУ}"
+                                 Text="{Binding StartValue}"
                                  Style="{StaticResource SimpleTextBox}"
                                  Height="35"
                                  HorizontalContentAlignment="Left"
@@ -151,8 +152,7 @@
                                   Style="{StaticResource MaterialDesignComboBox}"
                                   ItemsSource="{Binding Parameters}"
                                   SelectedItem="{Binding Parameter}"
-                                  Foreground="{StaticResource LineBrush}"
-                                  DisplayMemberPath="Name">
+                                  Foreground="{StaticResource LineBrush}">
                         </ComboBox>
                     </Grid>
                 </Grid>

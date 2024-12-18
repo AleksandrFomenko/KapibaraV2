@@ -31,6 +31,7 @@
             </Grid.RowDefinitions>
             <TextBox Grid.Row="0" Style="{StaticResource SimpleTextBox}"
                      IsReadOnly="True"
+                     HorizontalAlignment="Center"
                      Text="{Binding Header, Mode=OneWay}"
                      Margin="5"
                      Height="40"
