@@ -88,7 +88,6 @@
                              Text="{Binding FilterViewSheet, UpdateSourceTrigger=PropertyChanged}"
                              VerticalAlignment="Top"
                              HorizontalAlignment="Stretch"
-                             HorizontalContentAlignment="Left"
                              Margin="50,10,10,10"
                              Height="40">
                     </TextBox>
@@ -96,10 +95,11 @@
                              Style="{StaticResource MaterialDesignListBox}"
                              FontSize="12"
                              Margin="10,75,10,10"
+                             HorizontalAlignment="Stretch"
+                             HorizontalContentAlignment="Stretch"
                              Background="{DynamicResource MainWindowGradient}"
                              Foreground="{DynamicResource TextBrush}"
                              ItemsSource="{Binding ViewSheets}"
-                             HorizontalAlignment="Stretch"
                              SelectedItem="{Binding SelectedViewSheet}">
                         
                         <ListBox.ItemTemplate>
@@ -108,7 +108,7 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" /> 
-                                        <ColumnDefinition Width="3*" />  
+                                        <ColumnDefinition Width="7*" />  
                                     </Grid.ColumnDefinitions>
                                     
                                     <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" 
@@ -126,7 +126,6 @@
                                     <TextBlock Text="{Binding Name}" 
                                                FontSize="12"
                                                VerticalAlignment="Center" 
-                                               HorizontalAlignment="Stretch"
                                                Grid.Column="2" 
                                                Margin="5,0" />
                                 </Grid>
