@@ -48,6 +48,7 @@
 
     <ItemGroup>
         <Folder Include="Kinds\Model\" />
+        <Folder Include="Models\" />
     </ItemGroup>
 
     <ItemGroup>

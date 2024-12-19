@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using KapibaraCore.Parameters;
+﻿using KapibaraCore.Parameters;
 using ViewManager.ViewModels;
 
 namespace ViewManager.Sheets.Tabs.CreateSheets.Model;
@@ -34,53 +33,41 @@ internal class CreateSheetsModel
         ViewManagerViewModel.CloseWindow?.Invoke();
     }
 
-    internal void Make(ElementId titleBlockTypeId, int count, int startValue, bool isUserPar, string userParameter)
+    internal void Make(ElementId titleBlockTypeId, int count, int startValue, bool isSystemPar, bool isUserPar, string userParameter)
     {
         for (int i = 0; i < count; i++)
         {
             var uniqueNumber = GetUnique("‪"+"‪"+"‪"+"‪"+"‪"+(startValue+i).ToString());
             var view = ViewSheet.Create(_doc, titleBlockTypeId);
-            SetSystemNumeration(view, uniqueNumber);
+            
+            if (isSystemPar) SetSystemNumeration(view, uniqueNumber);
             if (isUserPar) SetUserNumeration(view, userParameter, (startValue+i).ToString());
         }
     }
 
-    private void SetSystemNumeration(Autodesk.Revit.DB.View view, string Value)
+    private void SetSystemNumeration(Autodesk.Revit.DB.View view, string value)
     {
         var parameter = view.get_Parameter(BuiltInParameter.SHEET_NUMBER);
   
-        parameter?.Set(Value);
+        parameter?.Set(value);
     }
-    private void SetUserNumeration(Autodesk.Revit.DB.View view, string parameterName, string Value)
+    private void SetUserNumeration(Element elem, string parameterName, string value)
     {
-        var parameter = Parameters.GetParameterByName(_doc, view, parameterName);
-        parameter.Set("аqwewqe");
-        Parameters.SetParameterValue(parameter, Value);
+        var parameter = Parameters.GetParameterByName(_doc, elem, parameterName);
+        if (parameter == null)
+        {
+            if (elem is Autodesk.Revit.DB.View view)
+            {
+                var sheets = new FilteredElementCollector(_doc, view.Id)
+                    .WhereElementIsNotElementType().ToElements().FirstOrDefault();
+                parameter = Parameters.GetParameterByName(_doc, sheets, parameterName);
+                
+            }
+        }
+        
+        Parameters.SetParameterValue(parameter, value);
     }
     
-    public static Parameter GetParameterByName(Document doc, object elem, string parameterName)
-    { 
-        if (elem is Element element)
-        {
-            Debug.WriteLine("это элемент");
-            if (elem is FamilyInstance instance)
-            {
-                var par = element.LookupParameter(parameterName);
-                Debug.WriteLine("1");
-                if (par != null) return par;
-                var type = doc.GetElement(instance.GetTypeId());
-                par = type?.LookupParameter(parameterName);
-                if (par != null) return par;
-            }
-            return element.LookupParameter(parameterName);
-        }
-        else
-        {
-            Debug.WriteLine("это не элемент");
-        }
-
-        return null;
-    }
     private string GetUnique(string startValue)
     {
         var views = new FilteredElementCollector(_doc)

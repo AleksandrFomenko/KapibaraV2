@@ -1,8 +1,13 @@
-﻿
-namespace KapibaraCore.Parameters;
+﻿namespace KapibaraCore.Parameters;
 
+/// <summary>
+/// Статический класс для получения параметров.
+/// </summary>
 public static class Parameters
-{
+{ 
+    /// <summary>
+    /// Записывает значение в параметр.
+    /// </summary>
     public static void SetParameterValue(Parameter parameter, object value) 
     {
         if (parameter == null || parameter.IsReadOnly) return; 
@@ -58,8 +63,15 @@ public static class Parameters
             }
         } 
     }
-
-
+    
+    /// <summary>
+    /// Получает параметр из элемента.
+    /// </summary>
+    /// <param name="doc">Документ.</param>
+    /// <param name="elem">Element.</param>
+    /// /// <param name="parameterName">Наименование параметра.</param>
+    /// <returns>Параметр.</returns>
+    
     public static Parameter GetParameterByName(Document doc, object elem, string parameterName)
     { 
         if (elem is Element element)
@@ -77,13 +89,23 @@ public static class Parameters
 
         return null;
     }
+    /// <summary>
+    /// Получает лист параметров из элемента.
+    /// </summary>
+    /// <param name="elem">Element.</param>
+    /// <returns>Параметры элемента</returns>
 
     public static List<Parameter> GetParameters(Element elem)
     {
         return elem.Parameters.Cast<Parameter>().ToList();
     }
-
-    public static List<FamilyParameter> GetParameterFromFamily(Document doc, Element elem)
+    
+    /// <summary>
+    /// Получает лист параметров из элемента.
+    /// </summary>
+    /// <param name="elem">Element.</param>
+    /// <returns>Параметры элемента</returns>
+    public static List<string> GetParameterFromFamily(Document doc, Element elem)
     {
         var famParameters = new List<FamilyParameter>();
         Family family = elem switch
@@ -100,29 +122,15 @@ public static class Parameters
             Document familyDoc = doc.EditFamily(family);
             famParameters = familyDoc.FamilyManager.GetParameters().ToList();
         }
-        return famParameters;
+        return famParameters.Select(x=> x.Definition.Name).ToList();
     }
     
-    public static List<string> GetParameterFromFamilyAsString(Document doc, Element elem)
-    {
-        var famParameters = new List<string>();
-        Family family = elem switch
-        {
-            FamilySymbol symbol => symbol.Family,
-            
-            FamilyInstance instance => (doc.GetElement(instance.GetTypeId()) as FamilySymbol)?.Family,
-            
-            _ => null
-        };
-        
-        if (family != null)
-        {
-            Document familyDoc = doc.EditFamily(family);
-            famParameters = familyDoc.FamilyManager.GetParameters().Select(x => x.Definition.Name).ToList();
-        }
-        return famParameters;
-    }
-
+    /// <summary>
+    /// Получает лист параметров из проекта, присвоенных определенной категории..
+    /// </summary>
+    /// <param name="doc">Документ.</param>
+    /// <param name="cat">BuiltInCategory.</param>
+    /// <returns>Параметры категории</returns>
     public static List<string> GetProjectParametersByCategory(Document doc, BuiltInCategory cat)
     {
         List<string> result = new List<string>();

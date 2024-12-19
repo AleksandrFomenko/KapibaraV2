@@ -63,8 +63,22 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
             if (_isSystemParameter != value)
             {
                 _isSystemParameter = value;
-                OnPropertyChanged();
                 UpdateRowHeights();
+                OnPropertyChanged();
+            }
+        }
+    }
+    private bool _isUserParameter = false;
+    public bool IsUserParameter
+    {
+        get => _isUserParameter;
+        set
+        {
+            if (_isUserParameter != value)
+            {
+                _isUserParameter = value;
+                UpdateRowHeights();
+                OnPropertyChanged();
             }
         }
     }
@@ -143,7 +157,7 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
         }
     }
     
-    private GridLength _myRowHeight = new GridLength(90);
+    private GridLength _myRowHeight = new GridLength(135);
     public GridLength MyRowHeight
     {
         get => _myRowHeight;
@@ -172,20 +186,20 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
     }
     private void UpdateRowHeights()
     {
-        if (IsSystemParameter)
+        if (IsUserParameter)
         {
-            MyRowHeight = new GridLength(90);
-            MyRow2Height = new GridLength(0);
+            MyRowHeight = new GridLength(225);
+            MyRow2Height = new GridLength(1, GridUnitType.Star);
         }
         else
         {
-            MyRowHeight = new GridLength(180);
-            MyRow2Height = new GridLength(1, GridUnitType.Star);
+            MyRowHeight = new GridLength(135);
+            MyRow2Height = new GridLength(0);
         }
     }
     private void UpdateVisibleUserParameter()
     {
-        UserParameterIsVisible = IsSystemParameter;
+        UserParameterIsVisible = IsUserParameter;
     }
 
     private void LoadTitleBlocks()
@@ -196,48 +210,12 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
     {
         var elemId = new ElementId(titleBlockId);
         var element = _doc.GetElement(elemId);
-        Parameters = GetProjectParametersByCategory(_doc, BuiltInCategory.OST_Sheets);
+        var parametersProject =
+            KapibaraCore.Parameters.Parameters.GetProjectParametersByCategory(_doc, BuiltInCategory.OST_Sheets);
+        var parametersFamily = KapibaraCore.Parameters.Parameters.GetParameterFromFamily(_doc, element);
+        Parameters = parametersProject.Union(parametersFamily).ToList();
     }
     
-    public static List<string> GetProjectParametersByCategory(Document doc, BuiltInCategory cat)
-    {
-        List<string> result = new List<string>();
-        
-        BindingMap bindingMap = doc.ParameterBindings;
-        var iterator = bindingMap.ForwardIterator();
-
-        while (iterator.MoveNext())
-        {
-            Definition definition = iterator.Key as Definition;
-            Binding binding = bindingMap.get_Item(definition);
-            
-            CategorySet categories = null;
-
-            if (binding is InstanceBinding instanceBinding)
-            {
-                categories = instanceBinding.Categories;
-            }
-            else if (binding is TypeBinding typeBinding)
-            {
-                categories = typeBinding.Categories;
-            }
-            
-            if (categories != null)
-            {
-                foreach (Category c in categories)
-                {
-                    if (c != null && c.Id.IntegerValue == (int)cat)
-                    {
-                        result.Add(definition.Name);
-                        break; 
-                    }
-                }
-            }
-        }
-
-        return result;
-    }
-
     private bool CanExecute()
     {
         return true;
@@ -246,7 +224,7 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
     private void Execute()
     {
         var title = new ElementId(_titleBlock.Id);
-        Action q = () => _model.Make(title, _count, _startValue, !_isSystemParameter, _parameter);
+        Action q = () => _model.Make(title, _count, _startValue, _isSystemParameter,_isUserParameter, _parameter);
         _model.MakeSheets(q, "Create Sheets");
     }
     
