@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.ApplicationServices;
+﻿using Autodesk.Revit.UI.Events;
 using Autodesk.Revit.DB.Events;
 
 namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
@@ -31,6 +29,11 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
             {
                 e.SetProcessingResult(FailureProcessingResult.Continue); 
             }
+        }
+
+        public void UIApplicationOnDialogBoxShowing(object sender, DialogBoxShowingEventArgs e)
+        {
+            e.OverrideResult(1);
         }
     }
 }

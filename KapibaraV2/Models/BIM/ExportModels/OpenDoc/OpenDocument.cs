@@ -1,11 +1,19 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.UI.Events;
+using Autodesk.Revit.DB.Events;
+using Autodesk.Revit.DB;
+using System.Linq;
 using KapibaraV2.Core;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Autodesk.Revit.UI.Events;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Autodesk.Revit.ApplicationServices;
 
 namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
 {
@@ -14,8 +22,9 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
         public Document OpenDocumentAsDetach(string filePath, string badNameWorkset, bool deleteLinksDwg, 
             bool closeAllWorset)
         {
-            Autodesk.Revit.ApplicationServices.Application app = RevitApi.Document.Application;
+            var app = RevitApi.UiApplication;
             ModelPath modelPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(filePath);
+            Autodesk.Revit.ApplicationServices.Application controlledApp = app.Application;
             
             OpenOptions openOptions = new OpenOptions();
             
@@ -44,26 +53,43 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex.ToString());
 
             }
-
-
-            FailureProcessorOpenDocument failureProcessor = new FailureProcessorOpenDocument();
-
-            app.FailuresProcessing += failureProcessor.ApplicationOnFailuresProcessing;
-
-            Document openDoc = app.OpenDocumentFile(modelPath, openOptions);
-
-            app.FailuresProcessing -= failureProcessor.ApplicationOnFailuresProcessing;
-
-
-            if (openDoc != null && openDoc.IsValidObject)
+            
+            FailureProcessorOpenDocument failureProcessor = null;
+            try
             {
-                if (deleteLinksDwg) { DeleteLinksAndDwg(openDoc); }
-                return openDoc;
+                failureProcessor = new FailureProcessorOpenDocument();
+
+                controlledApp.FailuresProcessing += failureProcessor.ApplicationOnFailuresProcessing;
+                app.DialogBoxShowing += failureProcessor.UIApplicationOnDialogBoxShowing;
+                
+
+                Document openDoc = controlledApp.OpenDocumentFile(modelPath, openOptions);
+
+                if (openDoc != null && openDoc.IsValidObject)
+                {
+                    if (deleteLinksDwg) { DeleteLinksAndDwg(openDoc); }
+                    return openDoc;
+                }
+
+                return null;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+                throw;
+            }
+            finally
+            {
+                if (failureProcessor != null)
+                {
+                    controlledApp.FailuresProcessing -= failureProcessor.ApplicationOnFailuresProcessing;
+                    app.DialogBoxShowing -= failureProcessor.UIApplicationOnDialogBoxShowing;
+                }
             }
 
-            return null;
         }
 
         private static void DeleteLinksAndDwg(Document doc)
