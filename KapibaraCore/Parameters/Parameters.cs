@@ -80,7 +80,7 @@ public static class Parameters
             {
                 var par = element.LookupParameter(parameterName);
                 if (par != null) return par;
-                var type = doc.GetElement(instance.GetTypeId());
+                var type = doc.GetElement(element.GetTypeId());
                 par = type?.LookupParameter(parameterName);
                 if (par != null) return par;
             }

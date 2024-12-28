@@ -94,8 +94,8 @@
                                       FontSize="14"
                                       Foreground="Black"
                                       ItemsSource="{Binding Categories}"
-                                SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
-                                Style="{StaticResource MaterialDesignFilledComboBox}">
+                                      SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                                      Style="{StaticResource MaterialDesignFilledComboBox}">
                             </ComboBox>
                         </Grid>
                     </materialDesign:Card>
