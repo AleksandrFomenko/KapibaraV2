@@ -78,7 +78,7 @@
         <Resource Include="Resources\Icons\ai.png" />
         <Resource Include="Resources\Icons\github.png" />
         <Resource Include="Resources\Icons\mouse.png" />
-        <Resource Include="Resources\Icons\ImportExcel.jpg" />
+        <Resource Include="Resources\Icons\ImportExcel.png" />
     </ItemGroup>
 
     <ItemGroup>

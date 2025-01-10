@@ -40,8 +40,8 @@ namespace KapibaraV2
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png");
             
             panelBIM.AddPushButton<ImportExcelByParameter.Commands.StartupCommand>("ImportExcel")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ImportExcel.jpg")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ImportExcel.jpg");
+                .SetImage("/KapibaraV2;component/Resources/Icons/ImportExcel.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ImportExcel.png");
 
             //MEP общие
             panelMepGeneral.AddPushButton<SolidIntersector.Commands.SolidIntersector>("Solid Intersector")
