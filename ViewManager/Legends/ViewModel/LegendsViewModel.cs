@@ -17,8 +17,7 @@ public sealed class LegendsViewModel : INotifyPropertyChanged
     public ObservableCollection<Autodesk.Revit.DB.View> Legends { get; set; }
     
     public Autodesk.Revit.DB.View _selectedLegend;
-
-
+    
     public Autodesk.Revit.DB.View SelectedLegend
     {
         get => _selectedLegend;
@@ -89,7 +88,6 @@ public sealed class LegendsViewModel : INotifyPropertyChanged
     }
 
     private double _changeX;
-
     public double ChangeX
     {
         get => _changeX;
@@ -103,7 +101,6 @@ public sealed class LegendsViewModel : INotifyPropertyChanged
     }
     
     private double _changeY;
-
     public double ChangeY
     {
         get => _changeY;

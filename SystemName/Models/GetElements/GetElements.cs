@@ -62,7 +62,7 @@ public static class GetElements
         return mepSystem;
     }
     
-    private static Element getSystemTypeByCutName(string systemName)
+    private static Element GetSystemTypeByCutName(string systemName)
     {
         var cats = new List<BuiltInCategory>
         {
@@ -80,9 +80,9 @@ public static class GetElements
         return mepSystemType;
     }
 
-    private static List<Element> getSystemByCutName(string name)
+    private static List<Element> GetSystemByCutName(string name)
     {
-        var mepSystemType = getSystemTypeByCutName(name);
+        var mepSystemType = GetSystemTypeByCutName(name);
         var cats = new List<BuiltInCategory>
         {
             BuiltInCategory.OST_PipingSystem, BuiltInCategory.OST_Alignments,
@@ -138,7 +138,7 @@ public static class GetElements
     { 
         return cut
             ?  systemsName
-            .SelectMany(name => getElementsInSystems(getSystemByCutName(name)))
+            .SelectMany(name => getElementsInSystems(GetSystemByCutName(name)))
             .ToList() 
             
             : systemsName

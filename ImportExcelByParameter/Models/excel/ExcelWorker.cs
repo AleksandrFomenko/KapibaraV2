@@ -14,6 +14,7 @@ internal class ExcelWorker
     
     internal string SheetName;
     internal string ParameterName;
+    internal int RowNumber;
     
     internal static Action CloseExcel { get; set; }
     
@@ -58,7 +59,7 @@ internal class ExcelWorker
 
         while (columnIndex <= lastColumn)
         {
-            var cell = _worksheet.Cell(1, columnIndex);
+            var cell = _worksheet.Cell(RowNumber, columnIndex);
             string cellValue = cell.GetString().Trim();
 
             if (string.Equals(cellValue, ParameterName, StringComparison.OrdinalIgnoreCase))
@@ -90,7 +91,7 @@ internal class ExcelWorker
     
     private int FindRow(string searchValue)
     {
-        int rowIndex = 2; 
+        int rowIndex = RowNumber + 1; 
         int emptyCount = 0;
         const int stop = 10;
         int maxRows = 1048576;
@@ -126,26 +127,26 @@ internal class ExcelWorker
     {
         var otherColumns = GetParameterColumn();
         if (_columnParameterIndex == 0) 
-            TaskDialog.Show("Error", "Параметр {ParameterName} не найден в первой строчке");
+            TaskDialog.Show("Error", $"Параметр {{ParameterName}} не найден в строчке {RowNumber}");
         var row = FindRow(searchValue);
 
         if(row > 0)
         {
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             
-            var paramColumnName = _worksheet.Cell(1, _columnParameterIndex).GetString().Trim();
-            var paramValue = _worksheet.Cell(row, _columnParameterIndex).GetString().Trim();
+            var paramColumnName = _worksheet.Cell(RowNumber, _columnParameterIndex).GetString();
+            var paramValue = _worksheet.Cell(row, _columnParameterIndex).GetString();
             result[paramColumnName] = paramValue;
             
             foreach(var col in otherColumns)
             {
-                var colName = _worksheet.Cell(1, col).GetString().Trim();
-                var cellValue = _worksheet.Cell(row, col).GetString().Trim();
+                var colName = _worksheet.Cell(RowNumber, col).GetString();
+                var cellValue = _worksheet.Cell(row, col).GetString();
+                cellValue = cellValue.Replace("\n", Environment.NewLine);
                 result[colName] = cellValue;
             }
-            
             return result;
-        } 
+        }
         return new Dictionary<string, string>();
     }
 }

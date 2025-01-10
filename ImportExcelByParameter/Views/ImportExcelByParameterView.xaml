@@ -88,7 +88,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0"
-                                   Text="Выбор листа"
+                                   Text="Выбор листа и номера строки"
                                    Foreground="{DynamicResource TextBrush}"
                                    VerticalAlignment="Top"
                                    HorizontalAlignment="Left"
@@ -97,11 +97,23 @@
                         <ComboBox Grid.Row="1"
                                   Margin="25,5"
                                   VerticalAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  Width="350"
                                   Style="{StaticResource MaterialDesignComboBox}"
                                   ItemsSource="{Binding Sheets}"
                                   SelectedItem="{Binding Sheet,Mode=TwoWay}"
                                   Foreground="{StaticResource LineBrush}" >
                         </ComboBox>
+                        <materialDesign:NumericUpDown Grid.Row="1"
+                                                      Margin="380,0,5,5"
+                                                      Foreground="{StaticResource LineBrush}"
+                                                      FontSize="16"
+                                                      HorizontalAlignment="Right"
+                                                      HorizontalContentAlignment="Right"
+                                                      Value="{Binding RowNumber}"
+                                                      PreviewTextInput="NumberValidationTextBox"
+                                                      Minimum="1"/>
+                        
                     </Grid>
                 </Border>
                 <Border Grid.Row="3" CornerRadius="5"

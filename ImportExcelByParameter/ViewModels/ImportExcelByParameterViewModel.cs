@@ -8,7 +8,7 @@ namespace ImportExcelByParameter.ViewModels;
 public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
 {
     private Document _doc;
-    private ExcelByParameterModel _model;
+    private readonly ExcelByParameterModel _model;
     public RelayCommand StartCommand { get; }
     public RelayCommand SelectPathCommand { get; }
     internal static Action CloseWindow { get; set; }
@@ -28,9 +28,21 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
     }
     
     private string _pathExcel;
-    public string PathExcel => _pathExcel;
 
-    private string _selectedCategory = string.Empty;
+    public string PathExcel
+    {
+        get => _pathExcel;
+        set
+        {
+            if (_pathExcel != value)
+            {
+                _pathExcel = value;
+                OnPropertyChanged();
+                StartCommand.RaiseCanExecuteChanged();
+            }
+        }
+    }
+    private string _selectedCategory;
     public string SelectedCategory
     {
         get => _selectedCategory;
@@ -40,6 +52,7 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
             {
                 _selectedCategory = value;
                 OnPropertyChanged();
+                StartCommand.RaiseCanExecuteChanged();
                 LoadParameters();
             }
         }
@@ -63,6 +76,7 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
             if (_parameter == value) return;
             _parameter = value;
             OnPropertyChanged();
+            StartCommand.RaiseCanExecuteChanged();
         } 
     }
     private List<string> _parameters;
@@ -100,6 +114,18 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
             OnPropertyChanged();
         } 
     }
+
+    private int _rowNumber = 1;
+    public int RowNumber
+    {
+        get => _rowNumber;
+        set
+        {
+            if (_rowNumber == value) return;
+            _rowNumber = value;
+            OnPropertyChanged();
+        }
+    }
     private void LoadSheets(string path)
     {
         Sheets = _model.Excel.GetWorksheetNames(path);
@@ -107,7 +133,7 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
     }
     private bool CanExecute()
     {
-        return true;
+        return SelectedCategory != null && Parameter != null && PathExcel != null;
     }
     private void SelectPath()
     {
@@ -120,6 +146,7 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
             _pathExcel = openFileDialog.FileName;
             LoadSheets(_pathExcel);
             OnPropertyChanged(nameof(PathExcel));
+            StartCommand.RaiseCanExecuteChanged();
         }
     }
 
@@ -127,11 +154,10 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
     {
         _model.SetParameterName(Parameter);
         _model.SetSheetName(Sheet);
+        _model.SetRowNumber(RowNumber);
         _model.Execute(PathExcel,  SelectedCategory);
     }
-    
     public event PropertyChangedEventHandler PropertyChanged;
-
     private void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -1,19 +1,6 @@
-﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Events;
-using Autodesk.Revit.DB.Events;
-using Autodesk.Revit.DB;
-using System.Linq;
-using KapibaraV2.Core;
-using System;
-using System.Collections.Generic;
+﻿using KapibaraV2.Core;
 using System.Diagnostics;
-using Autodesk.Revit.UI.Events;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autodesk.Revit.ApplicationServices;
+
 
 namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
 {

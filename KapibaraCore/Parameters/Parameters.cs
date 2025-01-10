@@ -1,4 +1,6 @@
-﻿namespace KapibaraCore.Parameters;
+﻿using System.Diagnostics;
+
+namespace KapibaraCore.Parameters;
 
 /// <summary>
 /// Статический класс для получения параметров.
@@ -22,6 +24,20 @@ public static class Parameters
                 }
                 else 
                 {
+                    if (value is string valueStr)
+                    {
+                        valueStr = valueStr.ToLower();
+                        if (valueStr is "да" or "yes")
+                        {
+                            parameter.Set(1);
+                            break;
+                        }
+                        if (valueStr is "нет" or "no")
+                        {
+                            parameter.Set(0);
+                            break;
+                        }
+                    }
                     if (int.TryParse(value?.ToString(), out int result))
                     {
                         parameter.Set(result);
@@ -33,12 +49,14 @@ public static class Parameters
             {
                 if (value is double dValue)
                 {
-                    parameter.Set(dValue);
+                    var res = InternalUnits.Convert(parameter, dValue);
+                    parameter.Set(res);
                 }
                 else
                 {
                     if (double.TryParse(value?.ToString(), out double result))
                     {
+                        result = InternalUnits.Convert(parameter, result);
                         parameter.Set(result);
                     }
                 }
@@ -72,22 +90,13 @@ public static class Parameters
     /// /// <param name="parameterName">Наименование параметра.</param>
     /// <returns>Параметр.</returns>
     
-    public static Parameter GetParameterByName(Document doc, object elem, string parameterName)
+    public static Parameter GetParameterByName(Document doc, Element element, string parameterName)
     { 
-        if (elem is Element element)
-        {
-            if (elem is FamilyInstance instance)
-            {
-                var par = element.LookupParameter(parameterName);
-                if (par != null) return par;
-                var type = doc.GetElement(element.GetTypeId());
-                par = type?.LookupParameter(parameterName);
-                if (par != null) return par;
-            }
-            return element.LookupParameter(parameterName);
-        }
-
-        return null;
+        var par = element.LookupParameter(parameterName); 
+        if (par != null) return par;
+        var type = doc.GetElement(element.GetTypeId()); 
+        par = type?.LookupParameter(parameterName); 
+        return par ?? element.LookupParameter(parameterName);
     }
     /// <summary>
     /// Получает лист параметров из элемента.

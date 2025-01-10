@@ -3,8 +3,6 @@ using Nice3point.Revit.Toolkit.External;
 using KapibaraV2.Commands.MepGeneral;
 using KapibaraV2.Commands.BIM;
 using KapibaraV2.Commands.Info;
-using View = System.Windows.Forms.View;
-
 
 namespace KapibaraV2
 {
@@ -40,6 +38,10 @@ namespace KapibaraV2
             panelBIM.AddPushButton<FsmModules.Command.StartupCommand>("Prefab")
                 .SetImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png");
+            
+            panelBIM.AddPushButton<ImportExcelByParameter.Commands.StartupCommand>("ImportExcel")
+                .SetImage("/KapibaraV2;component/Resources/Icons/ImportExcel.jpg")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ImportExcel.jpg");
 
             //MEP общие
             panelMepGeneral.AddPushButton<SolidIntersector.Commands.SolidIntersector>("Solid Intersector")
@@ -61,12 +63,12 @@ namespace KapibaraV2
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
             */
             // Информация
-            panelInfo.AddPushButton<KapibaraInfo>("GitHub/Tg")
-                .SetImage("/KapibaraV2;component/Resources/Icons/github.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/github.png");
-            panelInfo.AddPushButton<ToolsKapi>("Tools")
-                .SetImage("/KapibaraV2;component/Resources/Icons/mouse.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/mouse.png");
+            //panelInfo.AddPushButton<KapibaraInfo>("GitHub/Tg")
+                //.SetImage("/KapibaraV2;component/Resources/Icons/github.png")
+                //.SetLargeImage("/KapibaraV2;component/Resources/Icons/github.png");
+           // panelInfo.AddPushButton<ToolsKapi>("Tools")
+               // .SetImage("/KapibaraV2;component/Resources/Icons/mouse.png")
+               // .SetLargeImage("/KapibaraV2;component/Resources/Icons/mouse.png");
             panelInfo.AddPushButton<ChatGPT.Commands.ChatGpt>("ChatGPT")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ai.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ai.png");
