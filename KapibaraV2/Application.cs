@@ -1,8 +1,10 @@
-﻿using KapibaraV2.Commands;
+﻿using System.Windows.Media;
+using Autodesk.Windows;
 using Nice3point.Revit.Toolkit.External;
 using KapibaraV2.Commands.MepGeneral;
 using KapibaraV2.Commands.BIM;
-using KapibaraV2.Commands.Info;
+
+
 
 namespace KapibaraV2
 {
@@ -19,105 +21,81 @@ namespace KapibaraV2
 
         private void CreateRibbon()
         {
-            var panelBIM = Application.CreatePanel("BIM", "KapibaraV2");
-            var panelMepGeneral = Application.CreatePanel("MEP общие", "KapibaraV2");
-            //var panelVentilation = Application.CreatePanel("Вентиляция", "KapibaraV2");
-            //var panelWater = Application.CreatePanel("Водоснабжение, канализация", "KapibaraV2");
-            //var panelHeating = Application.CreatePanel("Отопление", "KapibaraV2");
-            var panelInfo = Application.CreatePanel("Info", "KapibaraV2");
+            var panelBim = Application.CreatePanel("BIM", "Kapibara");
+            var panelGeneral = Application.CreatePanel("Общие", "Kapibara");
+            var panelMepGeneral = Application.CreatePanel("MEP", "Kapibara");
+            var panelInfo = Application.CreatePanel("Разное", "Kapibara");
 
             //BIM
-            panelBIM.AddPushButton<ExportModels>("Export models")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ActiveView.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
+            
+            panelBim.AddPushButton<ExportModels>("Export\nmodels")
+                .SetImage("/KapibaraV2;component/Resources/Icons/ExportModels.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ExportModels.png");
 
-            panelBIM.AddPushButton<FamilyCleaner.Commands.StartupCommand>("CleaningFamily")
+            panelBim.AddPushButton<FamilyCleaner.Commands.StartupCommand>("CleaningFamily")
                 .SetImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png");
             
-            panelBIM.AddPushButton<FsmModules.Command.StartupCommand>("Prefab")
+            panelBim.AddPushButton<FsmModules.Command.StartupCommand>("Prefab")
                 .SetImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png");
             
-            panelBIM.AddPushButton<ImportExcelByParameter.Commands.StartupCommand>("ImportExcel")
+            //General
+            panelGeneral.AddPushButton<ImportExcelByParameter.Commands.StartupCommand>("ImportExcel")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ImportExcel.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ImportExcel.png");
+            panelGeneral.AddPushButton<FloorFillerCommand>("Этаж")
+                .SetImage("/KapibaraV2;component/Resources/Icons/Floor.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/Floor.png");
+            panelGeneral.AddPushButton<ViewManager.Commands.StartupCommand>("ViewManager")
+                .SetImage("/KapibaraV2;component/Resources/Icons/Floor.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/Floor.png");
+            
+            var stackPanel = panelGeneral.AddStackPanel();
+            stackPanel.AddLabel("Items:");
+            stackPanel.AddPushButton<SolidIntersector.Commands.SolidIntersector>("Solid Intersector")
+                .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+            stackPanel.AddPushButton<SetParametersByActiveView.Commands.StartupCommand>("ActiveView")
+                .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+            stackPanel.AddPushButton<ColorsByParameters.Commands.StartupCommand>("Цвета")
+                .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+            
 
             //MEP общие
-            panelMepGeneral.AddPushButton<SolidIntersector.Commands.SolidIntersector>("Solid Intersector")
-                .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/kapibwrite.png");
             panelMepGeneral.AddPushButton<SystemName.Commands.StartupCommandSystemName>("Имя системы")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
-            panelMepGeneral.AddPushButton<FloorFillerCommand>("Этаж")
-                .SetImage("/KapibaraV2;component/Resources/Icons/Floor.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/Floor.png");
-            
-            panelMepGeneral.AddPushButton<ViewManager.Commands.StartupCommand>("ViewManager")
-                .SetImage("/KapibaraV2;component/Resources/Icons/Floor.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/Floor.png");
-            /*
-            panelMepGeneral.AddPushButton<KapibaraActiveView>("Set in \n active view")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ActiveView.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
-            */
-            // Информация
-            //panelInfo.AddPushButton<KapibaraInfo>("GitHub/Tg")
-                //.SetImage("/KapibaraV2;component/Resources/Icons/github.png")
-                //.SetLargeImage("/KapibaraV2;component/Resources/Icons/github.png");
-           // panelInfo.AddPushButton<ToolsKapi>("Tools")
-               // .SetImage("/KapibaraV2;component/Resources/Icons/mouse.png")
-               // .SetLargeImage("/KapibaraV2;component/Resources/Icons/mouse.png");
+
+            // Разное
             panelInfo.AddPushButton<ChatGPT.Commands.ChatGpt>("ChatGPT")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ai.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ai.png");
 
 
-            Autodesk.Windows.RibbonControl ribbon = Autodesk.Windows.ComponentManager.Ribbon;
-            System.Windows.Media.SolidColorBrush panelBackgroundBrushPurple =
-                new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(204, 204, 255));
-            System.Windows.Media.SolidColorBrush panelBackgroundBrushPink =
-                new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(250, 218, 221));
-            System.Windows.Media.SolidColorBrush panelBackgroundBrushLightCoral =
-                new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(240, 128, 128));
-            System.Windows.Media.SolidColorBrush panelBackgroundBrushTurquoise =
-                new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(100, 149, 237));
-            System.Windows.Media.SolidColorBrush panelBackgroundBrushPaleTurquoise =
-                new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(175, 238, 238));
-            foreach (Autodesk.Windows.RibbonTab tab in ribbon.Tabs)
+            var ribbon = ComponentManager.Ribbon;
+            var panelBackgroundBrushPurple =
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(204, 204, 255));
+            var panelBackgroundBrushLightCoral =
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(240, 128, 128));
+            var panelBackgroundBrushTurquoise =
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(100, 149, 237));
+            var panelBackgroundBrushPaleTurquoise =
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(175, 238, 238));
+
+            foreach (RibbonTab tab in ribbon.Tabs)
             {
-                foreach (Autodesk.Windows.RibbonPanel panel in tab.Panels)
+                if (tab.Title == "Kapibara")
                 {
-                    if (panel.Source.Title == "MEP общие")
+                    foreach (var panel in tab.Panels)
                     {
-                        panel.CustomPanelTitleBarBackground = panelBackgroundBrushPurple;
-
-                    }
-
-                    if (panel.Source.Title == "Вентиляция")
-                    {
-                        panel.CustomPanelTitleBarBackground = panelBackgroundBrushPink;
-                    }
-
-                    if (panel.Source.Title == "Водоснабжение, канализация")
-                    {
-                        panel.CustomPanelTitleBarBackground = panelBackgroundBrushTurquoise;
-                    }
-
-                    if (panel.Source.Title == "BIM")
-                    {
-                        panel.CustomPanelTitleBarBackground = panelBackgroundBrushLightCoral;
-                    }
-
-                    if (panel.Source.Title == "Отопление")
-                    {
-                        panel.CustomPanelTitleBarBackground = panelBackgroundBrushLightCoral;
-                    }
-
-                    if (panel.Source.Title == "Info")
-                    {
-                        panel.CustomPanelTitleBarBackground = panelBackgroundBrushPaleTurquoise;
+                        panel.CustomPanelTitleBarBackground = panel.Source.Title switch
+                        {
+                            "MEP" => panelBackgroundBrushPurple,
+                            "Общие" => panelBackgroundBrushTurquoise,
+                            "BIM" => panelBackgroundBrushLightCoral,
+                            "Разное" => panelBackgroundBrushPaleTurquoise,
+                            _ => panel.CustomPanelTitleBarBackground
+                        };
                     }
                 }
             }
