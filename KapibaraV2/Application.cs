@@ -32,37 +32,37 @@ namespace KapibaraV2
                 .SetImage("/KapibaraV2;component/Resources/Icons/ExportModels.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ExportModels.png");
 
-            panelBim.AddPushButton<FamilyCleaner.Commands.StartupCommand>("CleaningFamily")
-                .SetImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png");
+            panelBim.AddPushButton<FamilyCleaner.Commands.StartupCommand>("Cleaning\nFamily")
+                .SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png");
             
-            panelBim.AddPushButton<FsmModules.Command.StartupCommand>("Prefab")
-                .SetImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/CleaningFamily.png");
+            //panelBim.AddPushButton<FsmModules.Command.StartupCommand>("Prefab")
+                //.SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
+                //.SetLargeImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png");
             
             //General
-            panelGeneral.AddPushButton<ImportExcelByParameter.Commands.StartupCommand>("ImportExcel")
+            panelGeneral.AddPushButton<ImportExcelByParameter.Commands.StartupCommand>("Import\nExcel")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ImportExcel.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ImportExcel.png");
-            panelGeneral.AddPushButton<FloorFillerCommand>("Этаж")
-                .SetImage("/KapibaraV2;component/Resources/Icons/Floor.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/Floor.png");
-            panelGeneral.AddPushButton<ViewManager.Commands.StartupCommand>("ViewManager")
-                .SetImage("/KapibaraV2;component/Resources/Icons/Floor.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/Floor.png");
+            //panelGeneral.AddPushButton<FloorFillerCommand>("Этаж")
+               // .SetImage("/KapibaraV2;component/Resources/Icons/Floor.png")
+                //.SetLargeImage("/KapibaraV2;component/Resources/Icons/Floor.png");
+            panelGeneral.AddPushButton<ViewManager.Commands.StartupCommand>("View\nManager")
+                .SetImage("/KapibaraV2;component/Resources/Icons/ViewManager.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ViewManager.png");
             
             var stackPanel = panelGeneral.AddStackPanel();
             stackPanel.AddLabel("Items:");
-            stackPanel.AddPushButton<SolidIntersector.Commands.SolidIntersector>("Solid Intersector")
-                .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
-            stackPanel.AddPushButton<SetParametersByActiveView.Commands.StartupCommand>("ActiveView")
-                .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
-            stackPanel.AddPushButton<ColorsByParameters.Commands.StartupCommand>("Цвета")
-                .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+            stackPanel.AddPushButton<SolidIntersector.Commands.SolidIntersector>("Intersector")
+                .SetImage("/KapibaraV2;component/Resources/Icons/intersector.png");
+            stackPanel.AddPushButton<ActiveView.Commands.StartupCommand>("Active view")
+                .SetImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
+            //stackPanel.AddPushButton<ColorsByParameters.Commands.StartupCommand>("Цвета")
+                //.SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
             
 
             //MEP общие
-            panelMepGeneral.AddPushButton<SystemName.Commands.StartupCommandSystemName>("Имя системы")
+            panelMepGeneral.AddPushButton<SystemName.Commands.StartupCommandSystemName>("System\nname")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
 

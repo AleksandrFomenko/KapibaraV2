@@ -1,0 +1,107 @@
+﻿<Window
+    x:Class="ActiveView.Views.ActiveViewView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:viewModel="clr-namespace:ActiveView.ViewModels"
+    xmlns:wpfResources="clr-namespace:WpfResources;assembly=WpfResources"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance viewModel:ActiveViewViewModel}"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen"
+    AllowsTransparency="True"
+    WindowStyle="None"
+    Background="Transparent"
+    Title="ActiveView"
+    Height="300"
+    Width="400">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme PrimaryColor="BlueGrey" SecondaryColor="LightBlue">
+                    <materialDesign:BundledTheme.BaseTheme>Light</materialDesign:BundledTheme.BaseTheme>
+                </materialDesign:BundledTheme>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" /> 
+                <ResourceDictionary Source="pack://application:,,,/WpfResources;component/Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border CornerRadius="20" Background="{DynamicResource MainWindowGradient}">
+        <Grid Background="Transparent">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="60" />
+                </Grid.RowDefinitions>
+                <wpfResources:TopPanel Grid.Row="0" Heading="Active View"/>
+                <Border Grid.Row="1" CornerRadius="5"
+                        Background="{StaticResource CharcoalGrayBrush}"
+                        Margin="10,5">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="1.5*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Text="Параметр"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Left"
+                                   Style="{StaticResource MaterialDesignTextBlock}"
+                                   Margin="10,0,0,0"/>
+                        <ComboBox Grid.Row="1"
+                                  Margin="10"
+                                  VerticalAlignment="Center"
+                                  Style="{StaticResource MaterialDesignComboBox}"
+                                  ItemsSource="{Binding Parameters}"
+                                  SelectedItem="{Binding Parameter,Mode=TwoWay}"
+                                  Foreground="{StaticResource LineBrush}"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2" CornerRadius="5"
+                        Background="{StaticResource CharcoalGrayBrush}"
+                        Margin="10,5">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="1.5*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Text="Значение"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Left"
+                                   Style="{StaticResource MaterialDesignTextBlock}"
+                                   Margin="10,0,0,0"/>
+                        <TextBox Grid.Row="1"
+                                 Style="{StaticResource SimpleTextBox}"
+                                 Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="5"
+                                 Visibility="{Binding TextBoxVisibility}"/>
+                        <ToggleButton Grid.Row="1"
+                                      Margin="10,0,0,0"
+                                      HorizontalAlignment="Left"
+                                      Visibility="{Binding ToggleButtonVisibility}"
+                                      IsChecked="{Binding IsActive, Mode=TwoWay}" 
+                                      Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+                    </Grid>
+                </Border>
+                <Button Grid.Row="3"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                        ToolTip="Нажать бы"
+                        Background="{StaticResource LineBrush}"
+                        Margin="10"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Command="{Binding StartCommand}">
+                    <TextBlock
+                        Text="Execute" />
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

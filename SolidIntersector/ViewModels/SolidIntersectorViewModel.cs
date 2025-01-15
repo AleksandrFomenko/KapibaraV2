@@ -1,17 +1,10 @@
-﻿using Autodesk.Revit.DB;
-using CommunityToolkit.Mvvm.ComponentModel;
-using SolidIntersector.Models;
-using System.Collections.Generic;
-using System.Linq;
+﻿using SolidIntersector.Models;
 using System.Windows;
 using Autodesk.Revit.UI;
-using CommunityToolkit.Mvvm.Input;
 using Helper.Models;
-using Nice3point.Revit.Toolkit;
 
 
 namespace SolidIntersector.ViewModels;
-
 
 public partial class SolidIntersectorViewModel : ObservableObject
 {

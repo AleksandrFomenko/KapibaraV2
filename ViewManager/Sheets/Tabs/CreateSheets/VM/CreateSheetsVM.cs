@@ -211,7 +211,7 @@ internal class CreateSheetsVM: ISheetsTab, INotifyPropertyChanged
         var elemId = new ElementId(titleBlockId);
         var element = _doc.GetElement(elemId);
         var parametersProject =
-            KapibaraCore.Parameters.Parameters.GetProjectParametersByCategory(_doc, BuiltInCategory.OST_Sheets);
+            KapibaraCore.Parameters.Parameters.GetProjectParameters(_doc, BuiltInCategory.OST_Sheets);
         var parametersFamily = KapibaraCore.Parameters.Parameters.GetParameterFromFamily(_doc, element);
         Parameters = parametersProject.Union(parametersFamily).ToList();
     }

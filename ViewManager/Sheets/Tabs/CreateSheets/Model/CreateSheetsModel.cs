@@ -53,14 +53,14 @@ internal class CreateSheetsModel
     }
     private void SetUserNumeration(Element elem, string parameterName, string value)
     {
-        var parameter = Parameters.GetParameterByName(_doc, elem, parameterName);
+        var parameter = Parameters.GetParameterByName(elem, parameterName);
         if (parameter == null)
         {
             if (elem is Autodesk.Revit.DB.View view)
             {
                 var sheets = new FilteredElementCollector(_doc, view.Id)
                     .WhereElementIsNotElementType().ToElements().FirstOrDefault();
-                parameter = Parameters.GetParameterByName(_doc, sheets, parameterName);
+                parameter = Parameters.GetParameterByName(sheets, parameterName);
                 
             }
         }

@@ -7,12 +7,12 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:wpfResources="clr-namespace:WpfResources;assembly=WpfResources"
     xmlns:viewModel="clr-namespace:ChatGPT.ViewModels"
-
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance viewModel:ChatGptViewModel}"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     AllowsTransparency="True"
+    Background="Transparent"
     Height="600"
     Width="1000">
     <Window.Resources>

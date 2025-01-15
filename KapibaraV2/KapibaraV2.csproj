@@ -44,9 +44,9 @@
         
 
     <ItemGroup>
-        <PackageReference Include="MaterialDesignColors" Version="3.1.1-ci691" />
+        <PackageReference Include="MaterialDesignColors" Version="5.2.1" />
         <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
-        <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci691" />
+        <PackageReference Include="MaterialDesignThemes" Version="5.2.*" />
         <PackageReference Include="MaterialDesignThemes.MahApps" Version="3.1.1-ci691" />
         <PackageReference Include="MaterialDesignThemes.MahApps.163" Version="0.0.111" />
         <PackageReference Include="MaterialDesignThemes.Wpf" Version="1.0.1" />
@@ -70,25 +70,22 @@
 
     <ItemGroup>
         <Resource Include="Resources\Icons\SystemName.png" />
-        <Resource Include="Resources\Icons\Floor.png" />
         <Resource Include="Resources\Icons\ActiveView.png" />
-        <Resource Include="Resources\Icons\tools.jpg" />
-        <Resource Include="Resources\Icons\kapibwrite.png" />
-        <Resource Include="Resources\Icons\CleaningFamily.png" />
+        <Resource Include="Resources\Icons\FamilyManager.png" />
         <Resource Include="Resources\Icons\ai.png" />
-        <Resource Include="Resources\Icons\github.png" />
-        <Resource Include="Resources\Icons\mouse.png" />
         <Resource Include="Resources\Icons\ImportExcel.png" />
         <Resource Include="Resources\Icons\ExportModels.png" />
+        <Resource Include="Resources\Icons\intersector.png" />
+        <Resource Include="Resources\Icons\ViewManager.png" />
     </ItemGroup>
     
     <ItemGroup>
+      <ProjectReference Include="..\ActiveView\ActiveView.csproj" />
       <ProjectReference Include="..\ChatGPT\ChatGPT.csproj" />
       <ProjectReference Include="..\ColorsByParameters\ColorsByParameters.csproj" />
       <ProjectReference Include="..\FamilyCleaner\FamilyCleaner.csproj" />
       <ProjectReference Include="..\FsmModules\FsmModules.csproj" />
       <ProjectReference Include="..\ImportExcelByParameter\ImportExcelByParameter.csproj" />
-      <ProjectReference Include="..\SetParametersByActiveView\SetParametersByActiveView.csproj" />
       <ProjectReference Include="..\SolidIntersector\SolidIntersector.csproj" />
       <ProjectReference Include="..\SystemName\SystemName.csproj" />
       <ProjectReference Include="..\ViewManager\ViewManager.csproj" />

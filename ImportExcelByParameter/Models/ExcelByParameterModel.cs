@@ -47,7 +47,7 @@ internal class ExcelByParameterModel
                     var parameterValue = kvp.Value;
                     foreach (var elem in elementsDict[key])
                     {
-                        var par = Parameters.GetParameterByName(_doc, elem, parameterName);
+                        var par = elem.GetParameterByName(parameterName);
                         if (par != null && par.StorageType == StorageType.ElementId) continue;
                         Parameters.SetParameterValue(par, parameterValue);
                     }
@@ -79,7 +79,7 @@ internal class ExcelByParameterModel
             .ToElements();
         foreach (var elem in elems)
         {
-            var par = Parameters.GetParameterByName(_doc, elem, Excel.ParameterName);
+            var par = elem.GetParameterByName(Excel.ParameterName);
             if (par == null) continue;
 
             var paramValue = par.AsString() ?? par.AsValueString() ?? string.Empty;

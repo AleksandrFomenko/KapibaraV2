@@ -35,9 +35,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="ClosedXML" Version="0.104.2" />
-        <PackageReference Include="MaterialDesignThemes" Version="5.2.*" />
         <PackageReference Include="MaterialDesignColors" Version="5.2.*" />
+        <PackageReference Include="MaterialDesignThemes" Version="5.2.*" />
         <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="2.*" />
         <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*" />
@@ -47,14 +46,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="MaterialDesignThemes.Wpf">
-        <HintPath>..\..\..\..\.nuget\packages\materialdesignthemes\3.2.0\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
-      </Reference>
+      <ProjectReference Include="..\KapibaraCore\KapibaraCore.csproj" />
+      <ProjectReference Include="..\WpfResources\WpfResources.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\KapibaraCore\KapibaraCore.csproj" />
-      <ProjectReference Include="..\WpfResources\WpfResources.csproj" />
+      <Reference Include="MaterialDesignThemes.Wpf">
+        <HintPath>..\..\..\..\.nuget\packages\materialdesignthemes\3.2.0\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

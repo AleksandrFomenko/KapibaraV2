@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace KapibaraCore.Parameters;
+﻿namespace KapibaraCore.Parameters;
 
 /// <summary>
 /// Статический класс для получения параметров.
@@ -10,7 +8,7 @@ public static class Parameters
     /// <summary>
     /// Записывает значение в параметр.
     /// </summary>
-    public static void SetParameterValue(Parameter parameter, object value) 
+    public static void SetParameterValue(this Parameter parameter, object value) 
     {
         if (parameter == null || parameter.IsReadOnly) return; 
         StorageType storageType = parameter.StorageType; 
@@ -81,19 +79,19 @@ public static class Parameters
             }
         } 
     }
-    
+
     /// <summary>
     /// Получает параметр из элемента.
     /// </summary>
     /// <param name="doc">Документ.</param>
-    /// <param name="elem">Element.</param>
-    /// /// <param name="parameterName">Наименование параметра.</param>
+    /// <param name="element">Element.</param>
+    /// <param name="parameterName">Наименование параметра.</param>
     /// <returns>Параметр.</returns>
-    
-    public static Parameter GetParameterByName(Document doc, Element element, string parameterName)
+    public static Parameter GetParameterByName(this Element element, string parameterName)
     { 
         var par = element.LookupParameter(parameterName); 
         if (par != null) return par;
+        var doc = element.Document; 
         var type = doc.GetElement(element.GetTypeId()); 
         par = type?.LookupParameter(parameterName); 
         return par ?? element.LookupParameter(parameterName);
@@ -135,46 +133,88 @@ public static class Parameters
     }
     
     /// <summary>
-    /// Получает лист параметров из проекта, присвоенных определенной категории..
+    /// Получает лист параметров из проекта, присвоенных определенной категории.
     /// </summary>
     /// <param name="doc">Документ.</param>
     /// <param name="cat">BuiltInCategory.</param>
     /// <returns>Параметры категории</returns>
-    public static List<string> GetProjectParametersByCategory(Document doc, BuiltInCategory cat)
+    public static List<string> GetProjectParameters(this Document doc, BuiltInCategory cat)
     {
-        List<string> result = new List<string>();
+        var result = new List<string>();
         
-        BindingMap bindingMap = doc.ParameterBindings;
+        var bindingMap = doc.ParameterBindings;
         var iterator = bindingMap.ForwardIterator();
 
         while (iterator.MoveNext())
         {
-            Definition definition = iterator.Key as Definition;
-            Binding binding = bindingMap.get_Item(definition);
-            
-            CategorySet categories = null;
+            var definition = iterator.Key as Definition;
+            var binding = bindingMap.get_Item(definition);
 
-            if (binding is InstanceBinding instanceBinding)
+            var categories = binding switch
             {
-                categories = instanceBinding.Categories;
+                InstanceBinding instanceBinding => instanceBinding.Categories,
+                TypeBinding typeBinding => typeBinding.Categories,
+                _ => null
+            };
+
+            if (categories == null) continue;
+            foreach (Category c in categories)
+            {
+                if (c == null || c.Id.IntegerValue != (int)cat) continue;
+                result.Add(definition.Name);
+                break;
             }
-            else if (binding is TypeBinding typeBinding)
+        }
+        result.Sort();
+        return result;
+    }
+    /// <summary>
+    /// Получает лист параметров из проекта
+    /// </summary>
+    /// <param name="doc">Документ.</param>
+    /// <returns>Параметры категории</returns>
+    public static List<string> GetProjectParameters(this Document doc)
+    {
+        if (doc == null) return new List<string>();
+        
+        var bindingMap = doc.ParameterBindings;
+        if (bindingMap == null)
+            return new List<string>();
+
+        var parameterNames = new List<string>();
+        var iterator = bindingMap.ForwardIterator();
+
+        while (iterator.MoveNext())
+        {
+            if (iterator.Key is Definition definition)
             {
-                categories = typeBinding.Categories;
+                parameterNames.Add(definition.Name);
             }
-            
-            if (categories != null)
+        }
+        
+        parameterNames.Sort();
+
+        return parameterNames;
+    }
+    public static Definition GetProjectParameterDefinition(this Document doc, string parameterName)
+    {
+        if (doc == null) throw new ArgumentNullException(nameof(doc));
+    
+        BindingMap bindingMap = doc.ParameterBindings;
+        if (bindingMap == null) return null;
+    
+        var iterator = bindingMap.ForwardIterator();
+        while (iterator.MoveNext())
+        {
+            if (iterator.Key is Definition definition)
             {
-                foreach (Category c in categories)
+                if (definition.Name.Equals(parameterName, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (c != null && c.Id.IntegerValue == (int)cat)
-                    {
-                        result.Add(definition.Name);
-                        break; 
-                    }
+                    return definition;
                 }
             }
         }
-        return result;
+
+        return null;
     }
 }
