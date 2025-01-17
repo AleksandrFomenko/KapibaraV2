@@ -1,11 +1,9 @@
-﻿using ActiveView.Models;
-using Autodesk.Revit.Attributes;
+﻿using Autodesk.Revit.Attributes;
 using Nice3point.Revit.Toolkit.External;
-using ActiveView.ViewModels;
-using ActiveView.Views;
+using EngineeringSystems.ViewModels;
+using EngineeringSystems.Views;
 
-
-namespace ActiveView.Commands;
+namespace EngineeringSystems.Commands;
 
 /// <summary>
 ///     External command entry point invoked from the Revit interface
@@ -17,8 +15,8 @@ public class StartupCommand : ExternalCommand
     public override void Execute()
     {
         var doc = Context.ActiveDocument;
-        var viewModel = new ActiveViewViewModel(doc);
-        var view = new ActiveViewView(viewModel);
+        var viewModel = new EngineeringSystemsViewModel(doc);
+        var view = new EngineeringSystemsView(viewModel);
         view.ShowDialog();
     }
 }

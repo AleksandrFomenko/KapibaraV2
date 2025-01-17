@@ -1,4 +1,6 @@
-﻿namespace KapibaraCore.Parameters
+﻿using Autodesk.Revit.DB;
+
+namespace KapibaraCore.Parameters
 {
     internal static class InternalUnits
     {

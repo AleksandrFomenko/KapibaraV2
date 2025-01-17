@@ -1,0 +1,220 @@
+﻿<Window
+    x:Class="EngineeringSystems.Views.EngineeringSystemsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:viewModel="clr-namespace:EngineeringSystems.ViewModels"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:wpfResources="clr-namespace:WpfResources;assembly=WpfResources"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance viewModel:EngineeringSystemsViewModel}"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen"
+    AllowsTransparency="True"
+    WindowStyle="None"
+    Background="Transparent"
+    Height="{Binding WindowHeight, Mode=TwoWay}"
+    Width="{Binding WindowWidth,Mode=TwoWay}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme PrimaryColor="BlueGrey" SecondaryColor="LightBlue">
+                    <materialDesign:BundledTheme.BaseTheme>Light</materialDesign:BundledTheme.BaseTheme>
+                </materialDesign:BundledTheme>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" /> 
+                <ResourceDictionary Source="pack://application:,,,/WpfResources;component/Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border CornerRadius="20" Background="{DynamicResource MainWindowGradient}">
+        <Grid Background="Transparent">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="100" />
+                </Grid.RowDefinitions>
+                <wpfResources:TopPanel Grid.Row="0" Heading="Engineering systems"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{Binding FirstColumnWidth}"/>
+                        <ColumnDefinition Width="{Binding SecondColumnWidth}"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" CornerRadius="5"
+                                Background="{StaticResource CharcoalGrayBrush}"
+                                Margin="10,5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="1.5*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Text="Системный параметр"
+                                           Foreground="{DynamicResource TextBrush}"
+                                           VerticalAlignment="Top"
+                                           HorizontalAlignment="Left"
+                                           Style="{StaticResource MaterialDesignTextBlock}"
+                                           Margin="10,0,0,0"/>
+                                <ComboBox Grid.Row="1"
+                                          Margin="10"
+                                          VerticalAlignment="Center"
+                                          Style="{StaticResource MaterialDesignComboBox}"
+                                          ItemsSource="{Binding SystemParameters}"
+                                          SelectedItem="{Binding SystemParameter,Mode=TwoWay}"
+                                          Foreground="{StaticResource LineBrush}"
+                                          DisplayMemberPath="Name"/>
+                            </Grid>
+                        </Border>
+                        <Border Grid.Row="1" CornerRadius="5"
+                                Background="{StaticResource CharcoalGrayBrush}"
+                                Margin="10,5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="1.5*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Text="Пользовательский параметр"
+                                           Foreground="{DynamicResource TextBrush}"
+                                           VerticalAlignment="Top"
+                                           HorizontalAlignment="Left"
+                                           Style="{StaticResource MaterialDesignTextBlock}"
+                                           Margin="10,0,0,0"/>
+                                <ComboBox Grid.Row="1"
+                                          Margin="10"
+                                          VerticalAlignment="Center"
+                                          Style="{StaticResource MaterialDesignComboBox}"
+                                          ItemsSource="{Binding UserParameters}"
+                                          SelectedItem="{Binding UserParameter,Mode=TwoWay}"
+                                          Foreground="{StaticResource LineBrush}"/>
+                            </Grid>
+                        </Border>
+                        <Border Grid.Row="2" CornerRadius="5"
+                                Background="{StaticResource CharcoalGrayBrush}"
+                                Margin="10,5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="1.5*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Text="Опции"
+                                           Foreground="{DynamicResource TextBrush}"
+                                           VerticalAlignment="Top"
+                                           HorizontalAlignment="Left"
+                                           Style="{StaticResource MaterialDesignTextBlock}"
+                                           Margin="10,0,0,0"/>
+                                <ComboBox Grid.Row="1"
+                                          Margin="10"
+                                          VerticalAlignment="Center"
+                                          Style="{StaticResource MaterialDesignComboBox}"
+                                          ItemsSource="{Binding Options}"
+                                          SelectedItem="{Binding Option,Mode=TwoWay}"
+                                          Foreground="{StaticResource LineBrush}"
+                                          DisplayMemberPath="NameOpt"/>
+                            </Grid>
+                        </Border>
+                        <Border Grid.Row="3" CornerRadius="5"
+                                Background="{StaticResource CharcoalGrayBrush}"
+                                Margin="10,5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="1.5*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Text="Создать фильтры и 3D виды"
+                                           Foreground="{DynamicResource TextBrush}"
+                                           VerticalAlignment="Top"
+                                           HorizontalAlignment="Left"
+                                           Style="{StaticResource MaterialDesignTextBlock}"
+                                           Margin="10,0,0,0"/>
+                                <ToggleButton Grid.Row="1"
+                                              Margin="10,0,0,0"
+                                              HorizontalAlignment="Left"
+                                              Visibility="{Binding ToggleButtonVisibility}"
+                                              IsChecked="{Binding IsActive, Mode=TwoWay}" 
+                                              Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="125"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Row="0"
+                                  Margin="5"
+                                  materialDesign:ColorZoneAssist.Background="{StaticResource CharcoalGrayBrush}"
+                                  materialDesign:ColorZoneAssist.Foreground="White"
+                                  materialDesign:ColorZoneAssist.Mode="Custom"
+                                  Header="Фильтр по наименованию"
+                                  Style="{StaticResource MaterialDesignCardGroupBox}">
+                            <GroupBox.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel
+                                        Orientation="Horizontal" Height="25">
+                                        <materialDesign:PackIcon
+                                            Width="20"
+                                            Height="20"
+                                            VerticalAlignment="Center"
+                                            Kind="FilterCogOutline"
+                                            Foreground="{StaticResource LineBrush}" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                            Foreground="{StaticResource LineBrush}"
+                                            Text="Фильтр по наименованию" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GroupBox.HeaderTemplate>
+                            <Grid>
+                                <TextBox Style="{StaticResource MaterialDesignFilledTextBox}"
+                                         materialDesign:TextFieldAssist.UnderlineBrush="#2c0675"
+                                         SelectionBrush="#2c0675"
+                                         Text="{Binding FilterByName, UpdateSourceTrigger=PropertyChanged}"
+                                         FontSize="14">
+                                </TextBox>
+                            </Grid>
+                        </GroupBox>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5">
+                            <TextBlock Text="123" MinWidth="50"
+                                       Foreground="{StaticResource LineBrush}"
+                                       FontSize="12"/>
+                            <TextBlock Text="Имя системы" MinWidth="200"
+                                       Foreground="{StaticResource LineBrush}"
+                                       FontSize="12"/>
+                            <TextBlock Text="Сокращение системы" MinWidth="100"
+                                       Foreground="{StaticResource LineBrush}"
+                                       FontSize="12"/>
+                            <TextBlock Text="Id системы" MinWidth="100"
+                                       Foreground="{StaticResource LineBrush}"
+                                       FontSize="12"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <Button Grid.Row="2"
+                        Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                        ToolTip="Нажать бы"
+                        Background="{StaticResource LineBrush}"
+                        Margin="10"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Command="{Binding StartCommand}">
+                    <TextBlock
+                        Text="Execute" />
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

@@ -40,7 +40,7 @@ public static class GetElements
             .WherePasses(catFilter)
             .WhereElementIsNotElementType()
             .ToElements()
-            .ToList();  //
+            .ToList(); 
 
         return elements;
     }

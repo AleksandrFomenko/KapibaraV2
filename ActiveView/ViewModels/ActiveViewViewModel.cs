@@ -16,6 +16,7 @@ public sealed class ActiveViewViewModel : INotifyPropertyChanged
     private string _parameter;
     private string _value;
     private readonly ActiveViewModel _model;
+    public static Action Close;
 
     public RelayCommand StartCommand { get; }
 
@@ -103,6 +104,7 @@ public sealed class ActiveViewViewModel : INotifyPropertyChanged
     private void Execute()
     {
         _model.Execute(Parameter, Value);
+        Close();
     }
     
     public event PropertyChangedEventHandler PropertyChanged;

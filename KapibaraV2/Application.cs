@@ -22,12 +22,27 @@ namespace KapibaraV2
         private void CreateRibbon()
         {
             var panelBim = Application.CreatePanel("BIM", "Kapibara");
-            var panelGeneral = Application.CreatePanel("Общие", "Kapibara");
-            var panelMepGeneral = Application.CreatePanel("MEP", "Kapibara");
-            var panelInfo = Application.CreatePanel("Разное", "Kapibara");
-
-            //BIM
+            var panelBackgroundBrushLightCoral =
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(240, 128, 128));
+            panelBim.SetTitleBarBackground(panelBackgroundBrushLightCoral);
             
+            
+            var panelGeneral = Application.CreatePanel("Общие", "Kapibara");
+            var panelBackgroundBrushTurquoise =
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(100, 149, 237));
+            panelGeneral.SetTitleBarBackground(panelBackgroundBrushTurquoise);
+            
+            var panelBackgroundBrushPurple =
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(204, 204, 255));
+            var panelMepGeneral = Application.CreatePanel("MEP", "Kapibara");
+            panelMepGeneral.SetTitleBarBackground(panelBackgroundBrushPurple);
+            
+            var panelBackgroundBrushPaleTurquoise =
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(175, 238, 238));
+            var panelInfo = Application.CreatePanel("Разное", "Kapibara");
+            panelInfo.SetTitleBarBackground(panelBackgroundBrushPaleTurquoise);
+            
+            //BIM
             panelBim.AddPushButton<ExportModels>("Export\nmodels")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ExportModels.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ExportModels.png");
@@ -70,35 +85,6 @@ namespace KapibaraV2
             panelInfo.AddPushButton<ChatGPT.Commands.ChatGpt>("ChatGPT")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ai.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ai.png");
-
-
-            var ribbon = ComponentManager.Ribbon;
-            var panelBackgroundBrushPurple =
-                new SolidColorBrush(System.Windows.Media.Color.FromRgb(204, 204, 255));
-            var panelBackgroundBrushLightCoral =
-                new SolidColorBrush(System.Windows.Media.Color.FromRgb(240, 128, 128));
-            var panelBackgroundBrushTurquoise =
-                new SolidColorBrush(System.Windows.Media.Color.FromRgb(100, 149, 237));
-            var panelBackgroundBrushPaleTurquoise =
-                new SolidColorBrush(System.Windows.Media.Color.FromRgb(175, 238, 238));
-
-            foreach (RibbonTab tab in ribbon.Tabs)
-            {
-                if (tab.Title == "Kapibara")
-                {
-                    foreach (var panel in tab.Panels)
-                    {
-                        panel.CustomPanelTitleBarBackground = panel.Source.Title switch
-                        {
-                            "MEP" => panelBackgroundBrushPurple,
-                            "Общие" => panelBackgroundBrushTurquoise,
-                            "BIM" => panelBackgroundBrushLightCoral,
-                            "Разное" => panelBackgroundBrushPaleTurquoise,
-                            _ => panel.CustomPanelTitleBarBackground
-                        };
-                    }
-                }
-            }
         }
     }
 }

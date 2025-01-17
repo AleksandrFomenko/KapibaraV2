@@ -1,4 +1,7 @@
-﻿namespace KapibaraCore.Parameters;
+﻿using System.Collections.Generic;
+using Autodesk.Revit.DB;
+
+namespace KapibaraCore.Parameters;
 
 /// <summary>
 /// Статический класс для получения параметров.
@@ -196,6 +199,34 @@ public static class Parameters
 
         return parameterNames;
     }
+
+    public static IEnumerable<string> GetProjectParameters(this Document doc, ForgeTypeId type)
+    {
+        var bindingMap = doc.ParameterBindings;
+        if (bindingMap == null)
+            yield break;
+
+        var iterator = bindingMap.ForwardIterator();
+        var uniqueParameters = new HashSet<string>();
+
+        while (iterator.MoveNext())
+        {
+            var definition = iterator.Key;
+            if (definition == null)
+                continue;
+
+
+            var paramType = definition.GetDataType();
+
+            if (paramType != type) continue;
+            if (uniqueParameters.Add(definition.Name))
+            {
+                yield return definition.Name;
+            }
+        }
+    }
+
+    
     public static Definition GetProjectParameterDefinition(this Document doc, string parameterName)
     {
         if (doc == null) throw new ArgumentNullException(nameof(doc));

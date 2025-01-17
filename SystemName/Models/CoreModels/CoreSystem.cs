@@ -27,8 +27,7 @@ public class CoreSystem
         BuiltInCategory.OST_FlexPipeCurves
     };
     
-
-    // залупа 
+    
     private string getSystemType(Element elem)
     {
         var result = "";

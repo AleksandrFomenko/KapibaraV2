@@ -24,6 +24,19 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
     </ItemGroup>
 
+
+    <ItemGroup>
+      <Reference Include="mscorlib">
+        <HintPath>..\..\..\..\.nuget\packages\microsoft.netframework.referenceassemblies.net48\1.0.3\build\.NETFramework\v4.8\mscorlib.dll</HintPath>
+      </Reference>
+      <Reference Include="RevitAPI">
+        <HintPath>..\..\..\..\.nuget\packages\nice3point.revit.api.revitapi\2022.1.21\ref\net48\RevitAPI.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Core">
+        <HintPath>..\..\..\..\.nuget\packages\microsoft.netframework.referenceassemblies.net48\1.0.3\build\.NETFramework\v4.8\System.Core.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
     <PropertyGroup Condition="$(Configuration.Contains('R20'))">
         <RevitVersion>2020</RevitVersion>
         <TargetFramework>net48</TargetFramework>
