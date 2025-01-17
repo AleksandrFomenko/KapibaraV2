@@ -18,6 +18,25 @@
     Width="{Binding WindowWidth,Mode=TwoWay}">
     <Window.Resources>
         <ResourceDictionary>
+            <Style x:Key="TextTableHead" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{StaticResource LineBrush}" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0,0,30,0"></Setter>
+            </Style>
+            <Style x:Key="TextListBox" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <Style x:Key="BorderPanel" TargetType="Border">
+                <Setter Property="CornerRadius" Value="5"/>
+                <Setter Property="BorderBrush" Value="{StaticResource TextBrush}"/>
+                <Setter Property="Background" Value="{StaticResource CharcoalGrayBrush}"/>
+                <Setter Property="BorderThickness" Value="1.5"/>
+            </Style>
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme PrimaryColor="BlueGrey" SecondaryColor="LightBlue">
                     <materialDesign:BundledTheme.BaseTheme>Light</materialDesign:BundledTheme.BaseTheme>
@@ -27,7 +46,11 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Border CornerRadius="20" Background="{DynamicResource MainWindowGradient}">
+    
+    <Border CornerRadius="20"
+            Background="{DynamicResource MainWindowGradient}"
+            BorderThickness="2"
+            BorderBrush="Black">
         <Grid Background="Transparent">
             <Grid>
                 <Grid.RowDefinitions>
@@ -48,8 +71,8 @@
                             <RowDefinition Height="*" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <Border Grid.Row="0" CornerRadius="5"
-                                Background="{StaticResource CharcoalGrayBrush}"
+                        <Border Grid.Row="0" 
+                                Style="{StaticResource BorderPanel}"
                                 Margin="10,5">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -74,7 +97,7 @@
                             </Grid>
                         </Border>
                         <Border Grid.Row="1" CornerRadius="5"
-                                Background="{StaticResource CharcoalGrayBrush}"
+                                Style="{StaticResource BorderPanel}"
                                 Margin="10,5">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -97,8 +120,8 @@
                                           Foreground="{StaticResource LineBrush}"/>
                             </Grid>
                         </Border>
-                        <Border Grid.Row="2" CornerRadius="5"
-                                Background="{StaticResource CharcoalGrayBrush}"
+                        <Border Grid.Row="2"
+                                Style="{StaticResource BorderPanel}"
                                 Margin="10,5">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -122,8 +145,8 @@
                                           DisplayMemberPath="NameOpt"/>
                             </Grid>
                         </Border>
-                        <Border Grid.Row="3" CornerRadius="5"
-                                Background="{StaticResource CharcoalGrayBrush}"
+                        <Border Grid.Row="3"
+                                Style="{StaticResource BorderPanel}"
                                 Margin="10,5">
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -187,20 +210,83 @@
                                 </TextBox>
                             </Grid>
                         </GroupBox>
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5">
-                            <TextBlock Text="123" MinWidth="50"
-                                       Foreground="{StaticResource LineBrush}"
-                                       FontSize="12"/>
-                            <TextBlock Text="Имя системы" MinWidth="200"
-                                       Foreground="{StaticResource LineBrush}"
-                                       FontSize="12"/>
-                            <TextBlock Text="Сокращение системы" MinWidth="100"
-                                       Foreground="{StaticResource LineBrush}"
-                                       FontSize="12"/>
-                            <TextBlock Text="Id системы" MinWidth="100"
-                                       Foreground="{StaticResource LineBrush}"
-                                       FontSize="12"/>
-                        </StackPanel>
+                        <Grid Grid.Row="1" Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60"/> 
+                                <ColumnDefinition Width="2.5*"/> 
+                                <ColumnDefinition Width="1.5*"/> 
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
+                            <CheckBox IsChecked="{Binding IsChecked}"
+                                      Style="{StaticResource MaterialDesignLightCheckBox}"
+                                      Background="{DynamicResource TextBrush}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Width="20"
+                                      Height="15"
+                                      Grid.Column="0">
+                                <CheckBox.LayoutTransform>
+                                    <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                </CheckBox.LayoutTransform>
+                            </CheckBox>
+                            <TextBlock Grid.Column="1" Text="Имя системы" 
+                                       Style="{StaticResource TextTableHead}"/>
+                            <TextBlock Grid.Column="2" Text="Сокращение системы" 
+                                       Style="{StaticResource TextTableHead}"/>
+                            <TextBlock Grid.Column="3" Text="Id системы" 
+                                       Margin="0,0,30,0"
+                                       Style="{StaticResource TextTableHead}"/>
+                        </Grid>
+                            
+                            
+                        <ListBox Grid.Row="2"
+                                 Style="{StaticResource MaterialDesignListBox}"
+                                 ItemsSource="{Binding EngineeringSystems}"
+                                 SelectedItem="{Binding EngineeringSystem}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="2.5*"/>
+                                            <ColumnDefinition Width="1.5*"/>
+                                            <ColumnDefinition Width="100"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <CheckBox IsChecked="{Binding IsChecked}"
+                                                  Style="{StaticResource MaterialDesignLightCheckBox}"
+                                                  Background="{DynamicResource TextBrush}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Width="20"
+                                                  Height="15"
+                                                  Grid.Column="0">
+                                            <CheckBox.LayoutTransform>
+                                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                            </CheckBox.LayoutTransform>
+                                        </CheckBox>
+
+                                        <TextBlock Text="{Binding NameSystem}"
+                                                   Style="{StaticResource TextListBox}"
+                                                   Grid.Column="1"/>
+                
+                                        <TextBlock Text="{Binding CutSystemName}"
+                                                   Style="{StaticResource TextListBox}"
+                                                   Grid.Column="2"/>
+                
+                                        <TextBlock Text="{Binding SystemId}"
+                                                   Style="{StaticResource TextListBox}"
+                                                   Grid.Column="3"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
                     </Grid>
                 </Grid>
                 <Button Grid.Row="2"

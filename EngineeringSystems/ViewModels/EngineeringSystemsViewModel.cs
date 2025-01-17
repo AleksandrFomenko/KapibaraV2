@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using EngineeringSystems.Model;
 using KapibaraCore.Parameters;
 using RelayCommand = KapibaraCore.RelayCommand.RelayCommand;
 
@@ -9,6 +10,7 @@ namespace EngineeringSystems.ViewModels;
 public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
 {
     private readonly Document _doc;
+    private Data _data;
     private GridLength _firstColumnWidth;
     private GridLength _secondColumnWidth;
     private double _windowWidth;
@@ -19,6 +21,10 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
     private string _userParameter;
     private List<Options> _options;
     private Options _option;
+    private List<EngineeringSystem> _engineeringSystems;
+    private EngineeringSystem _engineeringSystem;
+    private string _filterByName = string.Empty;
+    
     
     public RelayCommand StartCommand { get; }
     public GridLength FirstColumnWidth
@@ -76,6 +82,30 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
             CheckOptions();
         }
     }
+    public List<EngineeringSystem> EngineeringSystems
+    {
+        get => _engineeringSystems;
+        set => SetField(ref _engineeringSystems, value);
+    }
+    public EngineeringSystem EngineeringSystem
+    {
+        get => _engineeringSystem;
+        set
+        {
+            value.IsChecked = true;
+            SetField(ref _engineeringSystem, value);
+        }
+    }
+
+    public string FilterByName
+    {
+        get => _filterByName;
+        set
+        {
+            SetField(ref _filterByName, value);
+            ReloadEngineeringSystems();
+        }
+    }
     internal EngineeringSystemsViewModel(Document doc)
     {
         _doc = doc;
@@ -96,14 +126,22 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
         UserParameters = _doc.GetProjectParameters(SpecTypeId.String.Text).ToList();
         Options = new List<Options>()
         {
-            new Options("Записывать в элементы на активном виде", 400, 450,
+            new Options("Записывать в элементы на активном виде", 400, 500,
                 new GridLength(1, GridUnitType.Star), 
                 new GridLength(0, GridUnitType.Pixel)),
-            new Options("Выбрать систему", 800,600,
+            new Options("Выбрать систему", 1000,600,
                 new GridLength(0.5, GridUnitType.Star),
                 new GridLength(1, GridUnitType.Star))
         };
         Option = Options[0];
+
+        _data = new Data(_doc);
+        ReloadEngineeringSystems();
+    }
+
+    private void ReloadEngineeringSystems()
+    {
+        EngineeringSystems = _data.GetSystems(FilterByName);
     }
 
 
