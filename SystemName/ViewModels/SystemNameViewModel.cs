@@ -211,7 +211,7 @@ public partial class SystemNameViewModel : ObservableObject
             foreach (var systemName in GetCheckedSystemNames()) 
             { 
                 var view = View3D.createView3D(systemName);
-                var filter = Filter.createFilter(GetElements.MEP_cats, _selectedParameter, systemName);
+                var filter = Filter.CreateFilter(GetElements.MEP_cats, _selectedParameter, systemName);
                 view.AddFilter(filter.Id);
                view.SetFilterVisibility(filter.Id, false);
             }

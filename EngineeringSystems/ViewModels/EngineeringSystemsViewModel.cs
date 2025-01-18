@@ -24,6 +24,8 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
     private List<EngineeringSystem> _engineeringSystems;
     private EngineeringSystem _engineeringSystem;
     private string _filterByName = string.Empty;
+    private bool _isCheckedAllSystems;
+    private bool _сreateView;
     
     
     public RelayCommand StartCommand { get; }
@@ -66,7 +68,11 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
     public string UserParameter
     {
         get => _userParameter;
-        set => SetField(ref _userParameter, value);
+        set
+        {
+            SetField(ref _userParameter, value);
+            StartCommand.RaiseCanExecuteChanged();
+        }
     }
     public List<Options> Options
     {
@@ -92,11 +98,10 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
         get => _engineeringSystem;
         set
         {
-            value.IsChecked = true;
+            value.IsChecked = !value.IsChecked;
             SetField(ref _engineeringSystem, value);
         }
     }
-
     public string FilterByName
     {
         get => _filterByName;
@@ -105,6 +110,23 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
             SetField(ref _filterByName, value);
             ReloadEngineeringSystems();
         }
+    }
+    public bool IsCheckedAllSystems
+    {
+        get => _isCheckedAllSystems;
+        set
+        {
+            SetField(ref _isCheckedAllSystems, value);
+            foreach (var engineeringSystem in EngineeringSystems)
+            {
+                engineeringSystem.IsChecked = value;
+            }
+        }
+    }
+    public bool CreateView
+    {
+        get => _сreateView;
+        set => SetField(ref _сreateView, value);
     }
     internal EngineeringSystemsViewModel(Document doc)
     {
@@ -126,25 +148,25 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
         UserParameters = _doc.GetProjectParameters(SpecTypeId.String.Text).ToList();
         Options = new List<Options>()
         {
-            new Options("Записывать в элементы на активном виде", 400, 500,
+            new Options("Записать в элементы на активном виде", 400, 500,
                 new GridLength(1, GridUnitType.Star), 
-                new GridLength(0, GridUnitType.Pixel)),
+                new GridLength(0, GridUnitType.Pixel), 
+                true
+                ),
             new Options("Выбрать систему", 1000,600,
                 new GridLength(0.5, GridUnitType.Star),
-                new GridLength(1, GridUnitType.Star))
+                new GridLength(1, GridUnitType.Star),
+                false)
         };
         Option = Options[0];
 
         _data = new Data(_doc);
         ReloadEngineeringSystems();
     }
-
     private void ReloadEngineeringSystems()
     {
         EngineeringSystems = _data.GetSystems(FilterByName);
     }
-
-
     private void CheckOptions()
     {
         WindowWidth = Option.Width;
@@ -152,21 +174,37 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
         FirstColumnWidth = Option.FirstColumnWidth;
         SecondColumnWidth = Option.SecondColumnWidth;
     }
+    private List<string> GetCheckedSystemNames(bool flag)
+    {
+        if (flag)
+        {
+            return EngineeringSystems
+                .Where(system => system.IsChecked)
+                .Select(system => system.NameSystem)
+                .ToList();
+        }
+        
+        return EngineeringSystems
+            .Where(system => system.IsChecked)
+            .Select(system => system.CutSystemName)
+            .ToList();
+    }
     private bool CanExecute()
     {
-        return true;
+        return UserParameter != null;
     }
     private void Execute()
     {
+        var model = new EngineeringSystemsModel(_doc, Option);
+        var flag = SystemParameter.Name == "Имя системы" ? true : false;
+        var systemString = GetCheckedSystemNames(flag);
+        model.Execute(systemString, UserParameter, flag, CreateView);
     }
-
     public event PropertyChangedEventHandler PropertyChanged;
-
     private void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-
     private bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;

@@ -11,14 +11,17 @@ public class Options
     public double Height { get; }
     public GridLength FirstColumnWidth { get; }
     public GridLength SecondColumnWidth { get; }
+    public bool Flag { get; set; }
 
-    public Options(string name, double width, double height, GridLength firstColumnWidth, GridLength secondColumnWidth)
+    public Options(string name, double width, double height, GridLength firstColumnWidth, GridLength secondColumnWidth,
+        bool flag)
     {
         NameOpt = name;
         Width = width;
         Height = height;
         FirstColumnWidth = firstColumnWidth;
         SecondColumnWidth = secondColumnWidth;
+        Flag = flag;
     }
 }
 

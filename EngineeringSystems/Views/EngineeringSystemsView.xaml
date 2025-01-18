@@ -37,6 +37,7 @@
                 <Setter Property="Background" Value="{StaticResource CharcoalGrayBrush}"/>
                 <Setter Property="BorderThickness" Value="1.5"/>
             </Style>
+            
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme PrimaryColor="BlueGrey" SecondaryColor="LightBlue">
                     <materialDesign:BundledTheme.BaseTheme>Light</materialDesign:BundledTheme.BaseTheme>
@@ -164,7 +165,7 @@
                                               Margin="10,0,0,0"
                                               HorizontalAlignment="Left"
                                               Visibility="{Binding ToggleButtonVisibility}"
-                                              IsChecked="{Binding IsActive, Mode=TwoWay}" 
+                                              IsChecked="{Binding CreateView, Mode=TwoWay}" 
                                               Style="{StaticResource MaterialDesignSwitchToggleButton}" />
                             </Grid>
                         </Border>
@@ -210,37 +211,47 @@
                                 </TextBox>
                             </Grid>
                         </GroupBox>
-                        <Grid Grid.Row="1" Margin="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="60"/> 
-                                <ColumnDefinition Width="2.5*"/> 
-                                <ColumnDefinition Width="1.5*"/> 
-                                <ColumnDefinition Width="100"/>
-                            </Grid.ColumnDefinitions>
-                            <CheckBox IsChecked="{Binding IsChecked}"
-                                      Style="{StaticResource MaterialDesignLightCheckBox}"
-                                      Background="{DynamicResource TextBrush}"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      Width="20"
-                                      Height="15"
-                                      Grid.Column="0">
-                                <CheckBox.LayoutTransform>
-                                    <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
-                                </CheckBox.LayoutTransform>
-                            </CheckBox>
-                            <TextBlock Grid.Column="1" Text="Имя системы" 
-                                       Style="{StaticResource TextTableHead}"/>
-                            <TextBlock Grid.Column="2" Text="Сокращение системы" 
-                                       Style="{StaticResource TextTableHead}"/>
-                            <TextBlock Grid.Column="3" Text="Id системы" 
-                                       Margin="0,0,30,0"
-                                       Style="{StaticResource TextTableHead}"/>
-                        </Grid>
+                        <Border Grid.Row="1"
+                                Margin="5,5,5,0"
+                                BorderThickness="2,2,2,0"
+                                BorderBrush="{StaticResource TextBrush}"
+                                Background="{StaticResource CharcoalGrayBrush}"
+                                CornerRadius="10,10,0,0">
                             
+                            <Grid Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60"/> 
+                                    <ColumnDefinition Width="2.5*"/> 
+                                    <ColumnDefinition Width="1.5*"/> 
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox IsChecked="{Binding IsCheckedAllSystems}"
+                                          Style="{StaticResource MaterialDesignLightCheckBox}"
+                                          Background="{DynamicResource TextBrush}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Width="20"
+                                          Height="15"
+                                          Grid.Column="0">
+                                    <CheckBox.LayoutTransform>
+                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                    </CheckBox.LayoutTransform>
+                                </CheckBox>
+                                <TextBlock Grid.Column="1" Text="Имя системы" 
+                                           Style="{StaticResource TextTableHead}"/>
+                                <TextBlock Grid.Column="2" Text="Сокращение системы" 
+                                           Style="{StaticResource TextTableHead}"/>
+                                <TextBlock Grid.Column="3" Text="Id системы" 
+                                           Style="{StaticResource TextTableHead}"/>
+                            </Grid>
                             
+                        </Border>
                         <ListBox Grid.Row="2"
+                                 Margin="5,0,5,5"
                                  Style="{StaticResource MaterialDesignListBox}"
+                                 BorderThickness="2,0,2,2"
+                                 BorderBrush="{StaticResource TextBrush}"
+                                 Background="{StaticResource CharcoalGrayBrush}"
                                  ItemsSource="{Binding EngineeringSystems}"
                                  SelectedItem="{Binding EngineeringSystem}">
                             <ListBox.ItemTemplate>
@@ -260,6 +271,7 @@
                                                   VerticalAlignment="Center"
                                                   Width="20"
                                                   Height="15"
+                                                  BorderBrush="{StaticResource TextBrush}"
                                                   Grid.Column="0">
                                             <CheckBox.LayoutTransform>
                                                 <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
@@ -286,6 +298,11 @@
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                 </Style>
                             </ListBox.ItemContainerStyle>
+                            <ListBox.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="0, 0,10, 10"/>
+                                </Style>
+                            </ListBox.Resources>
                         </ListBox>
                     </Grid>
                 </Grid>

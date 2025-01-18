@@ -88,9 +88,7 @@ public static class GetElements
             BuiltInCategory.OST_PipingSystem, BuiltInCategory.OST_Alignments,
             BuiltInCategory.OST_DuctSystem
         };
-        
         var catFilter = new ElementMulticategoryFilter(cats);
-        
         var elementIds = mepSystemType.GetDependentElements(catFilter);
         
         var elements = elementIds
@@ -99,7 +97,6 @@ public static class GetElements
             .ToList();
 
         return elements;
-
     }
 
     private static List<Element> getElementsInSystem(Element mepSystem)

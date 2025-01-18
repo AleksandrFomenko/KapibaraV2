@@ -1,8 +1,15 @@
-﻿namespace System_name.Models.View3D;
+﻿namespace EngineeringSystems.Model;
 
-public static class Filter
+internal class Filter
 {
-    public static ParameterFilterElement CreateFilter(List <BuiltInCategory> categories, string nameParameter, string value)
+    private Document _doc;
+
+    internal Filter(Document doc)
+    {
+        _doc = doc;
+    }
+    
+    internal ParameterFilterElement CreateFilter(List <BuiltInCategory> categories, string nameParameter, string value)
     {
         /*
         var parameterId = searchParameter(nameParameter);
@@ -28,13 +35,13 @@ public static class Filter
         var uniqueName = GetUniqueFilterName(value);
         
         var filter = new ElementParameterFilter(filterRule);
-        return ParameterFilterElement.Create(Context.Document, uniqueName, categoryIds, filter);
+        return ParameterFilterElement.Create(_doc, uniqueName, categoryIds, filter);
     }
 
-    private static ElementId SearchParameter(string name)
+    private ElementId SearchParameter(string name)
     {
-        BindingMap bindingMap = Context.Document.ParameterBindings;
-        DefinitionBindingMapIterator iterator = bindingMap.ForwardIterator();
+        var bindingMap = _doc.ParameterBindings;
+        var iterator = bindingMap.ForwardIterator();
         
         while (iterator.MoveNext())
         {
@@ -47,9 +54,9 @@ public static class Filter
         }
         return null; 
     }
-    private static string GetUniqueFilterName(string baseName, int suffix = 0)
+    private string GetUniqueFilterName(string baseName, int suffix = 0)
     {
-        var filterCollector = new FilteredElementCollector(Context.Document)
+        var filterCollector = new FilteredElementCollector(_doc)
             .OfClass(typeof(ParameterFilterElement))
             .Cast<ParameterFilterElement>();
         
@@ -60,5 +67,4 @@ public static class Filter
         return nameExists ? GetUniqueFilterName(baseName, suffix + 1) :
             newName;
     }
-    
 }
