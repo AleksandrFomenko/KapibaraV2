@@ -68,7 +68,7 @@ namespace KapibaraV2
             
             var stackPanel = panelGeneral.AddStackPanel();
             stackPanel.AddLabel("Items:");
-            stackPanel.AddPushButton<SolidIntersector.Commands.SolidIntersector>("Intersector")
+            stackPanel.AddPushButton<SolidIntersection.Commands.SolidIntersection>("Intersection")
                 .SetImage("/KapibaraV2;component/Resources/Icons/intersector.png");
             stackPanel.AddPushButton<ActiveView.Commands.StartupCommand>("Active view")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
@@ -77,7 +77,7 @@ namespace KapibaraV2
             
 
             //MEP общие
-            panelMepGeneral.AddPushButton<SystemName.Commands.StartupCommandSystemName>("System\nname")
+            panelMepGeneral.AddPushButton<EngineeringSystems.Commands.StartupCommand>("System\nname")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
 

@@ -4,7 +4,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/WpfResources;component/Themes/DarkTheme.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/WpfResources;component/Themes/MainTheme.xaml"/>
-        
     </ResourceDictionary.MergedDictionaries>
     
     <Style x:Key="SimpleTextBox" TargetType="{x:Type TextBox}">

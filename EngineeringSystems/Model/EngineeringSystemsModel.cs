@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
@@ -163,7 +164,6 @@ internal class EngineeringSystemsModel
                     break;
             }
         }
-
         return result;
     }
     private List<Element> GetElementsInSystem(List<string> systemsName, bool sysName)
@@ -195,9 +195,8 @@ internal class EngineeringSystemsModel
             var parameter = elem.get_Parameter(bp);
             if (parameter == null)
             {
-                return;
+                continue;
             }
-
             if (parameter.AsString() != null && parameter.AsString() != "")
             {
                 if (elem is FamilyInstance notSuperComponent && notSuperComponent.SuperComponent == null)
@@ -239,7 +238,6 @@ internal class EngineeringSystemsModel
         var elements = _options.Flag ?
             GetElementsOnActiveView() :
             GetElementsInSystem(systemNames, flag1);
-
         using (var t = new Transaction(_doc, "Engineering systems"))
         {
             t.Start();

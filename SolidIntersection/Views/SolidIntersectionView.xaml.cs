@@ -2,14 +2,15 @@
 using System.Windows.Media;
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
-using SolidIntersector.ViewModels;
+using SolidIntersection.ViewModels;
 
-namespace SolidIntersector.Views;
+namespace SolidIntersection.Views;
 
-public sealed partial class SolidIntersectorView: Window
+public sealed partial class SolidIntersectionView: Window
 {
-    public SolidIntersectorView(SolidIntersectorViewModel viewModel)
+    public SolidIntersectionView(SolidIntersectionViewModel viewModel)
     {
+        SolidIntersectionViewModel.Close = Close;
         InitializeMaterialDesign();
         DataContext = viewModel;
         InitializeComponent();

@@ -4,6 +4,7 @@
         <ResourceDictionary Source="DarkTheme.xaml"/>
         <ResourceDictionary Source="MainTheme.xaml"/>
         <ResourceDictionary Source="../Styles/TextBox.xaml"/>
+        <ResourceDictionary Source="../Styles/Border.xaml"/>
         <ResourceDictionary Source="../Images/Icons.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

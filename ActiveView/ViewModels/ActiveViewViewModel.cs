@@ -17,6 +17,8 @@ public sealed class ActiveViewViewModel : INotifyPropertyChanged
     private string _value;
     private readonly ActiveViewModel _model;
     public static Action Close;
+    private Visibility _textBoxVisibility = Visibility.Visible;
+    private Visibility _toggleButtonVisibility = Visibility.Hidden;
 
     public RelayCommand StartCommand { get; }
 
@@ -59,8 +61,6 @@ public sealed class ActiveViewViewModel : INotifyPropertyChanged
             Value = value ? "1" : "0";
         }
     }
-
-    private Visibility _textBoxVisibility = Visibility.Visible;
     public Visibility TextBoxVisibility
     {
         get => _textBoxVisibility;
@@ -70,7 +70,6 @@ public sealed class ActiveViewViewModel : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
-    private Visibility _toggleButtonVisibility = Visibility.Hidden;
     public Visibility ToggleButtonVisibility
     {
         get => _toggleButtonVisibility;

@@ -7,6 +7,7 @@
         <ImplicitUsings>true</ImplicitUsings>
         <Configurations>Debug R20;Debug R21;Debug R22;Debug R23;Debug R24;Debug R25</Configurations>
         <Configurations>$(Configurations);Release R20;Release R21;Release R22;Release R23;Release R24;Release R25</Configurations>
+        <RootNamespace>SolidIntersection</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup Condition="$(Configuration.Contains('R20'))">
@@ -42,8 +43,8 @@
         <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
         <PackageReference Include="MaterialDesignThemes" Version="5.1.1-ci691" />
         <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="1.*" />
-        <PackageReference Include="Nice3point.Revit.Toolkit" Version="2022.2.1" />
-        <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*-*" />
         <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
@@ -63,6 +64,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Helper\Helper.csproj" />
+      <ProjectReference Include="..\KapibaraCore\KapibaraCore.csproj" />
+      <ProjectReference Include="..\WpfResources\WpfResources.csproj" />
     </ItemGroup>
 
 </Project>

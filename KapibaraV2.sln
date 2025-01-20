@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KapibaraV2", "KapibaraV2\KapibaraV2.csproj", "{28584587-AEFD-415D-AEE2-028D7321E908}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidIntersector", "SolidIntersector\SolidIntersector.csproj", "{1E6FE382-8036-4CDB-9B5F-32FA791B3B35}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolidIntersection", "SolidIntersection\SolidIntersection.csproj", "{1E6FE382-8036-4CDB-9B5F-32FA791B3B35}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper", "Helper\Helper.csproj", "{08BA8657-054C-40BF-B4E7-04EF6F7CB284}"
 EndProject
@@ -485,5 +485,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8CD358BB-9032-4846-8165-FEA9FBA0B3FA} = {0C224346-C1FF-4378-9604-7A42BAC64D2B}
 		{B0E33ABF-7D1D-4410-B442-2CD87E520F0C} = {C7E32B2C-18FD-4A33-8C97-F83D480F4D92}
+		{1E6FE382-8036-4CDB-9B5F-32FA791B3B35} = {0C224346-C1FF-4378-9604-7A42BAC64D2B}
 	EndGlobalSection
 EndGlobal

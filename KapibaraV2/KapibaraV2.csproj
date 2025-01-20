@@ -83,10 +83,11 @@
       <ProjectReference Include="..\ActiveView\ActiveView.csproj" />
       <ProjectReference Include="..\ChatGPT\ChatGPT.csproj" />
       <ProjectReference Include="..\ColorsByParameters\ColorsByParameters.csproj" />
+      <ProjectReference Include="..\EngineeringSystems\EngineeringSystems.csproj" />
       <ProjectReference Include="..\FamilyCleaner\FamilyCleaner.csproj" />
       <ProjectReference Include="..\FsmModules\FsmModules.csproj" />
       <ProjectReference Include="..\ImportExcelByParameter\ImportExcelByParameter.csproj" />
-      <ProjectReference Include="..\SolidIntersector\SolidIntersector.csproj" />
+      <ProjectReference Include="..\SolidIntersection\SolidIntersection.csproj" />
       <ProjectReference Include="..\SystemName\SystemName.csproj" />
       <ProjectReference Include="..\ViewManager\ViewManager.csproj" />
     </ItemGroup>

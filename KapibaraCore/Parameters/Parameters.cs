@@ -104,17 +104,18 @@ public static class Parameters
     /// <param name="elem">Element.</param>
     /// <returns>Параметры элемента</returns>
 
-    public static List<Parameter> GetParameters(Element elem)
+    public static List<Parameter> GetParameters(this Element elem)
     {
         return elem.Parameters.Cast<Parameter>().ToList();
     }
-    
+
     /// <summary>
     /// Получает лист параметров из элемента.
     /// </summary>
+    /// <param name="doc"></param>
     /// <param name="elem">Element.</param>
     /// <returns>Параметры элемента</returns>
-    public static List<string> GetParameterFromFamily(Document doc, Element elem)
+    public static List<string> GetParameterFromFamily(this Document doc, Element elem)
     {
         var famParameters = new List<FamilyParameter>();
         Family family = elem switch

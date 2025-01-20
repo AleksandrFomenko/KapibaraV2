@@ -1,0 +1,243 @@
+﻿<Window
+    x:Class="SolidIntersection.Views.SolidIntersectionView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:viewModel="clr-namespace:SolidIntersection.ViewModels"
+    xmlns:wpfResources="clr-namespace:WpfResources;assembly=WpfResources"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance viewModel:SolidIntersectionViewModel}"
+    WindowStartupLocation="CenterScreen"
+    ResizeMode="NoResize"
+    AllowsTransparency="True"
+    WindowStyle="None"
+    Background="Transparent"
+    Height="600"
+    Width="700">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <materialDesign:BundledTheme PrimaryColor="BlueGrey" SecondaryColor="LightBlue">
+                    <materialDesign:BundledTheme.BaseTheme>Light</materialDesign:BundledTheme.BaseTheme>
+                </materialDesign:BundledTheme>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" /> 
+                <ResourceDictionary Source="pack://application:,,,/WpfResources;component/Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="TextTableHead" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{StaticResource LineBrush}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0,0,30,0"></Setter>
+            </Style>
+            <Style x:Key="TextListBox" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border Style="{StaticResource BorderMainWindow}">
+        <Grid Background="Transparent">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <wpfResources:TopPanel Grid.Row="0" Heading="Solid intersection"/>
+            <Grid Grid.Row="1" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Background="Transparent">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100" />
+                        <RowDefinition Height="100" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="100" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" 
+                            Style="{StaticResource InputBorder}"
+                            Margin="10,5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="1.5*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Text="Параметр"
+                                       Foreground="{DynamicResource TextBrush}"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       Style="{StaticResource MaterialDesignTextBlock}"
+                                       Margin="10,0,0,0"/>
+                            <ComboBox Grid.Row="1"
+                                      Margin="10"
+                                      VerticalAlignment="Center"
+                                      Style="{StaticResource MaterialDesignComboBox}"
+                                      ItemsSource="{Binding Parameters}"
+                                      SelectedItem="{Binding Parameter, Mode=TwoWay}"
+                                      Foreground="{StaticResource LineBrush}"/>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Row="1" 
+                            Style="{StaticResource InputBorder}"
+                            Margin="10,5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="1.5*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0"
+                                       Text="Значение"
+                                       Foreground="{DynamicResource TextBrush}"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       Style="{StaticResource MaterialDesignTextBlock}"
+                                       Margin="10,0,0,0"/>
+                            <TextBox Grid.Row="1"
+                                     Style="{StaticResource SimpleTextBox}"
+                                     Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                                     Margin="5"
+                                     Visibility="{Binding TextBoxVisibility}"/>
+                            <ToggleButton Grid.Row="1"
+                                          Margin="10,0,0,0"
+                                          HorizontalAlignment="Left"
+                                          Visibility="{Binding ToggleButtonVisibility}"
+                                          IsChecked="{Binding ToggleButton, Mode=TwoWay}" 
+                                          Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+                        </Grid>
+                    </Border>
+                    <Button Grid.Row="3"
+                            Style="{StaticResource MaterialDesignRaisedDarkButton}"
+                            ToolTip="Нажать бы"
+                            Background="{StaticResource LineBrush}"
+                            Margin="10"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Command="{Binding ExecuteCommand}">
+                        <TextBlock
+                            Text="Execute" />
+                    </Button>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="125" />
+                        <RowDefinition Height="50" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <GroupBox Grid.Row="0"
+                                  Margin="5"
+                                  materialDesign:ColorZoneAssist.Background="{StaticResource CharcoalGrayBrush}"
+                                  materialDesign:ColorZoneAssist.Foreground="White"
+                                  materialDesign:ColorZoneAssist.Mode="Custom"
+                                  Header="Фильтр по наименованию"
+                                  Style="{StaticResource MaterialDesignCardGroupBox}">
+                            <GroupBox.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel
+                                        Orientation="Horizontal" Height="25">
+                                        <materialDesign:PackIcon
+                                            Width="20"
+                                            Height="20"
+                                            VerticalAlignment="Center"
+                                            Kind="FilterCogOutline"
+                                            Foreground="{StaticResource TextBrush}" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                            Foreground="{StaticResource TextBrush}"
+                                            Text="Фильтр по наименованию" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GroupBox.HeaderTemplate>
+                            <Grid>
+                                <TextBox Style="{StaticResource MaterialDesignFilledTextBox}"
+                                         materialDesign:TextFieldAssist.UnderlineBrush="#2c0675"
+                                         SelectionBrush="#2c0675"
+                                         Text="{Binding FilterByName, UpdateSourceTrigger=PropertyChanged}"
+                                         FontSize="14">
+                                </TextBox>
+                            </Grid>
+                        </GroupBox>
+                    <Border Grid.Row="1"
+                                Margin="5,5,5,0"
+                                BorderThickness="2,2,2,0"
+                                BorderBrush="{StaticResource TextBrush}"
+                                Background="{StaticResource CharcoalGrayBrush}"
+                                CornerRadius="10,10,0,0">
+                            
+                            <Grid Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60"/> 
+                                    <ColumnDefinition Width="*"/> 
+                                </Grid.ColumnDefinitions>
+                                <CheckBox IsChecked="{Binding AllItems}"
+                                          Margin="5,0,0,0"
+                                          Style="{StaticResource MaterialDesignLightCheckBox}"
+                                          Background="{DynamicResource TextBrush}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Width="20"
+                                          Height="15"
+                                          Grid.Column="0">
+                                    <CheckBox.LayoutTransform>
+                                        <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                    </CheckBox.LayoutTransform>
+                                </CheckBox>
+                                <TextBlock Grid.Column="1" Text="Наименование" 
+                                           Margin="5,0,0,0"
+                                           Style="{StaticResource TextTableHead}"/>
+                            </Grid>
+                        </Border>
+                    <ListBox Grid.Row="2"
+                             ItemsSource="{Binding ItemsList}"
+                             BorderThickness="2,0,2,2"
+                             BorderBrush="{StaticResource TextBrush}"
+                             Background="{StaticResource CharcoalGrayBrush}"
+                             Margin="5,0,5,5"
+                             Style="{StaticResource MaterialDesignListBox}"
+                             SelectedItem="{Binding SelectedItem}">
+                        <ListBox.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="0, 0,10, 10"/>
+                            </Style>
+                        </ListBox.Resources>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="60"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <CheckBox IsChecked="{Binding IsChecked}"
+                                                  Style="{StaticResource MaterialDesignLightCheckBox}"
+                                                  Background="{DynamicResource TextBrush}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Width="20"
+                                                  Height="15"
+                                                  BorderBrush="{StaticResource TextBrush}"
+                                                  Grid.Column="0">
+                                            <CheckBox.LayoutTransform>
+                                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                            </CheckBox.LayoutTransform>
+                                        </CheckBox>
+
+                                        <TextBlock Text="{Binding NameItem}"
+                                                   Style="{StaticResource TextListBox}"
+                                                   Grid.Column="1"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

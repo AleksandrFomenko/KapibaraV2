@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/WpfResources;component/Themes/DarkTheme.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/WpfResources;component/Themes/MainTheme.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    <Style x:Key="BorderMainWindow" TargetType="Border">
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="Background" Value="{DynamicResource MainWindowGradient}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BorderBrush" Value="Black" />
+    </Style>
+    <Style x:Key="InputBorder" TargetType="Border">
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="BorderBrush" Value="{StaticResource TextBrush}"/>
+        <Setter Property="Background" Value="{StaticResource CharcoalGrayBrush}"/>
+        <Setter Property="BorderThickness" Value="1.5"/>
+    </Style>
+</ResourceDictionary>

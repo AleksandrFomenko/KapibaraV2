@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using EngineeringSystems.Model;
@@ -26,6 +27,9 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
     private string _filterByName = string.Empty;
     private bool _isCheckedAllSystems;
     private bool _сreateView;
+    private bool _toggleButtonEnabled;
+    internal static Action Close;
+    
     
     
     public RelayCommand StartCommand { get; }
@@ -128,6 +132,11 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
         get => _сreateView;
         set => SetField(ref _сreateView, value);
     }
+    public bool ToggleButtonEnabled
+    {
+        get => _toggleButtonEnabled;
+        set => SetField(ref _toggleButtonEnabled, value);
+    }
     internal EngineeringSystemsViewModel(Document doc)
     {
         _doc = doc;
@@ -173,6 +182,9 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
         WindowHeight = Option.Height;
         FirstColumnWidth = Option.FirstColumnWidth;
         SecondColumnWidth = Option.SecondColumnWidth;
+        if (Option.NameOpt == "Записать в элементы на активном виде") ToggleButtonEnabled = true;
+        ToggleButtonEnabled = Option?.NameOpt != "Записать в элементы на активном виде";
+        if (Option?.NameOpt == "Записать в элементы на активном виде") CreateView = false;
     }
     private List<string> GetCheckedSystemNames(bool flag)
     {
@@ -183,7 +195,6 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
                 .Select(system => system.NameSystem)
                 .ToList();
         }
-        
         return EngineeringSystems
             .Where(system => system.IsChecked)
             .Select(system => system.CutSystemName)
@@ -196,9 +207,10 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
     private void Execute()
     {
         var model = new EngineeringSystemsModel(_doc, Option);
-        var flag = SystemParameter.Name == "Имя системы" ? true : false;
+        var flag = SystemParameter.Name == "Имя системы";
         var systemString = GetCheckedSystemNames(flag);
         model.Execute(systemString, UserParameter, flag, CreateView);
+        Close();
     }
     public event PropertyChangedEventHandler PropertyChanged;
     private void OnPropertyChanged([CallerMemberName] string propertyName = null)
