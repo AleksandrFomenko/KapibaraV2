@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Text;
+using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using KapibaraCore.Parameters;
 using KapibaraCore.Solids;
@@ -9,10 +11,16 @@ namespace LevelByFloor.Models;
 internal class LevelByFloorModel
 {
     private Document _doc;
+    private Options _options;
 
     internal LevelByFloorModel(Document doc)
     {
         _doc = doc;
+    }
+
+    internal void SetOpt(Options opt)
+    {
+        _options = opt;
     }
 
     internal List<string> LoadParameters()
@@ -62,7 +70,7 @@ internal class LevelByFloorModel
         BoundingBoxXYZ combinedBoundingBox = new BoundingBoxXYZ();
         bool isFirstBoundingBox = true;
         
-        var elements = new FilteredElementCollector(_doc, _doc.ActiveView.Id)
+        var elements = new FilteredElementCollector(_doc)
             .WhereElementIsNotElementType()
             .ToElements();
 
@@ -109,11 +117,12 @@ internal class LevelByFloorModel
     private double CheckIntersection(Element element1, Element element2)
     {
         var solid1 = element1.GetSolid();
+
         var solid2 = element2.GetSolid();
+
 
         if (solid1 == null || solid2 == null)
         {
-            //Debug.WriteLine("Один из элементов не имеет валидной геометрии.");
             return 0;
         }
         try
@@ -123,9 +132,8 @@ internal class LevelByFloorModel
             if (intersection != null && intersection.Volume > 0) return intersection.Volume;
 
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Debug.WriteLine($"Ошибка при пересечении: {ex.Message}");
             return 0;
         }
 
@@ -155,10 +163,9 @@ internal class LevelByFloorModel
 
         DirectShape shape = null;
         var q = 0;
-        for (int i = 0; i < levels.Count - 1; i++)
+        var x = levelsBelowZero.Count;
+        for (var i = 0; i < levels.Count - 1; i++)
         {
-            
-            var x = levelsBelowZero.Count;
             if (q < x)
             {
                 shape = CreateLevelSolid(bb, levels[i].ProjectElevation, levels[i + 1].ProjectElevation);
@@ -170,57 +177,69 @@ internal class LevelByFloorModel
             dict[shape.Id] = i - x + 1;
         }
         var lastLevelElevation = levels[levels.Count - 1].ProjectElevation;
-        CreateLevelSolid(bb, lastLevelElevation, lastLevelElevation + 500);
+        shape = CreateLevelSolid(bb, lastLevelElevation, lastLevelElevation + 500);
+        dict[shape.Id] = levels.Count - x;
             
         var firstLevelElevation = levels[0].ProjectElevation;
-        CreateLevelSolid(bb, firstLevelElevation - 1000, firstLevelElevation);
+        shape = CreateLevelSolid(bb, firstLevelElevation - 1000, firstLevelElevation);
+        dict[shape.Id] = -(x + 1);
         return dict;
     }
-    internal void Execute()
+    internal void Execute(string parameter, string suffix, string prefix)
     {
-        var elems = new FilteredElementCollector(_doc).WhereElementIsNotElementType().ToElements();
-        if (_doc.ActiveView is not View3D view3D)
+        var elems = _options.Fec.WhereElementIsNotElementType().ToElements();
+        if (_doc.ActiveView is not View3D)
         {
             TaskDialog.Show("", "Активный вид не является 3D видом");
             LevelByFloorViewModel.Close();
         }
         try
         {
-            using (var t = new Transaction(_doc, "Set level"))
+            Dictionary<ElementId, int> dictionary;
+            using (var t1 = new Transaction(_doc, "Create solids"))
             {
-                t.Start();
-                var dictionary = CreateLevelSolids(GetBoundingBoxForAllElements());
-                foreach (var dict in dictionary)
-                {
-                    Debug.Write($"Ключ {dict.Key.ToString()}, значение {dict.Value.ToString()}");
-                }
-
+                t1.Start();
+                dictionary = CreateLevelSolids(GetBoundingBoxForAllElements());
+                t1.Commit();
+            }
+            using (var t2 = new Transaction(_doc, "Set level"))
+            {
+                t2.Start();
                 Element resultElem = null;
-                double maxVolume = 0;
+                if(dictionary == null) return;
                 foreach (var elem in elems)
                 {
+                    double maxVolume = 0;
                     foreach (var dict in dictionary)
                     {
                         var checkElem = _doc.GetElement(dict.Key);
+                        if(checkElem == null) continue;
                         
                         var volume = CheckIntersection(elem, checkElem);
-                        if (volume > maxVolume)
-                        {
-                            maxVolume = volume;
-                            resultElem = checkElem;
-                        }
+                        if (!(volume > maxVolume)) continue;
+                        maxVolume = volume;
+                        resultElem = checkElem;
                     }
-                    if (resultElem != null)
-                    {
-                        
-                    }
-                    var par = elem.LookupParameter("тест");
-                    if (par != null)
-                    {
-                        par.Set("выав");
-                    }
+
+                    if (resultElem == null) continue;
+                    var par = elem.GetParameterByName(parameter);
+                    if (par==null) continue;
+                    var builder = new StringBuilder();
+                    builder.Append(prefix);
+                    builder.Append(dictionary[resultElem.Id].ToString());
+                    builder.Append(suffix);
+                    par.SetParameterValue(builder.ToString());
                 }
-                t.Commit();
+                t2.Commit();
+            }
+            using (var t3 = new Transaction(_doc, "Delete solids"))
+            {
+                t3.Start();
+                foreach (var dict in dictionary)
+                {
+                    _doc.Delete(dict.Key);
+                }
+                t3.Commit();
             }
         }
         catch (Exception e)

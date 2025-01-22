@@ -14,7 +14,7 @@
     AllowsTransparency="True"
     WindowStyle="None"
     Background="Transparent"
-    Height="300"
+    Height="400"
     Width="350">
     <Window.Resources>
         <ResourceDictionary>
@@ -36,6 +36,7 @@
             <wpfResources:TopPanel Grid.Row="0" Heading="Set level"/>
             <Grid Grid.Row="1" Background="Transparent">
             <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
@@ -73,6 +74,32 @@
                             <RowDefinition Height="1.5*"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0"
+                                   Text="Выбрать элементы"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Left"
+                                   Style="{StaticResource MaterialDesignTextBlock}"
+                                   Margin="10,0,0,0"/>
+                        <ComboBox Grid.Row="1"
+                                  Margin="10"
+                                  VerticalAlignment="Center"
+                                  Style="{StaticResource MaterialDesignComboBox}"
+                                  ItemsSource="{Binding Options}"
+                                  SelectedItem="{Binding Option, Mode=TwoWay}"
+                                  Foreground="{StaticResource LineBrush}"
+                                  DisplayMemberPath="Name"/>
+                    </Grid>
+                </Border>
+                
+                <Border Grid.Row="2" 
+                        Style="{StaticResource InputBorder}"
+                        Margin="10,5">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="1.5*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
                                    Text="Префикс/суффикс"
                                    Foreground="{DynamicResource TextBrush}"
                                    VerticalAlignment="Top"
@@ -102,7 +129,7 @@
                         </Grid>
                     </Grid>
                 </Border>
-                <Button Grid.Row="2"
+                <Button Grid.Row="3"
                         Style="{StaticResource MaterialDesignRaisedDarkButton}"
                         ToolTip="Нажать бы"
                         Background="{StaticResource LineBrush}"

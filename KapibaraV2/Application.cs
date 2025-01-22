@@ -59,12 +59,12 @@ namespace KapibaraV2
             panelGeneral.AddPushButton<ImportExcelByParameter.Commands.StartupCommand>("Import\nExcel")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ImportExcel.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ImportExcel.png");
-            //panelGeneral.AddPushButton<FloorFillerCommand>("Этаж")
-               // .SetImage("/KapibaraV2;component/Resources/Icons/Floor.png")
-                //.SetLargeImage("/KapibaraV2;component/Resources/Icons/Floor.png");
             panelGeneral.AddPushButton<ViewManager.Commands.StartupCommand>("View\nManager")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ViewManager.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ViewManager.png");
+            panelGeneral.AddPushButton<LevelByFloor.Commands.StartupCommand>("Level\nby floor")
+                .SetImage("/KapibaraV2;component/Resources/Icons/LevelByFloor.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/LevelByFloor.png");
             
             var stackPanel = panelGeneral.AddStackPanel();
             stackPanel.AddLabel("Items:");

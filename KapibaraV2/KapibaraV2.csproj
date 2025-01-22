@@ -44,7 +44,7 @@
         
 
     <ItemGroup>
-        <PackageReference Include="MaterialDesignColors" Version="5.2.1" />
+        <PackageReference Include="MaterialDesignColors" Version="5.2.2-ci882" />
         <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
         <PackageReference Include="MaterialDesignThemes" Version="5.2.*" />
         <PackageReference Include="MaterialDesignThemes.MahApps" Version="3.1.1-ci691" />
@@ -77,6 +77,7 @@
         <Resource Include="Resources\Icons\ExportModels.png" />
         <Resource Include="Resources\Icons\intersector.png" />
         <Resource Include="Resources\Icons\ViewManager.png" />
+        <Resource Include="Resources\Icons\LevelByFloor.png" />
     </ItemGroup>
     
     <ItemGroup>
@@ -87,6 +88,7 @@
       <ProjectReference Include="..\FamilyCleaner\FamilyCleaner.csproj" />
       <ProjectReference Include="..\FsmModules\FsmModules.csproj" />
       <ProjectReference Include="..\ImportExcelByParameter\ImportExcelByParameter.csproj" />
+      <ProjectReference Include="..\LevelByFloor\LevelByFloor.csproj" />
       <ProjectReference Include="..\SolidIntersection\SolidIntersection.csproj" />
       <ProjectReference Include="..\SystemName\SystemName.csproj" />
       <ProjectReference Include="..\ViewManager\ViewManager.csproj" />
