@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Autodesk.Revit.UI;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
+using ImportExcelByParameter.ViewModels;
 
 namespace ImportExcelByParameter.Models.excel;
 
@@ -126,8 +127,12 @@ internal class ExcelWorker
     internal Dictionary<string, string> Execute(string searchValue)
     {
         var otherColumns = GetParameterColumn();
-        if (_columnParameterIndex == 0) 
-            TaskDialog.Show("Error", $"Параметр {{ParameterName}} не найден в строчке {RowNumber}");
+        if (_columnParameterIndex == 0)
+        {
+            TaskDialog.Show("Error", $"Параметр {ParameterName} не найден в строчке {RowNumber}");
+            ImportExcelByParameterViewModel.CloseWindow?.Invoke();
+        }
+        
         var row = FindRow(searchValue);
 
         if(row > 0)
