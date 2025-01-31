@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using ImportExcelByParameter.Configuration;
 using ImportExcelByParameter.Models;
 using Microsoft.Win32;
 
@@ -9,11 +11,17 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
 {
     private Document _doc;
     private readonly ExcelByParameterModel _model;
+    
+    internal Config Cfg { get; set; }
     public RelayCommand StartCommand { get; }
     public RelayCommand SelectPathCommand { get; }
     internal static Action CloseWindow { get; set; }
-    internal ImportExcelByParameterViewModel(Document doc)
+    internal ImportExcelByParameterViewModel(Document doc, Config qwe)
     {
+        var path = qwe.GetPath();
+        Cfg = KapibaraCore.Configuration.Configuration.LoadConfig<Config>(path);
+        Debug.Write(Cfg.ToString());
+        Debug.Write(123);
         _doc = doc;
         _model = new ExcelByParameterModel(doc);
         StartCommand = new RelayCommand(
@@ -31,15 +39,16 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
 
     public string PathExcel
     {
-        get => _pathExcel;
+        get => Cfg.PathStr;
         set
-        {
-            if (_pathExcel != value)
-            {
-                _pathExcel = value;
-                OnPropertyChanged();
-                StartCommand.RaiseCanExecuteChanged();
-            }
+        { 
+            Cfg.PathStr = value;
+            Debug.Write(Cfg.PathStr);
+            Cfg.SaveConfig();
+            _pathExcel = value;
+            OnPropertyChanged();
+            StartCommand.RaiseCanExecuteChanged();
+            
         }
     }
     private string _selectedCategory;
@@ -156,6 +165,7 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
         _model.SetSheetName(Sheet);
         _model.SetRowNumber(RowNumber);
         _model.Execute(PathExcel,  SelectedCategory);
+        CloseWindow.Invoke();
     }
     public event PropertyChangedEventHandler PropertyChanged;
     private void OnPropertyChanged([CallerMemberName] string propertyName = null)

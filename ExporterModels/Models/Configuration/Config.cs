@@ -1,27 +1,31 @@
-﻿using Newtonsoft.Json;
+﻿using System.Diagnostics;
+using Newtonsoft.Json;
 using System.IO;
 using System.Reflection;
 using Autodesk.Revit.UI;
-using KapibaraV2.Models.BIM.ExportModels;
+using ExporterModels.Models.Entities;
 
-namespace KapibaraV2.Configuration
+
+namespace ExporterModels.Models.Configuration
 {
     public class Config
     {
         public string PathConfig { get; set; }
-        public List<Project> Projects { get; set; } = new List<Project>();
-        public string badWorksetName {  get; set; } 
         
+        public List<Project> Projects { get; set; } = new List<Project>();
+        
+        public string BadWorksetName { get; set; }
+
         private static readonly string DllPath = Assembly.GetExecutingAssembly().Location;
         private static readonly string DllDirectory = Path.GetDirectoryName(DllPath);
         private static readonly string ConfigFilePath = Path.Combine(DllDirectory, "config", "config.json");
-
+        
 
         public void SaveConfig(string filePath)
         {
             try
             {
-                string json = JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+                string json = JsonConvert.SerializeObject(this, Formatting.Indented);
                 File.WriteAllText(filePath, json);
             }
             catch (Exception ex)
@@ -29,19 +33,18 @@ namespace KapibaraV2.Configuration
                 TaskDialog.Show("Error", $"An error occurred while saving the configuration: {ex.Message}");
             }
         }
-
+        
         public static Config LoadConfig(string filePath)
         {
             try
             {
                 if (!File.Exists(filePath))
                 {
-                    throw new FileNotFoundException("Файл конфигурации не найден");
+                    throw new FileNotFoundException("Файл конфигурации не найден", filePath);
                 }
 
                 string json = File.ReadAllText(filePath);
-                Config config = JsonConvert.DeserializeObject<Config>(json);
-                return config;
+                return JsonConvert.DeserializeObject<Config>(json);
             }
             catch (FileNotFoundException ex)
             {
@@ -62,8 +65,7 @@ namespace KapibaraV2.Configuration
         
         public static string GetConfigPath()
         {
-            Config config = LoadConfig(ConfigFilePath);
-            return config?.PathConfig;
+            return LoadConfig(ConfigFilePath)?.PathConfig;
         }
         
         public static void UpdateConfigPath(string newPath)
@@ -76,30 +78,26 @@ namespace KapibaraV2.Configuration
         public static void UpdateBadWorkSetName(string newBadName)
         {
             var config = LoadConfig(ConfigFilePath) ?? new Config();
-            config.badWorksetName = newBadName;
+            config.BadWorksetName = newBadName;
             config.SaveConfig(ConfigFilePath);
         }
-        
-        public static List<Project> GetProjects()
+
+        public static IReadOnlyList<Project> GetProjects()
         {
             var config = LoadConfig(GetConfigPath());
-            return config?.Projects ?? new List<Project>();
+            return config?.Projects.AsReadOnly() ?? new List<Project>().AsReadOnly();
         }
-        
+
+
         public static void AddProject(Project newProject)
         {
             var configPath = GetConfigPath();
-            var config = LoadConfig(configPath);
-
-            if (config == null)
-            {
-                config = new Config();
-            }
+            var config = LoadConfig(configPath) ?? new Config();
 
             config.Projects.Add(newProject);
             config.SaveConfig(configPath);
         }
-
+        
         public static void RemoveProject(string projectName)
         {
             var configPath = GetConfigPath();
@@ -115,7 +113,7 @@ namespace KapibaraV2.Configuration
                 }
             }
         }
-
+        
         public static void SaveProject(Project updatedProject)
         {
             var configPath = GetConfigPath();
@@ -126,12 +124,63 @@ namespace KapibaraV2.Configuration
                 var project = config.Projects.FirstOrDefault(p => p.Name == updatedProject.Name);
                 if (project != null)
                 {
-                    project.Paths = updatedProject.Paths;
+                    project.Models = updatedProject.Models;
                     project.SavePath = updatedProject.SavePath;
-                    project.badNameWorkset = updatedProject.badNameWorkset;
-                    project.IfcConfigPath = updatedProject.IfcConfigPath;
                     config.SaveConfig(configPath);
                 }
+            }
+        }
+        
+    }
+
+    internal class PathJson
+    {
+        public string PathStr { get; set; }
+        private static readonly string DllPath = Assembly.GetExecutingAssembly().Location;
+        private static readonly string DllDirectory = Path.GetDirectoryName(DllPath);
+        private static readonly string ConfigFilePath = Path.Combine(DllDirectory, "config", "config.json");
+
+        //public static string GetConfigPath()
+       // {
+           // return LoadConfig(ConfigFilePath)?.PathConfig;
+       // }
+        public static void CheckConfig()
+        {
+            Debug.Write(DllPath);
+            Debug.Write(DllDirectory);
+            try
+            {
+                if (!File.Exists(ConfigFilePath))
+                {
+                    throw new FileNotFoundException("Файл конфигурации не найден", ConfigFilePath);
+                }
+
+                var json = File.ReadAllText(ConfigFilePath);
+                var x = JsonConvert.DeserializeObject<PathJson>(json);
+
+                if (x == null || string.IsNullOrEmpty(x.PathStr))
+                {
+                    var pathJson = new PathJson()
+                    {
+                        PathStr = Path.Combine(DllDirectory, "config", "Projects.json")
+                        
+                    };
+                    
+                    json = JsonConvert.SerializeObject(pathJson, Formatting.Indented);
+                    File.WriteAllText(ConfigFilePath, json);
+                }
+            }
+            catch (FileNotFoundException ex)
+            {
+                TaskDialog.Show("File Not Found", ex.Message);
+            }
+            catch (JsonException ex)
+            {
+                TaskDialog.Show("JSON Error", $"An error occurred while deserializing the JSON: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                TaskDialog.Show("Error", $"An unexpected error occurred: {ex.Message}");
             }
         }
     }

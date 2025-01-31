@@ -54,7 +54,6 @@ internal class ExcelByParameterModel
                 }
             }
             t.Commit();
-            ImportExcelByParameterViewModel.CloseWindow.Invoke();
         }
     }
     private Dictionary<string, List<Element>> GetElements(string cat)

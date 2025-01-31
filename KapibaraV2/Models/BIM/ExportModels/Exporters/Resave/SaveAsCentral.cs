@@ -27,7 +27,7 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.Resave
             OpenDocument openDocument = new OpenDocument();
             foreach (string path in _paths)
             {
-                Document doc = openDocument.OpenDocumentAsDetach(path, _badNameWorkset, true, true);
+                Document doc = openDocument.OpenDocumentAsDetach(path, _badNameWorkset, false, true);
 
                 if (doc == null)
                 { 

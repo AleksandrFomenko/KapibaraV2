@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using KapibaraV2.Configuration;
 using KapibaraV2.Models.BIM.ExportModels;
 
@@ -14,7 +9,7 @@ namespace KapibaraV2.ViewModels.BIM.AddDeleteProjects
         private readonly ExportModelsViewModel _mainViewModel;
 
         [ObservableProperty]
-        private string projectName;
+        private string _projectName;
 
 
         public AddProjectViewModel(ExportModelsViewModel mainViewModel)
@@ -36,6 +31,7 @@ namespace KapibaraV2.ViewModels.BIM.AddDeleteProjects
             _mainViewModel.LoadProjects();
             window?.Close();
         }
+        
 
         [RelayCommand]
         private void CloseWindow(Window window)

@@ -55,6 +55,6 @@ public partial class LevelByFloorViewModel : ObservableObject
     {
         _model.SetOpt(Option);
         _model.Execute(Parameter,Suffix,Prefix);
-        Close();
+        Close?.Invoke();
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System.Windows.Media;
-using Autodesk.Windows;
 using Nice3point.Revit.Toolkit.External;
-using KapibaraV2.Commands.MepGeneral;
 using KapibaraV2.Commands.BIM;
 
 
@@ -44,6 +42,11 @@ namespace KapibaraV2
             
             //BIM
             panelBim.AddPushButton<ExportModels>("Export\nmodels")
+                .SetImage("/KapibaraV2;component/Resources/Icons/ExportModels.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ExportModels.png");
+
+            
+            panelBim.AddPushButton<ExporterModels.Commands.StartupCommand>("Export1213\nmodels")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ExportModels.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ExportModels.png");
 

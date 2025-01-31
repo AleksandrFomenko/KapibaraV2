@@ -134,8 +134,6 @@
                         ToolTip="Нажать бы"
                         Background="{StaticResource LineBrush}"
                         Margin="10"
-                        VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
                         Command="{Binding ExecuteCommand}">
                     <TextBlock
                         Text="Execute" />
