@@ -20,10 +20,47 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
     {
         var path = qwe.GetPath();
         Cfg = KapibaraCore.Configuration.Configuration.LoadConfig<Config>(path);
-        Debug.Write(Cfg.ToString());
-        Debug.Write(123);
+        
         _doc = doc;
         _model = new ExcelByParameterModel(doc);
+        _categories = _model.Data.LoadCategory();
+        
+        if (Cfg == null)
+        {
+            Cfg = new Config()
+            {
+                Category = string.Empty,
+                ListStr = string.Empty,
+                Number = 1,
+                Parameter = string.Empty,
+                PathStr = string.Empty
+            };
+        }
+
+        if (!string.IsNullOrEmpty(Cfg.PathStr))
+        {
+            try
+            {
+                LoadSheets(Cfg.PathStr);
+            }
+            catch (Exception)
+            {
+                Sheets = new List<string>();
+            }
+        }
+        
+        if (!string.IsNullOrEmpty(Cfg.Category))
+        {
+            try
+            {
+                LoadParameters();
+            }
+            catch (Exception)
+            {
+                Parameters = new List<string>();
+            }
+        }
+        
         StartCommand = new RelayCommand(
             execute: _ => Execute(),
             canExecute: _ => CanExecute()
@@ -32,38 +69,29 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
             execute: _ => SelectPath(),
             canExecute: _ => true
         );
-        _categories = _model.Data.LoadCategory();
     }
     
-    private string _pathExcel;
-
     public string PathExcel
     {
         get => Cfg.PathStr;
         set
-        { 
+        {
             Cfg.PathStr = value;
-            Debug.Write(Cfg.PathStr);
-            Cfg.SaveConfig();
-            _pathExcel = value;
             OnPropertyChanged();
             StartCommand.RaiseCanExecuteChanged();
-            
         }
     }
-    private string _selectedCategory;
+
     public string SelectedCategory
     {
-        get => _selectedCategory;
+        get => Cfg.Category;
         set
         {
-            if (_selectedCategory != value)
-            {
-                _selectedCategory = value;
-                OnPropertyChanged();
-                StartCommand.RaiseCanExecuteChanged();
-                LoadParameters();
-            }
+            Cfg.Category = value;
+            Cfg.SaveConfig();
+            OnPropertyChanged();
+            StartCommand.RaiseCanExecuteChanged();
+            LoadParameters();
         }
     }
     private List<string> _categories;
@@ -76,14 +104,14 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
             LoadParameters();
         }
     }
-    private string _parameter;
+
     public string Parameter
     {
-        get => _parameter;
+        get => Cfg.Parameter;
         set
         {
-            if (_parameter == value) return;
-            _parameter = value;
+            Cfg.Parameter = value;
+            Cfg.SaveConfig();
             OnPropertyChanged();
             StartCommand.RaiseCanExecuteChanged();
         } 
@@ -100,7 +128,7 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
     }
     private void LoadParameters()
     { 
-        Parameters = _model.Data.LoadParameters(SelectedCategory);
+        Parameters = _model.Data.LoadParameters(Cfg.Category);
     }
     private List<string> _sheets;
     public List<string> Sheets
@@ -112,14 +140,14 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
-    private string _sheet;
+
     public string Sheet
     {
-        get => _sheet;
+        get => Cfg.ListStr;
         set
         {
-            if (_sheet == value) return;
-            _sheet = value;
+            Cfg.ListStr = value;
+            Cfg.SaveConfig();
             OnPropertyChanged();
         } 
     }
@@ -127,10 +155,12 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
     private int _rowNumber = 1;
     public int RowNumber
     {
-        get => _rowNumber;
+        get => Cfg.Number;
         set
         {
             if (_rowNumber == value) return;
+            Cfg.Number = value;
+            Cfg.SaveConfig();
             _rowNumber = value;
             OnPropertyChanged();
         }
@@ -152,8 +182,9 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
         };
         if (openFileDialog.ShowDialog() == true)
         {
-            _pathExcel = openFileDialog.FileName;
-            LoadSheets(_pathExcel);
+            Cfg.PathStr = openFileDialog.FileName;
+            Cfg.SaveConfig();
+            LoadSheets(Cfg.PathStr);
             OnPropertyChanged(nameof(PathExcel));
             StartCommand.RaiseCanExecuteChanged();
         }

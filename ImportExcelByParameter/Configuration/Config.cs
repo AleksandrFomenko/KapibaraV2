@@ -13,11 +13,11 @@ internal class Config
     private static readonly string DllDirectory = Path.GetDirectoryName(DllPath);
     private string _configFilePath = Path.Combine(DllDirectory, "ImportExcelConfig", "config.json");
     
-    internal string PathStr { get; set; }
-    internal string ListStr { get; set; }
-    internal int Number { get; set; }
-    internal string Category { get; set; }
-    internal string Parameter { get; set; }
+    public string PathStr { get; set; }
+    public string ListStr { get; set; }
+    public int Number { get; set; }
+    public string Category { get; set; }
+    public string Parameter { get; set; }
 
     internal Config()
     {
@@ -48,7 +48,7 @@ internal class Config
     {
         try
         {
-            var json = JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            var json = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(_configFilePath, json);
         }
         catch (Exception ex)
