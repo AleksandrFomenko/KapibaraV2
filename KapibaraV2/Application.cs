@@ -45,11 +45,6 @@ namespace KapibaraV2
                 .SetImage("/KapibaraV2;component/Resources/Icons/ExportModels.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ExportModels.png");
 
-            
-            panelBim.AddPushButton<ExporterModels.Commands.StartupCommand>("Export1213\nmodels")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ExportModels.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ExportModels.png");
-
             panelBim.AddPushButton<FamilyCleaner.Commands.StartupCommand>("Cleaning\nFamily")
                 .SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png");

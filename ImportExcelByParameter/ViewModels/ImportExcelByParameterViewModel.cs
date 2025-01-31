@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 using ImportExcelByParameter.Configuration;
 using ImportExcelByParameter.Models;
@@ -25,6 +26,16 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
         _model = new ExcelByParameterModel(doc);
         _categories = _model.Data.LoadCategory();
         
+        
+        StartCommand = new RelayCommand(
+            execute: _ => Execute(),
+            canExecute: _ => CanExecute()
+        );
+        SelectPathCommand = new RelayCommand(
+            execute: _ => SelectPath(),
+            canExecute: _ => true
+        );
+        
         if (Cfg == null)
         {
             Cfg = new Config()
@@ -35,6 +46,11 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
                 Parameter = string.Empty,
                 PathStr = string.Empty
             };
+        }
+
+        if (!File.Exists(Cfg.PathStr))
+        {
+            PathExcel = "File not found";
         }
 
         if (!string.IsNullOrEmpty(Cfg.PathStr))
@@ -60,15 +76,6 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
                 Parameters = new List<string>();
             }
         }
-        
-        StartCommand = new RelayCommand(
-            execute: _ => Execute(),
-            canExecute: _ => CanExecute()
-        );
-        SelectPathCommand = new RelayCommand(
-            execute: _ => SelectPath(),
-            canExecute: _ => true
-        );
     }
     
     public string PathExcel
