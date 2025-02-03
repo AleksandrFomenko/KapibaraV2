@@ -81,7 +81,7 @@ public sealed partial class WorkSetLinkFilesViewModel : ObservableObject
 
     private bool CanStartCommand()
     {
-        return false;
+        return true;
     }
     [RelayCommand(CanExecute = nameof(CanStartCommand))]
     private void Start(Window window)

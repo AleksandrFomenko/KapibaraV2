@@ -52,10 +52,9 @@ namespace KapibaraV2
             //panelBim.AddPushButton<FsmModules.Command.StartupCommand>("Prefab")
                 //.SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
                 //.SetLargeImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png");
-                
-                // var stackPanelBim = panelBim.AddStackPanel();
-                    //stackPanelBim.AddPushButton<WorkSetLinkFiles.Commands.StartupCommand>("Workset links")
-                    //SetImage("/KapibaraV2;component/Resources/Icons/WorksetLinkFiles.png");
+                var stackPanelBim = panelBim.AddStackPanel();
+                    stackPanelBim.AddPushButton<WorkSetLinkFiles.Commands.StartupCommand>("Worksets")
+                        .SetImage("/KapibaraV2;component/Resources/Icons/WorksetLinkFiles.png");
             
             //General
             panelGeneral.AddPushButton<ImportExcelByParameter.Commands.StartupCommand>("Import\nExcel")

@@ -1,4 +1,6 @@
-﻿namespace WorkSetLinkFiles.Models;
+﻿using System.Diagnostics;
+
+namespace WorkSetLinkFiles.Models;
 
 internal class WorkSetLinkFilesModel
 {
@@ -17,10 +19,10 @@ internal class WorkSetLinkFilesModel
     {
         foreach (var link in linkFilesList)
         {
-
             var workset = Workset.Create(_doc, link.WorksetName);
             var linkModel = Data.GetLink(link.RevitModelName);
-            linkModel?.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM).Set(new ElementId(workset.Id.IntegerValue));
+            Debug.Write(workset.Name);
+            linkModel?.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM).Set(workset.Id.IntegerValue);
         }
     }
 }
