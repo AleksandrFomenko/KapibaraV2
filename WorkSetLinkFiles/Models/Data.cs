@@ -66,4 +66,13 @@ internal class Data
                        typeElement.Name.Equals(name, StringComparison.OrdinalIgnoreCase);
             });
     }
+
+    internal List<string> GetWorksets()
+    {
+        return new FilteredElementCollector(_doc)
+            .OfCategory(BuiltInCategory.OST_RvtLinks)
+            .WhereElementIsNotElementType()
+            .Select(w => w.Name)
+            .ToList();
+    }
 }

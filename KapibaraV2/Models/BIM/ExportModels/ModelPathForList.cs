@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-
-namespace KapibaraV2.Models.BIM.ExportModels
+﻿namespace KapibaraV2.Models.BIM.ExportModels
 {
     public partial class ModelPathForList : ObservableObject
     {

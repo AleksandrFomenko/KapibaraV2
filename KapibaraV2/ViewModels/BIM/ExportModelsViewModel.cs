@@ -6,7 +6,6 @@ using KapibaraV2.ViewModels.BIM.AddDeleteProjects;
 using KapibaraV2.ViewModels.BIM.ExportModels;
 using KapibaraV2.Views.BIM.ExportModels;
 using System.Windows;
-using KapibaraV2.AutoClicker;
 using KapibaraV2.Models.BIM.ExportModels.Exporters;
 using KapibaraV2.Models.BIM.ExportModels.Exporters.IFC;
 using KapibaraV2.Models.BIM.ExportModels.Exporters.NWC;
@@ -214,19 +213,7 @@ namespace KapibaraV2.ViewModels.BIM
         [RelayCommand]
         private void Export(Window window)
         {
-            bool isFinish = false;
-            AutoMover autoMover = null;
-            if (IsAutoMoverEnabled)
-            {
-                AutoMover.Point[] points = {
-                    new AutoMover.Point(100, 100),
-                    new AutoMover.Point(200, 200),
-                    new AutoMover.Point(300, 300)
-                };
-                autoMover = new AutoMover(1000, points);
-                autoMover.Start();
-            }
-
+            
             IExporter iexporter = null;
             var checkedModelPaths = GetCheckedModelPaths();
             if (SelectedProject == null || checkedModelPaths == null || !checkedModelPaths.Any() || SelectedProject.SavePath == null)
@@ -262,12 +249,7 @@ namespace KapibaraV2.ViewModels.BIM
             }
             ExportManager exportManager = new ExportManager(iexporter);
             exportManager.ExecuteExport();
-
-            if (IsAutoMoverEnabled && autoMover != null && isFinish)
-            {
-                autoMover.Stop();
-            }
-
+            
             window?.Close();
         }
     }

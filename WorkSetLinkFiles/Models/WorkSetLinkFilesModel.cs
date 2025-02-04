@@ -5,7 +5,7 @@ namespace WorkSetLinkFiles.Models;
 internal class WorkSetLinkFilesModel
 {
     internal Data Data;
-    private readonly Document _doc;
+    private static Document _doc;
     
 
 
@@ -15,14 +15,36 @@ internal class WorkSetLinkFilesModel
         Data = new Data(_doc);
     }
 
-    internal void SetLinksWorkset(List<LinkFiles> linkFilesList)
+    internal void SetLinksWorkset(List<LinkFiles> linkFilesList, string suffix, string prefix)
     {
         foreach (var link in linkFilesList)
         {
-            var workset = Workset.Create(_doc, link.WorksetName);
+            var workset = Workset.Create(_doc, prefix + link.WorksetName + suffix);
             var linkModel = Data.GetLink(link.RevitModelName);
-            Debug.Write(workset.Name);
-            linkModel?.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM).Set(workset.Id.IntegerValue);
+
+            linkModel?.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)?.Set(workset.Id.IntegerValue);
+            _doc.GetElement(linkModel?.GetTypeId())?.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)?.Set(workset.Id.IntegerValue);
         }
+    }
+    
+    internal void SetWorkset(string worksetName, BuiltInCategory cat)
+    {
+        if (worksetName ==string.Empty) return;
+        
+        var workset = new FilteredElementCollector(_doc)
+            .OfClass(typeof(Workset))
+            .Cast<Workset>()
+            .FirstOrDefault(w => w.Name == worksetName);
+        var elems = new FilteredElementCollector(_doc)
+            .OfCategory(cat)
+            .WhereElementIsNotElementType()
+            .ToList();
+        if (workset?.Id?.IntegerValue == null) return;
+        var worksetId = (int)workset?.Id.IntegerValue;
+        elems.ForEach(a =>
+        {
+            var parameter = a?.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM);
+            parameter?.Set(worksetId);
+        });
     }
 }

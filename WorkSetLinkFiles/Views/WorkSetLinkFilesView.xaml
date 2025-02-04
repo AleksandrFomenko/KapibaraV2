@@ -157,6 +157,13 @@
                        Margin="75,0,0,0"
                        HorizontalAlignment="Left"
                        Style="{StaticResource TextBlockStyle}"/>
+            <ComboBox Grid.Row="3"
+                      Margin="120"
+                      VerticalAlignment="Center"
+                      Style="{StaticResource MaterialDesignComboBox}"
+                      ItemsSource="{Binding Worksets}"
+                      SelectedItem="{Binding WorksetAxes, Mode=TwoWay}"
+                      Foreground="{StaticResource LineBrush}"/>
             <ToggleButton Grid.Row="4"
                           Margin="10,0,0,0"
                           HorizontalAlignment="Left"
@@ -166,6 +173,13 @@
                        HorizontalAlignment="Left"
                        Margin="75,0,0,0"
                        Style="{StaticResource TextBlockStyle}"/>
+            <ComboBox Grid.Row="4"
+                      Margin="120"
+                      VerticalAlignment="Center"
+                      Style="{StaticResource MaterialDesignComboBox}"
+                      ItemsSource="{Binding Worksets}"
+                      SelectedItem="{Binding WorksetLevels, Mode=TwoWay}"
+                      Foreground="{StaticResource LineBrush}"/>
             <Button Grid.Row="5"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Background="{StaticResource LineBrush}"

@@ -2,7 +2,6 @@
 using KapibaraV2.Models.BIM.ExportModels;
 using System.Windows;
 using Microsoft.Win32;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace KapibaraV2.ViewModels.BIM.ExportModels
