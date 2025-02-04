@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using Autodesk.Revit.Attributes;
 using WorkSetLinkFiles.Commands;
 using WorkSetLinkFiles.Models;
@@ -98,7 +99,12 @@ public sealed partial class WorkSetLinkFilesViewModel : ObservableObject
         Worksets = _data.GetWorksets();
         WorksetLevel = Worksets.FirstOrDefault() ?? string.Empty;
         WorksetAxes = Worksets.FirstOrDefault() ?? string.Empty;
+        foreach (var link in LinksRevitModels)
+        {
+            link.PropertyChanged += Link_PropertyChanged;
+        }
     }
+    
     private bool CanStartCommand()
     {
         return Axes || Level || LinksRevitModels.Any(link => link.IsChecked);
@@ -143,5 +149,17 @@ public sealed partial class WorkSetLinkFilesViewModel : ObservableObject
             t.Commit();
         }
         Close?.Invoke();
+    }
+    private void Link_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(LinkFiles.IsChecked))
+        {
+            bool anyChecked = LinksRevitModels.Any(link => link.IsChecked);
+            if (IsCheckedAllLinks && IsCheckedAllLinks != anyChecked)
+            {
+                IsCheckedAllLinks = anyChecked;
+            }
+            StartCommand.NotifyCanExecuteChanged();
+        }
     }
 }

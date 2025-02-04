@@ -158,12 +158,29 @@
                        HorizontalAlignment="Left"
                        Style="{StaticResource TextBlockStyle}"/>
             <ComboBox Grid.Row="3"
-                      Margin="120"
-                      VerticalAlignment="Center"
+                      Margin="325,0,0,0"
+                      Width="200"
+                      HorizontalAlignment="Left"
                       Style="{StaticResource MaterialDesignComboBox}"
                       ItemsSource="{Binding Worksets}"
                       SelectedItem="{Binding WorksetAxes, Mode=TwoWay}"
-                      Foreground="{StaticResource LineBrush}"/>
+                      Foreground="{StaticResource TextBrush}">
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Foreground" Value="Black" />
+                        <Setter Property="Height" Value="30"></Setter>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ComboBoxItem">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ComboBox.ItemContainerStyle>
+            </ComboBox>
             <ToggleButton Grid.Row="4"
                           Margin="10,0,0,0"
                           HorizontalAlignment="Left"
@@ -174,12 +191,30 @@
                        Margin="75,0,0,0"
                        Style="{StaticResource TextBlockStyle}"/>
             <ComboBox Grid.Row="4"
-                      Margin="120"
-                      VerticalAlignment="Center"
+                      Margin="325,0,0,0"
+                      Width="200"
+                      HorizontalAlignment="Left"
                       Style="{StaticResource MaterialDesignComboBox}"
                       ItemsSource="{Binding Worksets}"
-                      SelectedItem="{Binding WorksetLevels, Mode=TwoWay}"
-                      Foreground="{StaticResource LineBrush}"/>
+                      SelectedItem="{Binding WorksetLevel, Mode=TwoWay}"
+                      Foreground="{StaticResource TextBrush}">
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Foreground" Value="Black" />
+                        <Setter Property="Height" Value="30"></Setter>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ComboBoxItem">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ComboBox.ItemContainerStyle>
+            </ComboBox>
+            
             <Button Grid.Row="5"
                     Style="{StaticResource MaterialDesignRaisedDarkButton}"
                     Background="{StaticResource LineBrush}"

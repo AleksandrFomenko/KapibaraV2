@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-
+﻿
 namespace WorkSetLinkFiles.Models;
 
 internal class WorkSetLinkFilesModel
@@ -31,10 +30,16 @@ internal class WorkSetLinkFilesModel
     {
         if (worksetName ==string.Empty) return;
         
-        var workset = new FilteredElementCollector(_doc)
-            .OfClass(typeof(Workset))
-            .Cast<Workset>()
+        var workset = new FilteredWorksetCollector(_doc)
+            .OfKind(WorksetKind.UserWorkset)
+            .ToWorksets()
             .FirstOrDefault(w => w.Name == worksetName);
+        
+        new FilteredWorksetCollector(_doc)
+            .OfKind(WorksetKind.UserWorkset)
+            .ToWorksets()
+            .Select(w => w.Name)
+            .ToList();
         var elems = new FilteredElementCollector(_doc)
             .OfCategory(cat)
             .WhereElementIsNotElementType()

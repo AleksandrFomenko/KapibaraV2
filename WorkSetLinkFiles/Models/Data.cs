@@ -1,4 +1,4 @@
-﻿using System.Windows.Documents;
+﻿
 
 namespace WorkSetLinkFiles.Models;
 
@@ -69,9 +69,9 @@ internal class Data
 
     internal List<string> GetWorksets()
     {
-        return new FilteredElementCollector(_doc)
-            .OfCategory(BuiltInCategory.OST_RvtLinks)
-            .WhereElementIsNotElementType()
+        return new FilteredWorksetCollector(_doc)
+            .OfKind(WorksetKind.UserWorkset)
+            .ToWorksets()
             .Select(w => w.Name)
             .ToList();
     }
