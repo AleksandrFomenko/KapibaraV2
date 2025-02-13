@@ -134,7 +134,6 @@ public sealed partial class WorkSetLinkFilesViewModel : ObservableObject
             {
                 // ignored
             }
-            
             try
             {
                 _model.SetWorkset(

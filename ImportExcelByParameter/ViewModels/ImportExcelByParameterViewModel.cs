@@ -36,18 +36,6 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
             canExecute: _ => true
         );
         
-        if (Cfg == null)
-        {
-            Cfg = new Config()
-            {
-                Category = string.Empty,
-                ListStr = string.Empty,
-                Number = 1,
-                Parameter = string.Empty,
-                PathStr = string.Empty
-            };
-        }
-
         if (!File.Exists(Cfg.PathStr))
         {
             PathExcel = "File not found";

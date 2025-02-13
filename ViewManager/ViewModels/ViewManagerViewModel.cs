@@ -19,7 +19,6 @@ public sealed class ViewManagerViewModel : INotifyPropertyChanged
     
     private PanelItem _selectedPanel;
     public static Action CloseWindow { get; set; }
-    
     public PanelItem SelectedPanel
     {
         get => _selectedPanel;

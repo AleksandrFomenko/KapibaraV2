@@ -1,9 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using ViewManager.Sheets.Tabs;
 using ViewManager.Sheets.Tabs.CreateSheets.VM;
-using ViewManager.ViewModels;
+using ViewManager.Sheets.Tabs.Print.Model;
+using ViewManager.Sheets.Tabs.Print.VM;
+
 
 namespace ViewManager.Sheets.ViewModel;
 
@@ -11,33 +11,17 @@ internal class SheetsViewModel: INotifyPropertyChanged
 {
     private Document _doc;
     public string Header => "Менеджер листов";
+    public CreateSheetsVM CreateSheetsViewModel { get; }
+    public PrintVm PrintViewModel { get; }
 
-    
-    public ObservableCollection<ISheetsTab> Tabs { get; }
-    private ISheetsTab _currentTab;
-    public ISheetsTab CurrentTab
-    {
-        get => _currentTab;
-        set
-        {
-            if (_currentTab != value)
-            {
-                _currentTab = value;
-                OnPropertyChanged();
-            }
-        }
-    }
+
     public SheetsViewModel(Document doc)
     {
         _doc = doc;
+        var printModel = new PrintModel(_doc); 
+        CreateSheetsViewModel = new CreateSheetsVM(_doc);
         
-        
-        Tabs = new ObservableCollection<ISheetsTab>
-        {
-            new CreateSheetsVM( _doc),
-        };
-        CurrentTab = Tabs.FirstOrDefault();
-        
+        PrintViewModel = new PrintVm(_doc, printModel);
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

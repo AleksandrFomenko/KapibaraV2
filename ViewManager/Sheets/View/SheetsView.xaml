@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:view="clr-namespace:ViewManager.Sheets.Tabs.CreateSheets.View"
-             xmlns:vm="clr-namespace:ViewManager.Sheets.Tabs.CreateSheets.VM"
+             xmlns:view1="clr-namespace:ViewManager.Sheets.Tabs.Print.View"
              mc:Ignorable="d"
              d:DesignHeight="800" d:DesignWidth="1500">
     <UserControl.Resources>
@@ -17,9 +17,6 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" /> 
                 <ResourceDictionary Source="pack://application:,,,/WpfResources;component/Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <DataTemplate DataType="{x:Type vm:CreateSheetsVM}">
-                <view:CreateSheetsView />
-            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
     
@@ -42,15 +39,13 @@
                 materialDesign:ColorZoneAssist.Foreground="{DynamicResource TextBrush}"
                 materialDesign:ColorZoneAssist.Mode="Custom"
                 Style="{StaticResource MaterialDesignFilledTabControl}"
-                ItemsSource="{Binding Tabs}"
-                SelectedItem="{Binding CurrentTab}">
-                
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Header}" />
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-                
+                SelectedItem="{Binding SelectedTab}">
+                <TabItem Header="Создание листов">
+                    <view:CreateSheetsView DataContext="{Binding CreateSheetsViewModel}"/>
+                </TabItem>
+                <TabItem Header="Печать">
+                    <view1:PrintView DataContext="{Binding PrintViewModel}"/>
+                </TabItem>
             </TabControl>
         </Grid>
     </Border>

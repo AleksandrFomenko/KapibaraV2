@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using ActiveView.Models;
-using System.Windows;
 using KapibaraCore.Parameters;
 using RelayCommand = KapibaraCore.RelayCommand.RelayCommand;
 using Visibility = System.Windows.Visibility;
