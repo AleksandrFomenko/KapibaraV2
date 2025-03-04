@@ -48,7 +48,7 @@ internal class LevelByFloorModel
         var bottomLoop = CurveLoop.Create(bottomEdges);
         
         var height = max.Z - min.Z;
-        
+        if (height == 0) TaskDialog.Show("err", "Два уровня имеют одинаковую высоту");
         var solid = GeometryCreationUtilities.CreateExtrusionGeometry(new List<CurveLoop> { bottomLoop }, XYZ.BasisZ, height);
 
         return solid;
@@ -244,6 +244,7 @@ internal class LevelByFloorModel
         }
         catch (Exception e)
         {
+            TaskDialog.Show("1", e.ToString());
             Debug.WriteLine(e.ToString());
         }
     }
