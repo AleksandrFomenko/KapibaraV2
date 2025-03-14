@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Autodesk.Revit.UI;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ColorsByParameters.ViewModels;
 

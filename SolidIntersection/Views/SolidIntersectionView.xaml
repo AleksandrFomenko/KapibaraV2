@@ -56,6 +56,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="100" />
                         <RowDefinition Height="100" />
+                        <RowDefinition Height="100" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="100" />
                     </Grid.RowDefinitions>
@@ -92,6 +93,30 @@
                                 <RowDefinition Height="1.5*"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0"
+                                       Text="Единое значение"
+                                       Foreground="{DynamicResource TextBrush}"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       Style="{StaticResource MaterialDesignTextBlock}"
+                                       Margin="10,0,0,0"/>
+                            <ToggleButton Grid.Row="1"
+                                          Margin="10,0,0,0"
+                                          HorizontalAlignment="Left"
+                                          IsChecked="{Binding OneValueForEveryone, Mode=TwoWay}" 
+                                          Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+                        </Grid>
+                    </Border>
+                   
+                    <Border Grid.Row="2" 
+                            Style="{StaticResource InputBorder}"
+                            Visibility="{Binding ShowBorderWithValue}"
+                            Margin="10,5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="1.5*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0"
                                        Text="Значение"
                                        Foreground="{DynamicResource TextBrush}"
                                        VerticalAlignment="Top"
@@ -111,7 +136,7 @@
                                           Style="{StaticResource MaterialDesignSwitchToggleButton}" />
                         </Grid>
                     </Border>
-                    <Button Grid.Row="3"
+                    <Button Grid.Row="4"
                             Style="{StaticResource MaterialDesignRaisedDarkButton}"
                             ToolTip="Нажать бы"
                             Background="{StaticResource LineBrush}"
@@ -190,7 +215,7 @@
                                     </CheckBox.LayoutTransform>
                                 </CheckBox>
                                 <TextBlock Grid.Column="1" Text="Наименование" 
-                                           Margin="5,0,0,0"
+                                           Margin="50,0,0,0"
                                            Style="{StaticResource TextTableHead}"/>
                             </Grid>
                         </Border>
@@ -212,7 +237,8 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="60"/>
-                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="200"/>
                                         </Grid.ColumnDefinitions>
 
                                         <CheckBox IsChecked="{Binding IsChecked}"
@@ -232,6 +258,13 @@
                                         <TextBlock Text="{Binding NameItem}"
                                                    Style="{StaticResource TextListBox}"
                                                    Grid.Column="1"/>
+                                        
+                                        <TextBox Text="{Binding Value}"
+                                                 Width="180"
+                                                 HorizontalAlignment="Right"
+                                                 Visibility="{Binding VisibleTextBox}"
+                                                 Style="{StaticResource SimpleTextBox}"
+                                                 Grid.Column="2"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>

@@ -1,6 +1,4 @@
-﻿
-
-namespace WorkSetLinkFiles.Models;
+﻿namespace WorkSetLinkFiles.Models;
 
 internal class Data
 {

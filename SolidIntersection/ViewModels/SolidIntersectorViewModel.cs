@@ -12,35 +12,18 @@ public partial class SolidIntersectionViewModel : ObservableObject
     private readonly SolidIntersectionModel _model;
     internal static Action Close;
 
-    [ObservableProperty]
-    private string _value;
-
-    [ObservableProperty]
-    private List<SelectedItems> _itemsList= new ();
-    
-    [ObservableProperty]
-    private SelectedItems _selectedItem;
-
-    [ObservableProperty]
-    private List<string> _parameters;
-
-    [ObservableProperty]
-    private string _parameter;
-    
-    [ObservableProperty]
-    private string _filterByName;
-    
-    [ObservableProperty]
-    private bool _allItems;
-    
-    [ObservableProperty]
-    private bool _toggleButton;
-    
-    [ObservableProperty]
-    private Visibility _textBoxVisibility = Visibility.Visible;
-    
-    [ObservableProperty]
-    private Visibility _toggleButtonVisibility = Visibility.Hidden;
+    [ObservableProperty] private string _value;
+    [ObservableProperty] private List<SelectedItems> _itemsList= new ();
+    [ObservableProperty] private SelectedItems _selectedItem;
+    [ObservableProperty] private List<string> _parameters;
+    [ObservableProperty] private string _parameter;
+    [ObservableProperty] private string _filterByName;
+    [ObservableProperty] private bool _allItems;
+    [ObservableProperty] private bool _toggleButton;
+    [ObservableProperty] private bool _oneValueForEveryone = false;
+    [ObservableProperty] private Visibility _showBorderWithValue = Visibility.Hidden;
+    [ObservableProperty] private Visibility _textBoxVisibility = Visibility.Visible;
+    [ObservableProperty] private Visibility _toggleButtonVisibility = Visibility.Hidden;
 
     public SolidIntersectionViewModel()
     {
@@ -50,10 +33,18 @@ public partial class SolidIntersectionViewModel : ObservableObject
         LoadedParameters();
         LoadedFamilies();
     }
-    partial void OnValueChanged(string value)
+    partial void OnValueChanged(string value) => ExecuteCommand.NotifyCanExecuteChanged();
+
+    partial void OnOneValueForEveryoneChanged(bool value)
     {
-        ExecuteCommand.NotifyCanExecuteChanged();
+        ShowBorderWithValue = value ? Visibility.Visible : Visibility.Hidden;
+        ItemsList.ForEach(item =>
+        {
+            item.VisibleTextBox = value ? Visibility.Hidden : Visibility.Visible;
+        });
+
     }
+    
     partial void OnParameterChanged(string value)
     {
         CheckParameter();
@@ -110,7 +101,16 @@ public partial class SolidIntersectionViewModel : ObservableObject
     private void Execute(Window window)
     {
         var selectedItems = ItemsList.Where(item => item.IsChecked);
-        _model.Execute(selectedItems, Parameter, Value);
-        Close();
+        var flag1 = OneValueForEveryone;
+        if (flag1)
+        {
+            _model.Execute(selectedItems, Parameter, Value);
+            Close();
+        }
+        else
+        {
+            _model.Execute(selectedItems, Parameter);
+            Close();
+        }
     }
 }

@@ -35,15 +35,20 @@ internal class Config
         var pathCfg = Path.Combine(dllDir, directoryName, configName);
         
         // path to cfg`s
+        
         var dirCfg = Path.Combine(dllDir, directoryName);
-        KapibaraConfig.Configuration.CreateEmptyJsonFile(dirCfg, configName);
-        Category = string.Empty;
-        ListStr = string.Empty;
-        Number = 1;
-        Parameter = string.Empty;
-        PathStr = string.Empty;
+        
+        if (!File.Exists(pathCfg))
+        {
+            KapibaraConfig.Configuration.CreateEmptyJsonFile(dirCfg, configName);
+            Category = string.Empty;
+            ListStr = string.Empty;
+            Number = 1;
+            Parameter = string.Empty;
+            PathStr = string.Empty;
     
-        SaveConfig();
+            SaveConfig();
+        }
     }
 
     public string GetPath()

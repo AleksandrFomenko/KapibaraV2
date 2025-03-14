@@ -52,6 +52,32 @@ public class SolidIntersectionModel
         return elements;
     }
 
+    internal void Execute(IEnumerable<SelectedItems> selectedItems, string parameterName)
+    {
+        try
+        {
+            using (var t = new Transaction(_doc, "Solid intersection"))
+            {
+                t.Start();
+                foreach (var selectedItem in selectedItems)
+                {
+                    var intersectionItems = FindIntersectingElements(selectedItem.GetName());
+            
+                    foreach (var elem in  intersectionItems)
+                    {
+                        var par = elem.GetParameterByName(parameterName);
+                        par.SetParameterValue(selectedItem.Value);
+                    }
+                }
+                t.Commit();
+            }
+        }
+        catch (Exception e)
+        {
+            TaskDialog.Show("Error", e.ToString());
+            throw;
+        }
+    }
     internal void Execute(IEnumerable<SelectedItems> selectedItems, string parameterName, string value)
     {
         try

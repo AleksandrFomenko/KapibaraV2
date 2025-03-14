@@ -35,10 +35,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.1" />
-        <PackageReference Include="MaterialDesignColors" Version="3.1.0" />
-        <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
-        <PackageReference Include="MaterialDesignThemes" Version="5.1.0" />
+        <PackageReference Include="Extended.Wpf.Toolkit" Version="4.*" />
+        <PackageReference Include="MaterialDesignThemes" Version="5.2.*" />
+        <PackageReference Include="MaterialDesignColors" Version="5.2.*" />
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -55,12 +54,7 @@
         <Folder Include="Plural\Model\" />
         <Folder Include="Single\Model\" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="MaterialDesignThemes.Wpf">
-        <HintPath>..\..\..\..\.nuget\packages\materialdesignthemes\5.1.1-ci691\lib\net462\MaterialDesignThemes.Wpf.dll</HintPath>
-      </Reference>
-    </ItemGroup>
+    
 
     <ItemGroup>
       <ProjectReference Include="..\WpfResources\WpfResources.csproj" />

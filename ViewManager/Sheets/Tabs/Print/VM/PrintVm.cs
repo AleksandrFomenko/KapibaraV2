@@ -81,10 +81,10 @@ internal sealed class PrintVm:ISheetsTab, INotifyPropertyChanged
         var flag1 = true;
         if (CheckCombine)
         {
-            flag1 = !CombineFileName.IsNullOrEmpty();
+            flag1 = !string.IsNullOrEmpty(CombineFileName);
         }
         
-        return (!PathFolder.IsNullOrEmpty() && flag1);
+        return (!string.IsNullOrEmpty(PathFolder) && flag1);
     }
     private void Execute()
     {

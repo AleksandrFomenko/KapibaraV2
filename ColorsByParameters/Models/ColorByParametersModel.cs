@@ -1,4 +1,6 @@
-﻿namespace ColorsByParameters.Models;
+﻿using Autodesk.Revit.DB;
+
+namespace ColorsByParameters.Models;
 
 internal class ColorByParametersModel
 {

@@ -63,14 +63,17 @@ public sealed partial class WorkSetLinkFilesViewModel : ObservableObject
         StartCommand.NotifyCanExecuteChanged();
     }
 
+
     partial void OnAxesChanged(bool value) =>  StartCommand.NotifyCanExecuteChanged();
     partial void OnLevelChanged(bool value) =>  StartCommand.NotifyCanExecuteChanged();
+    
     
     partial void OnLinkRevitModelChanged(LinkFiles value)
     {
         value.IsChecked = !value.IsChecked;
         StartCommand.NotifyCanExecuteChanged();
     }
+    
     partial void OnPrefixChanged(string value) =>
         LinksRevitModels.ForEach(link => link.Prefix = value);
 
@@ -102,6 +105,7 @@ public sealed partial class WorkSetLinkFilesViewModel : ObservableObject
         foreach (var link in LinksRevitModels)
         {
             link.PropertyChanged += Link_PropertyChanged;
+            link.IsCheckedChanged += () => StartCommand.NotifyCanExecuteChanged();
         }
     }
     
