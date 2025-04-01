@@ -68,7 +68,8 @@ namespace KapibaraV2
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/LevelByFloor.png");
             
             var stackPanel = panelGeneral.AddStackPanel();
-            stackPanel.AddLabel("Items:");
+            stackPanel.AddPushButton<SortingCategories.Commands.StartupCommand>("Sorting")
+                .SetImage("/KapibaraV2;component/Resources/Icons/Sort.png");
             stackPanel.AddPushButton<SolidIntersection.Commands.SolidIntersection>("Intersection")
                 .SetImage("/KapibaraV2;component/Resources/Icons/intersector.png");
             stackPanel.AddPushButton<ActiveView.Commands.StartupCommand>("Active view")

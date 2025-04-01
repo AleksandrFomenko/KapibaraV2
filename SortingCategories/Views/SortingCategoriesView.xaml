@@ -1,0 +1,155 @@
+﻿<ui:FluentWindow
+    x:Class="SortingCategories.Views.SortingCategoriesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    mc:Ignorable="d"
+    WindowStartupLocation="CenterScreen"
+    Title="SortingCategories"
+    Height="800"
+    Width="1400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="100" />
+        </Grid.RowDefinitions>
+        <ui:TitleBar Grid.Row="0" Title="Sorting"/>
+        
+        <Grid Grid.Row="1" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3.5*"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <ui:Card Grid.Column="0" Margin="0,15">
+                <StackPanel >
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="16">Сортировка</TextBlock>
+                        <Separator Visibility = "Hidden" Width="370"/>
+                        <ui:Button HorizontalAlignment="Center"
+                                   Content="Воздуховоды"
+                                   Appearance="Primary"
+                                   Command="{Binding DuctPatternCommand}"
+                                   Icon="{ui:SymbolIcon Production24}" />
+                        <Separator Visibility="Hidden" Width="10"></Separator>
+                        <ui:Button HorizontalAlignment="Center"
+                                   Content="Трубопроводы ОВ"
+                                   Appearance="Primary"
+                                   Command="{Binding PipelineHotPatternCommand}"
+                                   Icon="{ui:SymbolIcon Pipeline24}" />
+                        <Separator Visibility="Hidden" Width="10"></Separator>
+                        <ui:Button HorizontalAlignment="Center"
+                                   Content="Трубопроводы ВК"
+                                   Appearance="Primary"
+                                   Command="{Binding PipelineWaterPatternCommand}"
+                                   Icon="{ui:SymbolIcon Pipeline24}" />
+                        <Separator Visibility="Hidden" Width="10"></Separator>
+                        <ui:Button HorizontalAlignment="Center"
+                                   Appearance="Primary"
+                                   Content="Очистить"
+                                   Command="{Binding ClearCommand}"
+                                   Icon="{ui:SymbolIcon Delete48}" />
+                    </StackPanel>
+                    <Separator Visibility = "Hidden" Height="25"/>
+                    <Grid Height="40">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="0.5*" />
+                            <ColumnDefinition Width="1.5*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Margin="5, 0,0,0">Выбрать<LineBreak/>нужные</TextBlock>
+                        <TextBlock Grid.Column="1" TextAlignment="Center"> Выбор категорий</TextBlock>
+                        <TextBlock Grid.Column="2" TextAlignment="Center"> Параметр<LineBreak/>для сортировки</TextBlock>
+                        <TextBlock Grid.Column="3" TextAlignment="Center"> Параметр<LineBreak/>для группировки</TextBlock>
+                    </Grid>
+                    
+                    <Separator Visibility = "Hidden" Height="15"/>
+                    
+                    <Grid Height="50">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="0.5*" />
+                            <ColumnDefinition Width="1.5*" />
+                        </Grid.ColumnDefinitions>
+                        
+                        <CheckBox Grid.Column="0" IsChecked="{Binding IsAllChecked}" Margin="5, 0,0,0"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection = "RightToLeft">
+                            <Separator Visibility="Hidden" Width="25"></Separator>
+                            <ui:Button HorizontalAlignment="Center"
+                                       Content="Удалить"
+                                       Appearance="Caution"
+                                       Command="{Binding DeleteCommand}"
+                                       Icon="{ui:SymbolIcon Delete24}" />
+                            <Separator Visibility="Hidden" Width="10"></Separator>
+                            <ui:Button HorizontalAlignment="Center"
+                                       Content="Добавить"
+                                       Appearance="Light"
+                                       Command="{Binding AddCommand}"
+                                       Icon="{ui:SymbolIcon ChannelAdd24}" />
+                        </StackPanel>
+
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding ProjectParameters}" Margin="5, 0"/>
+                        <ComboBox Grid.Column="3" ItemsSource="{Binding ProjectParameters}" Margin="5, 0"/>
+                    </Grid>
+                    
+                    <Separator Opacity="0" Height="10"/>
+                    
+                    <ListBox 
+                        ItemsSource="{Binding RevitCategories}"
+                        SelectedItem="{Binding RevitCategory}"
+                        MaxHeight="400">
+                        <ListBox.ItemTemplate >
+                                <DataTemplate>
+                                    <Grid Height="50">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="0.5*" />
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="0.5*" />
+                                            <ColumnDefinition Width="1.5*" />
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Column="0" IsChecked="{Binding IsChecked}" />
+                                        <ComboBox Grid.Column="1"
+                                                  ItemsSource="{Binding Categories}"
+                                                  SelectedItem="{Binding Category}"
+                                                  Margin="5, 0"
+                                                  DisplayMemberPath="Name"/>
+                                        <TextBox Grid.Column="2" Text="{Binding Sorting}"
+                                                 TextAlignment="Center"
+                                                 Margin="5, 0"/>
+                                        <TextBox Grid.Column="3" Text="{Binding Group}" Margin="5, 0"/>
+                                        
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            
+                            <ListBox.ItemContainerStyle >
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Height" Value="50"/>
+                                </Style>
+                                
+                            </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </StackPanel>
+            </ui:Card>
+        </Grid>
+        
+        <ui:Button Grid.Row="2"
+                   HorizontalAlignment="Center"
+                   Content="Execute"
+                   Appearance="Primary"
+                   Command="{Binding ExecuteCommand}"
+                   Icon="{ui:SymbolIcon ArrowSortDownLines24}" />
+        <ui:Card Grid.Row="2" Margin="15" Width="250" HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal">
+                <ui:ToggleSwitch IsChecked="{Binding DarkTheme}"/>
+                <TextBlock Margin="10,0,0,0">Dark theme</TextBlock>
+            </StackPanel>
+        </ui:Card>
+    </Grid>
+</ui:FluentWindow>
