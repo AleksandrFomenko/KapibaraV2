@@ -1,4 +1,5 @@
-﻿using SortingCategories.ViewModels;
+﻿using KapibaraUI.Services.Appearance;
+using SortingCategories.ViewModels;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
@@ -8,7 +9,11 @@ public sealed partial class SortingCategoriesView : FluentWindow
 {
     public SortingCategoriesView(SortingCategoriesViewModel viewModel)
     {
-        ApplicationThemeManager.Apply(this);
+        ThemeWatcherService.Initialize();
+        ThemeWatcherService.Watch(this);
+
+        ThemeWatcherService.ApplyTheme(ApplicationTheme.Dark);
+
         DataContext = viewModel;
         InitializeComponent();
     }

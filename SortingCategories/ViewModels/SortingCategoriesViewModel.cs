@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Autodesk.Revit.UI;
 using KapibaraCore.Parameters;
+using KapibaraUI.Services.Appearance;
 using Wpf.Ui.Appearance;
 
 namespace SortingCategories.ViewModels;
@@ -8,6 +9,7 @@ namespace SortingCategories.ViewModels;
 public sealed partial class SortingCategoriesViewModel : ObservableObject
 {
     private readonly Document _doc;
+
 
     [ObservableProperty] private bool _darkTheme = true;
     [ObservableProperty] private bool _isAllChecked;
@@ -17,8 +19,15 @@ public sealed partial class SortingCategoriesViewModel : ObservableObject
     private readonly List<Category> _projectCategory;
 
 
-    partial void OnDarkThemeChanged(bool value) 
-        => ApplicationThemeManager.Apply(value ? ApplicationTheme.Dark : ApplicationTheme.Light);
+    partial void OnDarkThemeChanged(bool value)
+    {
+        ApplicationTheme applicationTheme =
+            ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Light
+                ? ApplicationTheme.Dark
+                : ApplicationTheme.Light;
+
+        ThemeWatcherService.ApplyTheme(applicationTheme);
+    }
     partial void OnIsAllCheckedChanged(bool value)
     {
         foreach (var item in RevitCategories)

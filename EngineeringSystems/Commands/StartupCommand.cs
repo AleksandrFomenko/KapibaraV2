@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.Attributes;
-using EngineeringSystems.Model;
 using Nice3point.Revit.Toolkit.External;
 using EngineeringSystems.ViewModels;
 using EngineeringSystems.Views;
