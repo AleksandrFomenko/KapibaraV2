@@ -1,33 +1,22 @@
 ﻿using System.Collections.ObjectModel;
-using Autodesk.Revit.UI;
-using KapibaraCore.Parameters;
-using KapibaraUI.Services.Appearance;
-using Wpf.Ui.Appearance;
-
+using SortingCategories.Model;
 namespace SortingCategories.ViewModels;
 
 public sealed partial class SortingCategoriesViewModel : ObservableObject
 {
-    private readonly Document _doc;
-
-
-    [ObservableProperty] private bool _darkTheme = true;
+    private readonly ParametersMainFamiliesModel _model;
+    
     [ObservableProperty] private bool _isAllChecked;
     [ObservableProperty] private ObservableCollection<RevitCategory> _revitCategories;
     [ObservableProperty] private RevitCategory _revitCategory;
     [ObservableProperty] private List<string> _projectParameters;
+    [ObservableProperty] private List<Option> _options;
+    [ObservableProperty] private Option _option;
+    [ObservableProperty] private string _parameterForSort;
+    [ObservableProperty] private string _parameterForGroup;
+    [ObservableProperty] private bool _checkSubComponents = true;
     private readonly List<Category> _projectCategory;
-
-
-    partial void OnDarkThemeChanged(bool value)
-    {
-        ApplicationTheme applicationTheme =
-            ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Light
-                ? ApplicationTheme.Dark
-                : ApplicationTheme.Light;
-
-        ThemeWatcherService.ApplyTheme(applicationTheme);
-    }
+    
     partial void OnIsAllCheckedChanged(bool value)
     {
         foreach (var item in RevitCategories)
@@ -35,19 +24,16 @@ public sealed partial class SortingCategoriesViewModel : ObservableObject
             item.IsChecked = value;
         }
     }
-    public SortingCategoriesViewModel(Document doc)
+    partial void OnRevitCategoriesChanged(ObservableCollection<RevitCategory> value) => _model.RevitCategories = value;
+    
+    public SortingCategoriesViewModel(ParametersMainFamiliesModel model)
     {
-        RevitCategories = new ObservableCollection<RevitCategory>();
-        _doc = doc;
-        ProjectParameters = _doc.GetProjectParameters();
-        
-        var categories = _doc.Settings.Categories;
-        _projectCategory = categories
-            .Cast<Category>()
-            .Where(i => i.IsVisibleInUI)
-            .Where(i => i.AllowsBoundParameters)
-            .Where(i => i.CategoryType == CategoryType.Model)
-            .ToList();
+        _model = model;
+        RevitCategories = [];
+        ProjectParameters = _model.GetParameters();
+        _projectCategory = _model.GetCategory();
+        Options = _model.GetOptions();
+        Option = Options.FirstOrDefault() ?? throw new InvalidOperationException();
     }
     
     [RelayCommand]
@@ -63,15 +49,22 @@ public sealed partial class SortingCategoriesViewModel : ObservableObject
     private void DuctPattern()
     {
         RevitCategories.Clear();
-        RevitCategories = Pattern.GenerateRevitCategories(_doc, _projectCategory, 1);
+        RevitCategories = _model.GetPattern(1, _projectCategory);
     }
     
     [RelayCommand]
     private void PipelineHotPattern()
     {
         RevitCategories.Clear();
-        RevitCategories = Pattern.GenerateRevitCategories(_doc, _projectCategory, 2);
+        RevitCategories = _model.GetPattern(2, _projectCategory);
     }
+    [RelayCommand]
+    private void PipelineWaterPattern()
+    {
+        RevitCategories.Clear();
+        RevitCategories = _model.GetPattern(3, _projectCategory);
+    }
+    
     
     [RelayCommand]
     private void Clear()
@@ -82,7 +75,6 @@ public sealed partial class SortingCategoriesViewModel : ObservableObject
     [RelayCommand]
     private void Execute()
     {
-        
-
+        _model.Execute(ParameterForSort, ParameterForGroup, Option.IsActiveView, CheckSubComponents);
     }
 }

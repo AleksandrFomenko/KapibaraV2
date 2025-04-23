@@ -50,6 +50,28 @@ public static class Pattern
         { BuiltInCategory.OST_GenericModel, "Прочие элементы" }
     };
     
+    private static Dictionary<BuiltInCategory, int> PipeNumberWater { get; } = new Dictionary<BuiltInCategory, int>
+    {
+        { BuiltInCategory.OST_MechanicalEquipment, 100 }, 
+        { BuiltInCategory.OST_PipeCurves, 200 },
+        { BuiltInCategory.OST_PipeFitting, 300 },       
+        { BuiltInCategory.OST_PipeAccessory, 400 },     
+        { BuiltInCategory.OST_PipeInsulations, 500 },
+        { BuiltInCategory.OST_PlumbingFixtures, 600},
+        { BuiltInCategory.OST_GenericModel, 700 }
+    };
+
+    private static readonly Dictionary<BuiltInCategory, string> PipeGroupWater = new Dictionary<BuiltInCategory, string>
+    {
+        { BuiltInCategory.OST_MechanicalEquipment, "Оборудование" },
+        { BuiltInCategory.OST_PipeCurves, "Трубопроводы" },
+        { BuiltInCategory.OST_PipeFitting, "Фитинги трубопроводов" },
+        { BuiltInCategory.OST_PipeAccessory, "Арматура трубопроводов" },
+        { BuiltInCategory.OST_PipeInsulations, "Изоляция" },
+        { BuiltInCategory.OST_PlumbingFixtures, "Сантехнические приборы" },
+        { BuiltInCategory.OST_GenericModel, "Прочие элементы" }
+    };
+    
     
     public static ObservableCollection<RevitCategory> GenerateRevitCategories(Document doc,
         List<Category> cats, int systemType)
@@ -70,6 +92,10 @@ public static class Pattern
             case 2: 
                 numberMap = PipeNumber;
                 groupMap = PipeGroup;
+                break;
+            case 3: 
+                numberMap = PipeNumberWater;
+                groupMap = PipeGroupWater;
                 break;
             default:
                 numberMap = new Dictionary<BuiltInCategory, int> 

@@ -1,7 +1,8 @@
 ﻿using System.Windows.Media;
+using KapibaraUI.Services.Appearance;
 using Nice3point.Revit.Toolkit.External;
 using KapibaraV2.Commands.BIM;
-
+using Wpf.Ui.Appearance;
 
 
 namespace KapibaraV2
@@ -14,6 +15,7 @@ namespace KapibaraV2
     {
         public override void OnStartup()
         {
+            ApplyResources();
             CreateRibbon();
         }
 
@@ -87,6 +89,12 @@ namespace KapibaraV2
             panelInfo.AddPushButton<ChatGPT.Commands.ChatGpt>("ChatGPT")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ai.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ai.png");
+        }
+        private static void ApplyResources()
+        {
+            ThemeWatcherService.Initialize();
+            ThemeWatcherService.ApplyTheme(ApplicationTheme.Dark);
+       
         }
     }
 }

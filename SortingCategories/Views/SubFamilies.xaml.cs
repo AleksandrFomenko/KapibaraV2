@@ -5,9 +5,9 @@ using Wpf.Ui.Abstractions.Controls;
 
 namespace SortingCategories.Views;
 
-public partial class MainFamilies : INavigableView<SortingCategoriesViewModel>
+public partial class SubFamilies :  INavigableView<SubFamiliesViewModel>
 {
-    public MainFamilies(SortingCategoriesViewModel viewModel, IThemeWatcherService themeWatcherService)
+    public SubFamilies(SubFamiliesViewModel viewModel, IThemeWatcherService themeWatcherService)
     {
         themeWatcherService.Watch(this);
         ViewModel = viewModel;
@@ -15,5 +15,5 @@ public partial class MainFamilies : INavigableView<SortingCategoriesViewModel>
         InitializeComponent();
     }
 
-    public SortingCategoriesViewModel ViewModel { get; }
+    public SubFamiliesViewModel ViewModel { get; }
 }

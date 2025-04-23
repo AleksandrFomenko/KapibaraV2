@@ -22,13 +22,14 @@ internal class PrintModel
             return;
         }
 
-        foreach (var sheet in sheets)
+        foreach (var sheetId in sheets)
         {
-            var sh = _doc.GetElement(sheet);
+            var sh = _doc.GetElement(sheetId);
             if (sh is ViewSheet viewSheet)
             {
-                settings.FileName = viewSheet.SheetNumber + " " + viewSheet.Name;
-                _doc.Export(path, sheets, settings);
+                var sheet1 = new List<ElementId> { sheetId };
+                settings.Combine = false;
+                _doc.Export(path, sheet1, settings);
             }
         }
     }
