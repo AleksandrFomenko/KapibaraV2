@@ -28,6 +28,9 @@ public partial class LevelByFloorViewModel : ObservableObject
     
     [ObservableProperty]
     private string _suffix;
+    
+    [ObservableProperty]
+    private string _indent = "0";
 
     internal LevelByFloorViewModel(Document doc, LevelByFloorModel model)
     {
@@ -54,7 +57,7 @@ public partial class LevelByFloorViewModel : ObservableObject
     private void Execute(Window window)
     {
         _model.SetOpt(Option);
-        _model.Execute(Parameter,Suffix,Prefix);
+        _model.Execute(Parameter,Suffix,Prefix, Indent);
         Close?.Invoke();
     }
 }

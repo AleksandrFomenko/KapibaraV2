@@ -62,7 +62,6 @@ public sealed partial class FamilyCleanerViewModel : ObservableObject
     [RelayCommand]
     private void Execute(Window window)
     {
-        
         foreach (var fileItem in RfaFiles.Where(fileItem => fileItem.IsSelected))
         {
             try

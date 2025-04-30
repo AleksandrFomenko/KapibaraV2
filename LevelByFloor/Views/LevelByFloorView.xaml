@@ -14,7 +14,7 @@
     AllowsTransparency="True"
     WindowStyle="None"
     Background="Transparent"
-    Height="400"
+    Height="500"
     Width="350">
     <Window.Resources>
         <ResourceDictionary>
@@ -36,6 +36,7 @@
             <wpfResources:TopPanel Grid.Row="0" Heading="Set level"/>
             <Grid Grid.Row="1" Background="Transparent">
             <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
@@ -129,7 +130,28 @@
                         </Grid>
                     </Grid>
                 </Border>
-                <Button Grid.Row="3"
+                <Border Grid.Row="3" 
+                        Style="{StaticResource InputBorder}"
+                        Margin="10,5">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="1.5*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                                   Text="Отступ"
+                                   Foreground="{DynamicResource TextBrush}"
+                                   VerticalAlignment="Top"
+                                   HorizontalAlignment="Left"
+                                   Style="{StaticResource MaterialDesignTextBlock}"
+                                   Margin="10,0,0,0"/>
+                        <TextBox Grid.Row="1"
+                                 Style="{StaticResource SimpleTextBox}"
+                                 Text="{Binding  Indent}"
+                                 Margin="5"/>
+                    </Grid>
+                </Border>
+                <Button Grid.Row="4"
                         Style="{StaticResource MaterialDesignRaisedDarkButton}"
                         ToolTip="Нажать бы"
                         Background="{StaticResource LineBrush}"

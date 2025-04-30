@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using KapibaraCore.Parameters;
 using KapibaraCore.Solids;
 using LevelByFloor.ViewModels;
+using System.Globalization;
 
 namespace LevelByFloor.Models;
 
@@ -139,7 +139,7 @@ internal class LevelByFloorModel
 
         return 0;
     }
-    private Dictionary<ElementId, int> CreateLevelSolids(BoundingBoxXYZ bb)
+    private Dictionary<ElementId, int> CreateLevelSolids(BoundingBoxXYZ bb, string indent)
     {
         var dict = new Dictionary<ElementId, int>();
         var levels = new FilteredElementCollector(_doc, _doc.ActiveView.Id)
@@ -164,28 +164,34 @@ internal class LevelByFloorModel
         DirectShape shape = null;
         var q = 0;
         var x = levelsBelowZero.Count;
+        double.TryParse(indent, NumberStyles.Any, CultureInfo.InvariantCulture, out double indentValue);
+        indentValue = indentValue / 304.8;
         for (var i = 0; i < levels.Count - 1; i++)
         {
             if (q < x)
             {
-                shape = CreateLevelSolid(bb, levels[i].ProjectElevation, levels[i + 1].ProjectElevation);
+                shape = CreateLevelSolid(bb,
+                    levels[i].ProjectElevation + indentValue, 
+                    levels[i + 1].ProjectElevation + indentValue);
                 dict[shape.Id] = -(x - q);
                 q++;
                 continue;
             }
-            shape = CreateLevelSolid(bb, levels[i].ProjectElevation, levels[i + 1].ProjectElevation);
+            shape = CreateLevelSolid(bb,
+                levels[i].ProjectElevation + indentValue,
+                levels[i + 1].ProjectElevation + indentValue);
             dict[shape.Id] = i - x + 1;
         }
         var lastLevelElevation = levels[levels.Count - 1].ProjectElevation;
-        shape = CreateLevelSolid(bb, lastLevelElevation, lastLevelElevation + 500);
+        shape = CreateLevelSolid(bb, lastLevelElevation + indentValue, lastLevelElevation + 500 + indentValue);
         dict[shape.Id] = levels.Count - x;
             
         var firstLevelElevation = levels[0].ProjectElevation;
-        shape = CreateLevelSolid(bb, firstLevelElevation - 1000, firstLevelElevation);
+        shape = CreateLevelSolid(bb, firstLevelElevation - 1000 + indentValue, firstLevelElevation + indentValue);
         dict[shape.Id] = -(x + 1);
         return dict;
     }
-    internal void Execute(string parameter, string suffix, string prefix)
+    internal void Execute(string parameter, string suffix, string prefix, string indent)
     {
         var elems = _options.Fec.WhereElementIsNotElementType().ToElements();
         if (_doc.ActiveView is not View3D)
@@ -199,7 +205,7 @@ internal class LevelByFloorModel
             using (var t1 = new Transaction(_doc, "Create solids"))
             {
                 t1.Start();
-                dictionary = CreateLevelSolids(GetBoundingBoxForAllElements());
+                dictionary = CreateLevelSolids(GetBoundingBoxForAllElements(), indent);
                 t1.Commit();
             }
             using (var t2 = new Transaction(_doc, "Set level"))
