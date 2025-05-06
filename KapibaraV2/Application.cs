@@ -84,6 +84,9 @@ namespace KapibaraV2
             panelMepGeneral.AddPushButton<EngineeringSystems.Commands.StartupCommand>("System\nname")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+            panelMepGeneral.AddPushButton<Insolation.Commands.StartupCommand>("ываываыва")
+                .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
 
             // Разное
             panelInfo.AddPushButton<ChatGPT.Commands.ChatGpt>("ChatGPT")

@@ -148,6 +148,62 @@ public static class RenderHelper
         buffer.VertexFormat = new VertexFormat(buffer.FormatBits);
     }
 
+    public static void MapLinesBuffer(RenderingBufferStorage buffer, IList<Line> lines, double diameter)
+        {
+            var vertexList = new List<XYZ>();
+            var indexList = new List<IndexLine>();
+            int offset = 0;
+            foreach (var line in lines)
+            {
+                var pts = line.Tessellate();
+                if (pts == null || pts.Count < 2) continue;
+                var tube = RenderGeometryHelper.GetSegmentationTube(pts, diameter);
+                foreach (var ring in tube)
+                {
+                    foreach (var p in ring)
+                    {
+                        vertexList.Add(p);
+                    }
+                }
+                int segCount = tube[0].Count;
+                int segs = tube.Count;
+                for (int s = 0; s < segs - 1; s++)
+                {
+                    for (int i = 0; i < segCount; i++)
+                    {
+                        int a = offset + s * segCount + i;
+                        int b = offset + (s + 1) * segCount + i;
+                        indexList.Add(new IndexLine(a, b));
+                    }
+                }
+                offset += segCount * segs;
+            }
+
+            int vCount = vertexList.Count;
+            buffer.VertexBufferCount = vCount;
+            buffer.PrimitiveCount = indexList.Count;
+            int floatsCount = VertexPosition.GetSizeInFloats() * vCount;
+            buffer.FormatBits = VertexFormatBits.Position;
+            buffer.VertexBuffer = new VertexBuffer(floatsCount);
+            buffer.VertexBuffer.Map(floatsCount);
+            var vstream = buffer.VertexBuffer.GetVertexStreamPosition();
+            foreach (var v in vertexList)
+                vstream.AddVertex(new VertexPosition(v));
+            buffer.VertexBuffer.Unmap();
+
+            int idxLen = indexList.Count * IndexLine.GetSizeInShortInts();
+            buffer.IndexBufferCount = idxLen;
+            buffer.IndexBuffer = new IndexBuffer(idxLen);
+            buffer.IndexBuffer.Map(idxLen);
+            var istream = buffer.IndexBuffer.GetIndexStreamLine();
+            foreach (var idx in indexList)
+                istream.AddLine(idx);
+            buffer.IndexBuffer.Unmap();
+            buffer.VertexFormat = new VertexFormat(buffer.FormatBits);
+        }
+    
+
+
     public static void MapCurveSurfaceBuffer(RenderingBufferStorage buffer, IList<XYZ> vertices, double diameter)
     {
         var tubeSegments = RenderGeometryHelper.GetSegmentationTube(vertices, diameter);
@@ -201,260 +257,6 @@ public static class RenderHelper
         buffer.IndexBuffer.Unmap();
         buffer.VertexFormat = new VertexFormat(buffer.FormatBits);
     }
-
-    public static void MapMeshGridBuffer(RenderingBufferStorage buffer, Mesh mesh, double offset)
-    {
-        var vertexCount = mesh.Vertices.Count;
-        var triangleCount = mesh.NumTriangles;
-
-        buffer.VertexBufferCount = vertexCount * 2;
-        buffer.PrimitiveCount = 3 * triangleCount * 2 + mesh.Vertices.Count;
-
-        var vertexBufferSizeInFloats = VertexPosition.GetSizeInFloats() * buffer.VertexBufferCount;
-        buffer.FormatBits = VertexFormatBits.Position;
-        buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
-        buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
-
-        var vertexStream = buffer.VertexBuffer.GetVertexStreamPosition();
-        var normals = new List<XYZ>(mesh.NumberOfNormals);
-
-        for (var i = 0; i < mesh.Vertices.Count; i++)
-        {
-            var normal = RenderGeometryHelper.GetMeshVertexNormal(mesh, i, mesh.DistributionOfNormals);
-            normals.Add(normal);
-        }
-
-        foreach (var vertex in mesh.Vertices)
-        {
-            var vertexPosition = new VertexPosition(vertex);
-            vertexStream.AddVertex(vertexPosition);
-        }
-
-        for (var i = 0; i < mesh.Vertices.Count; i++)
-        {
-            var vertex = mesh.Vertices[i];
-            var normal = normals[i];
-            var offsetVertex = vertex + normal * offset;
-            var vertexPosition = new VertexPosition(offsetVertex);
-            vertexStream.AddVertex(vertexPosition);
-        }
-
-        buffer.VertexBuffer.Unmap();
-        buffer.IndexBufferCount = (3 * triangleCount * 2 + mesh.Vertices.Count) * IndexLine.GetSizeInShortInts();
-        buffer.IndexBuffer = new IndexBuffer(buffer.IndexBufferCount);
-        buffer.IndexBuffer.Map(buffer.IndexBufferCount);
-
-        var indexStream = buffer.IndexBuffer.GetIndexStreamLine();
-
-        for (var i = 0; i < triangleCount; i++)
-        {
-            var meshTriangle = mesh.get_Triangle(i);
-            var index0 = (int) meshTriangle.get_Index(0);
-            var index1 = (int) meshTriangle.get_Index(1);
-            var index2 = (int) meshTriangle.get_Index(2);
-
-            indexStream.AddLine(new IndexLine(index0, index1));
-            indexStream.AddLine(new IndexLine(index1, index2));
-            indexStream.AddLine(new IndexLine(index2, index0));
-        }
-
-        for (var i = 0; i < triangleCount; i++)
-        {
-            var meshTriangle = mesh.get_Triangle(i);
-            var index0 = (int) meshTriangle.get_Index(0) + vertexCount;
-            var index1 = (int) meshTriangle.get_Index(1) + vertexCount;
-            var index2 = (int) meshTriangle.get_Index(2) + vertexCount;
-
-            indexStream.AddLine(new IndexLine(index0, index1));
-            indexStream.AddLine(new IndexLine(index1, index2));
-            indexStream.AddLine(new IndexLine(index2, index0));
-        }
-
-        for (var i = 0; i < mesh.Vertices.Count; i++)
-        {
-            indexStream.AddLine(new IndexLine(i, i + mesh.Vertices.Count));
-        }
-
-        buffer.IndexBuffer.Unmap();
-        buffer.VertexFormat = new VertexFormat(buffer.FormatBits);
-    }
-
-    public static void MapSideBuffer(RenderingBufferStorage buffer, XYZ min, XYZ max)
-    {
-        var vertexCount = 4;
-        var normal = (max - min).Normalize();
-        var length = (max - min).GetLength() / 2;
-
-        XYZ point1;
-        XYZ point2;
-        XYZ point3;
-        XYZ point4;
-        if (normal.IsAlmostEqualTo(XYZ.BasisX))
-        {
-            point1 = new XYZ(min.X, min.Y - length, min.Z);
-            point2 = new XYZ(min.X, min.Y + length, min.Z);
-            point3 = new XYZ(max.X, max.Y - length, max.Z);
-            point4 = new XYZ(max.X, max.Y + length, max.Z);
-        }
-        else if (normal.IsAlmostEqualTo(XYZ.BasisY))
-        {
-            point1 = new XYZ(min.X, min.Y, min.Z - length);
-            point2 = new XYZ(min.X, min.Y, min.Z + length);
-            point3 = new XYZ(max.X, max.Y, max.Z - length);
-            point4 = new XYZ(max.X, max.Y, max.Z + length);
-        }
-        else
-        {
-            point1 = new XYZ(min.X - length, min.Y, min.Z);
-            point2 = new XYZ(min.X + length, min.Y, min.Z);
-            point3 = new XYZ(max.X - length, max.Y, max.Z);
-            point4 = new XYZ(max.X + length, max.Y, max.Z);
-        }
-
-        buffer.VertexBufferCount = vertexCount;
-        buffer.PrimitiveCount = 2;
-
-        var vertexBufferSizeInFloats = VertexPosition.GetSizeInFloats() * buffer.VertexBufferCount;
-        buffer.FormatBits = VertexFormatBits.Position;
-        buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
-        buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
-
-        var vertexStream = buffer.VertexBuffer.GetVertexStreamPosition();
-        vertexStream.AddVertex(new VertexPosition(point1));
-        vertexStream.AddVertex(new VertexPosition(point2));
-        vertexStream.AddVertex(new VertexPosition(point3));
-        vertexStream.AddVertex(new VertexPosition(point4));
-
-        buffer.VertexBuffer.Unmap();
-        buffer.IndexBufferCount = 2 * IndexTriangle.GetSizeInShortInts();
-        buffer.IndexBuffer = new IndexBuffer(buffer.IndexBufferCount);
-        buffer.IndexBuffer.Map(buffer.IndexBufferCount);
-
-        var indexStream = buffer.IndexBuffer.GetIndexStreamTriangle();
-        indexStream.AddTriangle(new IndexTriangle(0, 1, 2));
-        indexStream.AddTriangle(new IndexTriangle(1, 2, 3));
-
-        buffer.IndexBuffer.Unmap();
-        buffer.VertexFormat = new VertexFormat(buffer.FormatBits);
-    }
-
-    public static void MapBoundingBoxSurfaceBuffer(RenderingBufferStorage buffer, BoundingBoxXYZ box)
-    {
-        var minPoint = box.Transform.OfPoint(box.Min);
-        var maxPoint = box.Transform.OfPoint(box.Max);
-
-        XYZ[] corners =
-        [
-            new(minPoint.X, minPoint.Y, minPoint.Z),
-            new(maxPoint.X, minPoint.Y, minPoint.Z),
-            new(maxPoint.X, maxPoint.Y, minPoint.Z),
-            new(minPoint.X, maxPoint.Y, minPoint.Z),
-            new(minPoint.X, minPoint.Y, maxPoint.Z),
-            new(maxPoint.X, minPoint.Y, maxPoint.Z),
-            new(maxPoint.X, maxPoint.Y, maxPoint.Z),
-            new(minPoint.X, maxPoint.Y, maxPoint.Z)
-        ];
-
-        int[] triangles =
-        [
-            0, 1, 2, 2, 3, 0, // bottom face
-            4, 5, 6, 6, 7, 4, // top face
-            0, 4, 5, 5, 1, 0, // front face
-            1, 5, 6, 6, 2, 1, // right face
-            2, 6, 7, 7, 3, 2, // back face
-            3, 7, 4, 4, 0, 3 // left face
-        ];
-
-        buffer.VertexBufferCount = corners.Length;
-        buffer.PrimitiveCount = triangles.Length / 3;
-
-        var vertexBufferSizeInFloats = VertexPosition.GetSizeInFloats() * buffer.VertexBufferCount;
-        buffer.FormatBits = VertexFormatBits.Position;
-        buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
-        buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
-
-        var vertexStream = buffer.VertexBuffer.GetVertexStreamPosition();
-
-        foreach (var corner in corners)
-        {
-            var vertexPosition = new VertexPosition(corner);
-            vertexStream.AddVertex(vertexPosition);
-        }
-
-        buffer.VertexBuffer.Unmap();
-
-        buffer.IndexBufferCount = triangles.Length * IndexTriangle.GetSizeInShortInts();
-        buffer.IndexBuffer = new IndexBuffer(buffer.IndexBufferCount);
-        buffer.IndexBuffer.Map(buffer.IndexBufferCount);
-
-        var indexStream = buffer.IndexBuffer.GetIndexStreamTriangle();
-
-        for (var i = 0; i < triangles.Length; i += 3)
-        {
-            indexStream.AddTriangle(new IndexTriangle(triangles[i], triangles[i + 1], triangles[i + 2]));
-        }
-
-        buffer.IndexBuffer.Unmap();
-        buffer.VertexFormat = new VertexFormat(buffer.FormatBits);
-    }
-
-    public static void MapBoundingBoxEdgeBuffer(RenderingBufferStorage buffer, BoundingBoxXYZ box)
-    {
-        var minPoint = box.Transform.OfPoint(box.Min);
-        var maxPoint = box.Transform.OfPoint(box.Max);
-
-        XYZ[] corners =
-        [
-            new(minPoint.X, minPoint.Y, minPoint.Z),
-            new(maxPoint.X, minPoint.Y, minPoint.Z),
-            new(maxPoint.X, maxPoint.Y, minPoint.Z),
-            new(minPoint.X, maxPoint.Y, minPoint.Z),
-            new(minPoint.X, minPoint.Y, maxPoint.Z),
-            new(maxPoint.X, minPoint.Y, maxPoint.Z),
-            new(maxPoint.X, maxPoint.Y, maxPoint.Z),
-            new(minPoint.X, maxPoint.Y, maxPoint.Z)
-        ];
-
-        int[] edges =
-        [
-            0, 1, 1, 2, 2, 3, 3, 0, // bottom face
-            4, 5, 5, 6, 6, 7, 7, 4, // top face
-            0, 4, 1, 5, 2, 6, 3, 7 // vertical edges
-        ];
-
-        buffer.VertexBufferCount = corners.Length;
-        buffer.PrimitiveCount = edges.Length / 2;
-
-        var vertexBufferSizeInFloats = VertexPosition.GetSizeInFloats() * buffer.VertexBufferCount;
-        buffer.FormatBits = VertexFormatBits.Position;
-        buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
-        buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
-
-        var vertexStream = buffer.VertexBuffer.GetVertexStreamPosition();
-
-        foreach (var corner in corners)
-        {
-            var vertexPosition = new VertexPosition(corner);
-            vertexStream.AddVertex(vertexPosition);
-        }
-
-        buffer.VertexBuffer.Unmap();
-
-        buffer.IndexBufferCount = edges.Length * IndexLine.GetSizeInShortInts();
-        buffer.IndexBuffer = new IndexBuffer(buffer.IndexBufferCount);
-        buffer.IndexBuffer.Map(buffer.IndexBufferCount);
-
-        var indexStream = buffer.IndexBuffer.GetIndexStreamLine();
-
-        for (var i = 0; i < edges.Length; i += 2)
-        {
-            indexStream.AddLine(new IndexLine(edges[i], edges[i + 1]));
-        }
-
-        buffer.IndexBuffer.Unmap();
-        buffer.VertexFormat = new VertexFormat(buffer.FormatBits);
-    }
-
     public static void MapNormalVectorBuffer(RenderingBufferStorage buffer, XYZ origin, XYZ vector, double length)
     {
         var headSize = length > 1 ? 0.2 : length * 0.2;

@@ -94,6 +94,7 @@
         <ProjectReference Include="..\FamilyCleaner\FamilyCleaner.csproj" />
         <ProjectReference Include="..\FsmModules\FsmModules.csproj" />
         <ProjectReference Include="..\ImportExcelByParameter\ImportExcelByParameter.csproj" />
+        <ProjectReference Include="..\Insolation\Insolation.csproj" />
         <ProjectReference Include="..\LevelByFloor\LevelByFloor.csproj" />
         <ProjectReference Include="..\SolidIntersection\SolidIntersection.csproj" />
         <ProjectReference Include="..\SortingCategories\SortingCategories.csproj" />
