@@ -46,9 +46,9 @@ public static class RenderHelper
         for (var i = 0; i < triangleCount; i++)
         {
             var meshTriangle = mesh.get_Triangle(i);
-            var index0 = (int) meshTriangle.get_Index(0);
-            var index1 = (int) meshTriangle.get_Index(1);
-            var index2 = (int) meshTriangle.get_Index(2);
+            var index0 = (int)meshTriangle.get_Index(0);
+            var index1 = (int)meshTriangle.get_Index(1);
+            var index2 = (int)meshTriangle.get_Index(2);
             indexStream.AddTriangle(new IndexTriangle(index0, index1, index2));
         }
 
@@ -83,10 +83,7 @@ public static class RenderHelper
 
         var indexStream = buffer.IndexBuffer.GetIndexStreamLine();
 
-        for (var i = 0; i < vertexCount - 1; i++)
-        {
-            indexStream.AddLine(new IndexLine(i, i + 1));
-        }
+        for (var i = 0; i < vertexCount - 1; i++) indexStream.AddLine(new IndexLine(i, i + 1));
 
         buffer.IndexBuffer.Unmap();
         buffer.VertexFormat = new VertexFormat(buffer.FormatBits);
@@ -109,12 +106,10 @@ public static class RenderHelper
         var vertexStream = buffer.VertexBuffer.GetVertexStreamPosition();
 
         foreach (var segment in tubeSegments)
+        foreach (var point in segment)
         {
-            foreach (var point in segment)
-            {
-                var vertexPosition = new VertexPosition(point);
-                vertexStream.AddVertex(vertexPosition);
-            }
+            var vertexPosition = new VertexPosition(point);
+            vertexStream.AddVertex(vertexPosition);
         }
 
         buffer.VertexBuffer.Unmap();
@@ -126,22 +121,20 @@ public static class RenderHelper
         var indexStream = buffer.IndexBuffer.GetIndexStreamLine();
 
         for (var i = 0; i < vertices.Count - 1; i++)
+        for (var j = 0; j < segmentVerticesCount; j++)
         {
-            for (var j = 0; j < segmentVerticesCount; j++)
-            {
-                var currentStart = i * segmentVerticesCount + j;
-                var nextStart = (i + 1) * segmentVerticesCount + j;
-                var currentEnd = i * segmentVerticesCount + (j + 1) % segmentVerticesCount;
-                var nextEnd = (i + 1) * segmentVerticesCount + (j + 1) % segmentVerticesCount;
+            var currentStart = i * segmentVerticesCount + j;
+            var nextStart = (i + 1) * segmentVerticesCount + j;
+            var currentEnd = i * segmentVerticesCount + (j + 1) % segmentVerticesCount;
+            var nextEnd = (i + 1) * segmentVerticesCount + (j + 1) % segmentVerticesCount;
 
-                // First triangle
-                indexStream.AddLine(new IndexLine(currentStart, nextStart));
-                indexStream.AddLine(new IndexLine(nextStart, nextEnd));
+            // First triangle
+            indexStream.AddLine(new IndexLine(currentStart, nextStart));
+            indexStream.AddLine(new IndexLine(nextStart, nextEnd));
 
-                // Second triangle
-                indexStream.AddLine(new IndexLine(nextEnd, currentEnd));
-                indexStream.AddLine(new IndexLine(currentEnd, currentStart));
-            }
+            // Second triangle
+            indexStream.AddLine(new IndexLine(nextEnd, currentEnd));
+            indexStream.AddLine(new IndexLine(currentEnd, currentStart));
         }
 
         buffer.IndexBuffer.Unmap();
@@ -149,59 +142,54 @@ public static class RenderHelper
     }
 
     public static void MapLinesBuffer(RenderingBufferStorage buffer, IList<Line> lines, double diameter)
+    {
+        var vertexList = new List<XYZ>();
+        var indexList = new List<IndexLine>();
+        var offset = 0;
+        foreach (var line in lines)
         {
-            var vertexList = new List<XYZ>();
-            var indexList = new List<IndexLine>();
-            int offset = 0;
-            foreach (var line in lines)
+            var pts = line.Tessellate();
+            if (pts == null || pts.Count < 2) continue;
+            var tube = RenderGeometryHelper.GetSegmentationTube(pts, diameter);
+            foreach (var ring in tube)
+            foreach (var p in ring)
+                vertexList.Add(p);
+
+            var segCount = tube[0].Count;
+            var segs = tube.Count;
+            for (var s = 0; s < segs - 1; s++)
+            for (var i = 0; i < segCount; i++)
             {
-                var pts = line.Tessellate();
-                if (pts == null || pts.Count < 2) continue;
-                var tube = RenderGeometryHelper.GetSegmentationTube(pts, diameter);
-                foreach (var ring in tube)
-                {
-                    foreach (var p in ring)
-                    {
-                        vertexList.Add(p);
-                    }
-                }
-                int segCount = tube[0].Count;
-                int segs = tube.Count;
-                for (int s = 0; s < segs - 1; s++)
-                {
-                    for (int i = 0; i < segCount; i++)
-                    {
-                        int a = offset + s * segCount + i;
-                        int b = offset + (s + 1) * segCount + i;
-                        indexList.Add(new IndexLine(a, b));
-                    }
-                }
-                offset += segCount * segs;
+                var a = offset + s * segCount + i;
+                var b = offset + (s + 1) * segCount + i;
+                indexList.Add(new IndexLine(a, b));
             }
 
-            int vCount = vertexList.Count;
-            buffer.VertexBufferCount = vCount;
-            buffer.PrimitiveCount = indexList.Count;
-            int floatsCount = VertexPosition.GetSizeInFloats() * vCount;
-            buffer.FormatBits = VertexFormatBits.Position;
-            buffer.VertexBuffer = new VertexBuffer(floatsCount);
-            buffer.VertexBuffer.Map(floatsCount);
-            var vstream = buffer.VertexBuffer.GetVertexStreamPosition();
-            foreach (var v in vertexList)
-                vstream.AddVertex(new VertexPosition(v));
-            buffer.VertexBuffer.Unmap();
-
-            int idxLen = indexList.Count * IndexLine.GetSizeInShortInts();
-            buffer.IndexBufferCount = idxLen;
-            buffer.IndexBuffer = new IndexBuffer(idxLen);
-            buffer.IndexBuffer.Map(idxLen);
-            var istream = buffer.IndexBuffer.GetIndexStreamLine();
-            foreach (var idx in indexList)
-                istream.AddLine(idx);
-            buffer.IndexBuffer.Unmap();
-            buffer.VertexFormat = new VertexFormat(buffer.FormatBits);
+            offset += segCount * segs;
         }
-    
+
+        var vCount = vertexList.Count;
+        buffer.VertexBufferCount = vCount;
+        buffer.PrimitiveCount = indexList.Count;
+        var floatsCount = VertexPosition.GetSizeInFloats() * vCount;
+        buffer.FormatBits = VertexFormatBits.Position;
+        buffer.VertexBuffer = new VertexBuffer(floatsCount);
+        buffer.VertexBuffer.Map(floatsCount);
+        var vstream = buffer.VertexBuffer.GetVertexStreamPosition();
+        foreach (var v in vertexList)
+            vstream.AddVertex(new VertexPosition(v));
+        buffer.VertexBuffer.Unmap();
+
+        var idxLen = indexList.Count * IndexLine.GetSizeInShortInts();
+        buffer.IndexBufferCount = idxLen;
+        buffer.IndexBuffer = new IndexBuffer(idxLen);
+        buffer.IndexBuffer.Map(idxLen);
+        var istream = buffer.IndexBuffer.GetIndexStreamLine();
+        foreach (var idx in indexList)
+            istream.AddLine(idx);
+        buffer.IndexBuffer.Unmap();
+        buffer.VertexFormat = new VertexFormat(buffer.FormatBits);
+    }
 
 
     public static void MapCurveSurfaceBuffer(RenderingBufferStorage buffer, IList<XYZ> vertices, double diameter)
@@ -221,12 +209,10 @@ public static class RenderHelper
         var vertexStream = buffer.VertexBuffer.GetVertexStreamPosition();
 
         foreach (var segment in tubeSegments)
+        foreach (var point in segment)
         {
-            foreach (var point in segment)
-            {
-                var vertexPosition = new VertexPosition(point);
-                vertexStream.AddVertex(vertexPosition);
-            }
+            var vertexPosition = new VertexPosition(point);
+            vertexStream.AddVertex(vertexPosition);
         }
 
         buffer.VertexBuffer.Unmap();
@@ -238,25 +224,86 @@ public static class RenderHelper
         var indexStream = buffer.IndexBuffer.GetIndexStreamTriangle();
 
         for (var i = 0; i < vertices.Count - 1; i++)
+        for (var j = 0; j < segmentVerticesCount; j++)
         {
-            for (var j = 0; j < segmentVerticesCount; j++)
-            {
-                var currentStart = i * segmentVerticesCount + j;
-                var nextStart = (i + 1) * segmentVerticesCount + j;
-                var currentEnd = i * segmentVerticesCount + (j + 1) % segmentVerticesCount;
-                var nextEnd = (i + 1) * segmentVerticesCount + (j + 1) % segmentVerticesCount;
+            var currentStart = i * segmentVerticesCount + j;
+            var nextStart = (i + 1) * segmentVerticesCount + j;
+            var currentEnd = i * segmentVerticesCount + (j + 1) % segmentVerticesCount;
+            var nextEnd = (i + 1) * segmentVerticesCount + (j + 1) % segmentVerticesCount;
 
-                // First triangle
-                indexStream.AddTriangle(new IndexTriangle(currentStart, nextStart, nextEnd));
+            // First triangle
+            indexStream.AddTriangle(new IndexTriangle(currentStart, nextStart, nextEnd));
 
-                // Second triangle
-                indexStream.AddTriangle(new IndexTriangle(nextEnd, currentEnd, currentStart));
-            }
+            // Second triangle
+            indexStream.AddTriangle(new IndexTriangle(nextEnd, currentEnd, currentStart));
         }
 
         buffer.IndexBuffer.Unmap();
         buffer.VertexFormat = new VertexFormat(buffer.FormatBits);
     }
+    
+    public static void MapLinesSurfaceBuffer(RenderingBufferStorage buffer, IList<Line> lines, double diameter)
+    {
+        var vertexList = new List<XYZ>();
+        var triangles = new List<IndexTriangle>();
+        var vertexOffset = 0;
+
+        foreach (var line in lines)
+        {
+            var pts = line.Tessellate();
+            if (pts == null || pts.Count < 2) continue;
+
+            var tubeSegments = RenderGeometryHelper.GetSegmentationTube(pts, diameter);
+            var ringCount = tubeSegments.Count;
+            var vertsPerRing = tubeSegments[0].Count;
+
+            foreach (var ring in tubeSegments)
+            foreach (var p in ring)
+                vertexList.Add(p);
+
+            for (var r = 0; r < ringCount - 1; r++)
+            for (var i = 0; i < vertsPerRing; i++)
+            {
+                var a = vertexOffset + r * vertsPerRing + i;
+                var b = vertexOffset + (r + 1) * vertsPerRing + i;
+                var c = vertexOffset + (r + 1) * vertsPerRing + (i + 1) % vertsPerRing;
+                var d = vertexOffset + r * vertsPerRing + (i + 1) % vertsPerRing;
+
+                triangles.Add(new IndexTriangle(a, b, c));
+                triangles.Add(new IndexTriangle(c, d, a));
+            }
+
+            vertexOffset += ringCount * vertsPerRing;
+        }
+
+
+        var vCount = vertexList.Count;
+        buffer.VertexBufferCount = vCount;
+        buffer.PrimitiveCount = triangles.Count;
+
+        var floatsCount = VertexPosition.GetSizeInFloats() * vCount;
+        buffer.FormatBits = VertexFormatBits.Position;
+        buffer.VertexBuffer = new VertexBuffer(floatsCount);
+        buffer.VertexBuffer.Map(floatsCount);
+
+        var vstream = buffer.VertexBuffer.GetVertexStreamPosition();
+        foreach (var v in vertexList)
+            vstream.AddVertex(new VertexPosition(v));
+        buffer.VertexBuffer.Unmap();
+
+        var idxLen = triangles.Count * IndexTriangle.GetSizeInShortInts();
+        buffer.IndexBufferCount = idxLen;
+        buffer.IndexBuffer = new IndexBuffer(idxLen);
+        buffer.IndexBuffer.Map(idxLen);
+
+        var istream = buffer.IndexBuffer.GetIndexStreamTriangle();
+        foreach (var tri in triangles)
+            istream.AddTriangle(tri);
+        buffer.IndexBuffer.Unmap();
+
+        buffer.VertexFormat = new VertexFormat(buffer.FormatBits);
+    }
+
     public static void MapNormalVectorBuffer(RenderingBufferStorage buffer, XYZ origin, XYZ vector, double length)
     {
         var headSize = length > 1 ? 0.2 : length * 0.2;

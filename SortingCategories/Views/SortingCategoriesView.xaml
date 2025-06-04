@@ -1,11 +1,11 @@
-﻿<controls:FluentWindow
+﻿<ui:FluentWindow
     x:Class="SortingCategories.Views.SortingCategoriesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:controls="http://lookupengine.com/xaml"
     xmlns:views="clr-namespace:SortingCategories.Views"
+    xmlns:ui="http://Kapibara/xaml"
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen"
     Width="1200"
@@ -17,21 +17,21 @@
             <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <controls:TitleBar Grid.Row="0" Title="Sorting"/>
-        <controls:NavigationView Grid.Row="1"
+        <ui:TitleBar Grid.Row="0" Title="Sorting"/>
+        <ui:NavigationView Grid.Row="1"
                                  x:Name="RootNavigationView"
                                  PaneDisplayMode="LeftFluent">
-            <controls:NavigationView.MenuItems>
-                <controls:NavigationViewItem
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem
                     Content="Main"
-                    Icon="{controls:SymbolIcon Cube24}"
+                    Icon="{ui:SymbolIcon Cube24}"
                     TargetPageType="{x:Type views:MainFamilies}" />
                 
-                <controls:NavigationViewItem
+                <ui:NavigationViewItem
                     Content="Sub"
-                    Icon="{controls:SymbolIcon BoxMultiple24}"
+                    Icon="{ui:SymbolIcon BoxMultiple24}"
                     TargetPageType="{x:Type views:SubFamilies}" />
-            </controls:NavigationView.MenuItems>
-        </controls:NavigationView>
+            </ui:NavigationView.MenuItems>
+        </ui:NavigationView>
     </Grid>
-</controls:FluentWindow>
+</ui:FluentWindow>

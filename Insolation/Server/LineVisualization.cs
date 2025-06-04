@@ -15,7 +15,7 @@ public class LineVisualization : IDirectContext3DServer
     
     private bool _hasEffectsUpdates = true;
     private bool _hasGeometryUpdates = true;
-    private bool _drawSurface;
+    private bool _drawSurface = true;
     private double _transparency;
     private double _diameter;
     private bool _drawCurve = true;
@@ -23,9 +23,11 @@ public class LineVisualization : IDirectContext3DServer
     private List<Line> _lines = null!;
     private readonly object _renderLock = new();
     
-    private readonly RenderingBufferStorage _surfaceBuffer = new();
-    private readonly RenderingBufferStorage _curveBuffer = new();
+   // private readonly RenderingBufferStorage _surfaceBuffer = new();
+    //private readonly RenderingBufferStorage _curveBuffer = new();
     private readonly RenderingBufferStorage _linesBuffer = new();
+    private readonly RenderingBufferStorage _mapLinesSurfaceBuffer = new();
+
     private readonly List<RenderingBufferStorage> _normalsBuffers = new(1);
     
     
@@ -47,7 +49,8 @@ public class LineVisualization : IDirectContext3DServer
         {
             try
             {
-                if (_hasGeometryUpdates || !_surfaceBuffer.IsValid() || !_curveBuffer.IsValid())
+                // if (_hasGeometryUpdates || !_surfaceBuffer.IsValid() || !_linesBuffer.IsValid())
+                if (_hasGeometryUpdates || !_linesBuffer.IsValid())
                 {
                     MapGeometryBuffer();
                     _hasGeometryUpdates = false;
@@ -63,6 +66,7 @@ public class LineVisualization : IDirectContext3DServer
                     var isTransparentPass = DrawContext.IsTransparentPass();
                     if (isTransparentPass && _transparency > 0 || !isTransparentPass && _transparency == 0)
                     {
+                        /*
                         DrawContext.FlushBuffer(_surfaceBuffer.VertexBuffer,
                             _surfaceBuffer.VertexBufferCount,
                             _surfaceBuffer.IndexBuffer,
@@ -70,20 +74,32 @@ public class LineVisualization : IDirectContext3DServer
                             _surfaceBuffer.VertexFormat,
                             _surfaceBuffer.EffectInstance, PrimitiveType.TriangleList, 0,
                             _surfaceBuffer.PrimitiveCount);
+                        */
+                        DrawContext.FlushBuffer( _mapLinesSurfaceBuffer.VertexBuffer,
+                            _mapLinesSurfaceBuffer.VertexBufferCount,
+                            _mapLinesSurfaceBuffer.IndexBuffer,
+                            _mapLinesSurfaceBuffer.IndexBufferCount,
+                            _mapLinesSurfaceBuffer.VertexFormat,
+                            _mapLinesSurfaceBuffer.EffectInstance, PrimitiveType.TriangleList, 0,
+                            _mapLinesSurfaceBuffer.PrimitiveCount);
+
                     }
                 }
-
+                 /*
                 if (_drawCurve)
                 {
                     _curveBuffer.EffectInstance ??= new EffectInstance(_curveBuffer.FormatBits);
+                    _linesBuffer.EffectInstance ??= new EffectInstance(_linesBuffer.FormatBits);
                     DrawContext.FlushBuffer(_curveBuffer.VertexBuffer,
                         _curveBuffer.VertexBufferCount,
                         _curveBuffer.IndexBuffer,
                         _curveBuffer.IndexBufferCount,
                         _curveBuffer.VertexFormat,
                         _curveBuffer.EffectInstance, PrimitiveType.LineList, 0,
-                        _curveBuffer.PrimitiveCount);
+                     _curveBuffer.PrimitiveCount);
+                
                 }
+                */
                 if (_lines.Count > 0 && _linesBuffer.IsValid())
                 {
                     DrawContext.FlushBuffer(
@@ -106,9 +122,8 @@ public class LineVisualization : IDirectContext3DServer
         }
     }
     
-    public void Register(List<XYZ> vertices, List<Line> lines)
+    public void Register(List<Line> lines)
     {
-        _vertices = vertices;
         _lines = lines;
 
         RevitShell.ActionEventHandler.Raise(application =>
@@ -128,20 +143,33 @@ public class LineVisualization : IDirectContext3DServer
     
     private void MapGeometryBuffer()
     {
-        RenderHelper.MapCurveSurfaceBuffer(_surfaceBuffer, _vertices, _diameter);
-        RenderHelper.MapCurveBuffer(_curveBuffer, _vertices, 0.1);
+       // RenderHelper.MapCurveSurfaceBuffer(_surfaceBuffer, _vertices, 0.1);
+        RenderHelper. MapLinesSurfaceBuffer(_mapLinesSurfaceBuffer,_lines, 0.025);
+        //RenderHelper.MapCurveBuffer(_curveBuffer, _vertices, 0.025);
         if (_lines.Count > 0)
-            RenderHelper.MapLinesBuffer(_linesBuffer, _lines, _diameter);
-        MapDirectionsBuffer();
+        {
+            RenderHelper.MapLinesBuffer(_linesBuffer, _lines, 0.025);
+        }
+
+        //MapDirectionsBuffer();
     }
     
     private void UpdateEffects()
     {
+        /*
         _surfaceBuffer.EffectInstance ??= new EffectInstance(_surfaceBuffer.FormatBits);
         _surfaceBuffer.EffectInstance.SetColor(new Color(0, 0, 255));
         _surfaceBuffer.EffectInstance.SetTransparency(_transparency);
-        _curveBuffer.EffectInstance ??= new EffectInstance(_curveBuffer.FormatBits);
-        _curveBuffer.EffectInstance.SetColor(new Color(0, 0, 255));
+        */
+        _mapLinesSurfaceBuffer.EffectInstance ??= new EffectInstance(_mapLinesSurfaceBuffer.FormatBits);
+        _mapLinesSurfaceBuffer.EffectInstance.SetColor(new Color(0, 255, 0));
+        _mapLinesSurfaceBuffer.EffectInstance.SetTransparency(_transparency);
+        
+        
+        _linesBuffer.EffectInstance ??= new EffectInstance(_linesBuffer.FormatBits);
+        _linesBuffer.EffectInstance.SetColor(new Color(0, 250, 0));
+        _linesBuffer.EffectInstance.SetTransparency(_transparency);
+       
         foreach (var buffer in _normalsBuffers)
         {
             buffer.EffectInstance ??= new EffectInstance(buffer.FormatBits);

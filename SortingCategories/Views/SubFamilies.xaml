@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:ui="http://lookupengine.com/xaml"
+      xmlns:controls="http://Kapibara/xaml"
       mc:Ignorable="d"
       ScrollViewer.CanContentScroll="False">
     <Grid>
@@ -13,7 +13,7 @@
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         
-        <ui:Card Grid.Row="0" Margin="0,15" VerticalAlignment="Top">
+        <controls:Card Grid.Row="0" Margin="0,15" VerticalAlignment="Top">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50" />
@@ -77,13 +77,13 @@
                    
                 </Grid>
             </Grid>
-        </ui:Card>
+        </controls:Card>
         
-        <ui:Button Grid.Row="2"
+        <controls:Button Grid.Row="2"
                    HorizontalAlignment="Center"
                    Content="Execute"
                    Appearance="Primary"
                    Command="{Binding ViewModel.ExecuteCommand}"
-                   Icon="{ui:SymbolIcon ArrowSortDownLines24}" />
+                   Icon="{controls:SymbolIcon ArrowSortDownLines24}" />
     </Grid>
 </Page>

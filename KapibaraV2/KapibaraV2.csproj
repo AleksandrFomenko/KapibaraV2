@@ -83,11 +83,14 @@
         <Resource Include="Resources\Icons\LevelByFloor.png" />
         <Resource Include="Resources\Icons\WorksetLinkFiles.png" />
         <Resource Include="Resources\Icons\Sort.png" />
+        <None Remove="Resources\Icons\ClashDetective.png" />
+        <Resource Include="Resources\Icons\ClashDetective.png" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ActiveView\ActiveView.csproj" />
         <ProjectReference Include="..\ChatGPT\ChatGPT.csproj" />
+        <ProjectReference Include="..\ClashNavigator\ClashNavigator.csproj" />
         <ProjectReference Include="..\ColorsByParameters\ColorsByParameters.csproj" />
         <ProjectReference Include="..\EngineeringSystems\EngineeringSystems.csproj" />
         <ProjectReference Include="..\ExporterModels\ExporterModels.csproj" />

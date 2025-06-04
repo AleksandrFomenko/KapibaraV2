@@ -56,21 +56,19 @@ public class StartupCommand : ExternalCommand
         var lines = new List<Line>()
         {
             Line.CreateBound(new XYZ(0, 0, 0),
-                new XYZ(0, 0, 0)),
-            Line.CreateBound(new XYZ(0, 1, 0),
-            new XYZ(0, 1, 1))
+                new XYZ(0, 0, 5)),
+            Line.CreateBound(new XYZ(1, 0, 0),
+                new XYZ(1, 0, 5)),
         };
         try
         {
-            _server.Register(_vertices, lines);
+            _server.Register(lines);
         }
         catch (Exception exception)
         {
             Console.WriteLine(exception);
            
         }
-
- 
     }
 
     private void OnViewClosed(object sender, EventArgs e)

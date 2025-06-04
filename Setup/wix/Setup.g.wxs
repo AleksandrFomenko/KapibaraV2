@@ -26,19 +26,19 @@
                   </RegistryKey>
                 </Component>
 
+                <Component Id="Component.KapibaraV2.rar_379024239" Guid="d56a3f69-deb4-4332-b726-1df0eeed02c4">
+                  <File Id="KapibaraV2.rar_379024239" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2.rar" />
+
+                  <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
+                    <RegistryValue Value="0" Type="string" KeyPath="yes" />
+                  </RegistryKey>
+                </Component>
+
                 <Directory Id="KapibaraV2_" Name="KapibaraV2">
 
                   <Component Id="Component.ActiveView.dll_942211236" Guid="d56a3f69-deb4-4332-b726-1df01595d772">
                     <File Id="ActiveView.dll_942211236" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\ActiveView.dll" />
                     <RemoveFolder Id="KapibaraV2_" On="uninstall" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.AdWindows.dll_1675836837" Guid="d56a3f69-deb4-4332-b726-1df048e72cd7">
-                    <File Id="AdWindows.dll_1675836837" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\AdWindows.dll" />
 
                     <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                       <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -269,150 +269,6 @@
                     </RegistryKey>
                   </Component>
 
-                  <Component Id="Component.Microsoft.Data.Sqlite.dll_2575644123" Guid="d56a3f69-deb4-4332-b726-1df079648c37">
-                    <File Id="Microsoft.Data.Sqlite.dll_2575644123" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Data.Sqlite.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.DotNet.PlatformAbstractions.dll_2807587813" Guid="d56a3f69-deb4-4332-b726-1df08dfc648b">
-                    <File Id="Microsoft.DotNet.PlatformAbstractions.dll_2807587813" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.DotNet.PlatformAbstractions.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.EntityFrameworkCore.Abstractions.dll_2151957093" Guid="d56a3f69-deb4-4332-b726-1df0317b2ccf">
-                    <File Id="Microsoft.EntityFrameworkCore.Abstractions.dll_2151957093" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.EntityFrameworkCore.Abstractions.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.EntityFrameworkCore.dll_2072777490" Guid="d56a3f69-deb4-4332-b726-1df0d81ea6ec">
-                    <File Id="Microsoft.EntityFrameworkCore.dll_2072777490" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.EntityFrameworkCore.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.EntityFrameworkCore.Relational.dll_1059650518" Guid="d56a3f69-deb4-4332-b726-1df0c1e3bd3a">
-                    <File Id="Microsoft.EntityFrameworkCore.Relational.dll_1059650518" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.EntityFrameworkCore.Relational.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.EntityFrameworkCore.Sqlite.dll_3796024287" Guid="d56a3f69-deb4-4332-b726-1df0fad4ce8e">
-                    <File Id="Microsoft.EntityFrameworkCore.Sqlite.dll_3796024287" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.EntityFrameworkCore.Sqlite.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.Extensions.Caching.Abstractions.dll_1389392655" Guid="d56a3f69-deb4-4332-b726-1df0629da262">
-                    <File Id="Microsoft.Extensions.Caching.Abstractions.dll_1389392655" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Extensions.Caching.Abstractions.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.Extensions.Caching.Memory.dll_3352320851" Guid="d56a3f69-deb4-4332-b726-1df0886d6c35">
-                    <File Id="Microsoft.Extensions.Caching.Memory.dll_3352320851" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Extensions.Caching.Memory.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.Extensions.Configuration.Abstractions.dll_3688912553" Guid="d56a3f69-deb4-4332-b726-1df05936e62d">
-                    <File Id="Microsoft.Extensions.Configuration.Abstractions.dll_3688912553" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Extensions.Configuration.Abstractions.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.Extensions.Configuration.Binder.dll_706419799" Guid="d56a3f69-deb4-4332-b726-1df06e965ae4">
-                    <File Id="Microsoft.Extensions.Configuration.Binder.dll_706419799" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Extensions.Configuration.Binder.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.Extensions.Configuration.dll_3253477382" Guid="d56a3f69-deb4-4332-b726-1df065a00f29">
-                    <File Id="Microsoft.Extensions.Configuration.dll_3253477382" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Extensions.Configuration.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.Extensions.DependencyInjection.Abstractions.dll_2113081594" Guid="d56a3f69-deb4-4332-b726-1df09fa9771b">
-                    <File Id="Microsoft.Extensions.DependencyInjection.Abstractions.dll_2113081594" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.Extensions.DependencyInjection.dll_2946811178" Guid="d56a3f69-deb4-4332-b726-1df0f4db5d42">
-                    <File Id="Microsoft.Extensions.DependencyInjection.dll_2946811178" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Extensions.DependencyInjection.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.Extensions.DependencyModel.dll_3412262657" Guid="d56a3f69-deb4-4332-b726-1df03979ccae">
-                    <File Id="Microsoft.Extensions.DependencyModel.dll_3412262657" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Extensions.DependencyModel.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.Extensions.Logging.Abstractions.dll_3840822753" Guid="d56a3f69-deb4-4332-b726-1df0cf930709">
-                    <File Id="Microsoft.Extensions.Logging.Abstractions.dll_3840822753" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Extensions.Logging.Abstractions.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.Extensions.Logging.dll_1560505894" Guid="d56a3f69-deb4-4332-b726-1df05004b7d2">
-                    <File Id="Microsoft.Extensions.Logging.dll_1560505894" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Extensions.Logging.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.Extensions.Options.dll_118800027" Guid="d56a3f69-deb4-4332-b726-1df09c011bbf">
-                    <File Id="Microsoft.Extensions.Options.dll_118800027" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Extensions.Options.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Microsoft.Extensions.Primitives.dll_3244863770" Guid="d56a3f69-deb4-4332-b726-1df094e3092d">
-                    <File Id="Microsoft.Extensions.Primitives.dll_3244863770" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Extensions.Primitives.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
                   <Component Id="Component.Microsoft.Xaml.Behaviors.dll_303810593" Guid="d56a3f69-deb4-4332-b726-1df0d744ae13">
                     <File Id="Microsoft.Xaml.Behaviors.dll_303810593" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Microsoft.Xaml.Behaviors.dll" />
 
@@ -455,14 +311,6 @@
 
                   <Component Id="Component.RBush.dll_1620417121" Guid="d56a3f69-deb4-4332-b726-1df0a7f30f84">
                     <File Id="RBush.dll_1620417121" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\RBush.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.Remotion.Linq.dll_1090093946" Guid="d56a3f69-deb4-4332-b726-1df032003fc6">
-                    <File Id="Remotion.Linq.dll_1090093946" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Remotion.Linq.dll" />
 
                     <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                       <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -541,40 +389,8 @@
                     </RegistryKey>
                   </Component>
 
-                  <Component Id="Component.SQLitePCLRaw.batteries_green.dll_1642791491" Guid="d56a3f69-deb4-4332-b726-1df0e4e0e41c">
-                    <File Id="SQLitePCLRaw.batteries_green.dll_1642791491" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\SQLitePCLRaw.batteries_green.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.SQLitePCLRaw.batteries_v2.dll_2275156190" Guid="d56a3f69-deb4-4332-b726-1df0d1e8d3eb">
-                    <File Id="SQLitePCLRaw.batteries_v2.dll_2275156190" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\SQLitePCLRaw.batteries_v2.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.SQLitePCLRaw.core.dll_2992168931" Guid="d56a3f69-deb4-4332-b726-1df01f5d518a">
-                    <File Id="SQLitePCLRaw.core.dll_2992168931" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\SQLitePCLRaw.core.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.SQLitePCLRaw.provider.dynamic_cdecl.dll_916672027" Guid="d56a3f69-deb4-4332-b726-1df09f637f55">
-                    <File Id="SQLitePCLRaw.provider.dynamic_cdecl.dll_916672027" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\SQLitePCLRaw.provider.dynamic_cdecl.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.SQLitePCLRaw.provider.e_sqlite3.dll_1119456834" Guid="d56a3f69-deb4-4332-b726-1df089892f36">
-                    <File Id="SQLitePCLRaw.provider.e_sqlite3.dll_1119456834" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\SQLitePCLRaw.provider.e_sqlite3.dll" />
+                  <Component Id="Component.SortingCategories.dll_1793141560" Guid="d56a3f69-deb4-4332-b726-1df0e4b3df70">
+                    <File Id="SortingCategories.dll_1793141560" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\SortingCategories.dll" />
 
                     <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                       <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -589,32 +405,8 @@
                     </RegistryKey>
                   </Component>
 
-                  <Component Id="Component.System.Collections.Immutable.dll_3169189008" Guid="d56a3f69-deb4-4332-b726-1df01b03e46a">
-                    <File Id="System.Collections.Immutable.dll_3169189008" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\System.Collections.Immutable.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
                   <Component Id="Component.System.ComponentModel.Annotations.dll_215272225" Guid="d56a3f69-deb4-4332-b726-1df0497c035b">
                     <File Id="System.ComponentModel.Annotations.dll_215272225" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\System.ComponentModel.Annotations.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.System.Diagnostics.DiagnosticSource.dll_2991732530" Guid="d56a3f69-deb4-4332-b726-1df077e49e86">
-                    <File Id="System.Diagnostics.DiagnosticSource.dll_2991732530" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\System.Diagnostics.DiagnosticSource.dll" />
-
-                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                    </RegistryKey>
-                  </Component>
-
-                  <Component Id="Component.System.Interactive.Async.dll_1334780317" Guid="d56a3f69-deb4-4332-b726-1df0407fcc8f">
-                    <File Id="System.Interactive.Async.dll_1334780317" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\System.Interactive.Async.dll" />
 
                     <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                       <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -663,6 +455,22 @@
 
                   <Component Id="Component.WorkSetLinkFiles.dll_2265462525" Guid="d56a3f69-deb4-4332-b726-1df0c3977d83">
                     <File Id="WorkSetLinkFiles.dll_2265462525" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\WorkSetLinkFiles.dll" />
+
+                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
+                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
+                    </RegistryKey>
+                  </Component>
+
+                  <Component Id="Component.Wpf.Ui.Abstractions.dll_52036349" Guid="d56a3f69-deb4-4332-b726-1df086068bfb">
+                    <File Id="Wpf.Ui.Abstractions.dll_52036349" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Wpf.Ui.Abstractions.dll" />
+
+                    <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
+                      <RegistryValue Value="0" Type="string" KeyPath="yes" />
+                    </RegistryKey>
+                  </Component>
+
+                  <Component Id="Component.Wpf.Ui.dll_2243965079" Guid="d56a3f69-deb4-4332-b726-1df0a215ff1c">
+                    <File Id="Wpf.Ui.dll_2243965079" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\Wpf.Ui.dll" />
 
                     <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                       <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -1002,89 +810,6 @@
 
                   </Directory>
 
-                  <Directory Id="runtimes" Name="runtimes">
-                    <Directory Id="win2darm" Name="win-arm">
-                      <Directory Id="native" Name="native">
-
-                        <Component Id="Component.e_sqlite3.dll_3889679666" Guid="d56a3f69-deb4-4332-b726-1df0127f887d">
-                          <File Id="e_sqlite3.dll_3889679666" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\runtimes\win-arm\native\e_sqlite3.dll" />
-                          <RemoveFolder Id="native" On="uninstall" />
-
-                          <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                            <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                          </RegistryKey>
-                        </Component>
-
-                      </Directory>
-
-                      <Component Id="win2darm" Guid="d56a3f69-deb4-4332-b726-1df0f78ee661">
-                        <RemoveFolder Id="win2darm" On="uninstall" />
-
-                        <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                          <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                        </RegistryKey>
-                      </Component>
-
-                    </Directory>
-
-                    <Directory Id="win2dx64_" Name="win-x64">
-                      <Directory Id="native.1" Name="native">
-
-                        <Component Id="Component.e_sqlite3.dll_2440005969" Guid="d56a3f69-deb4-4332-b726-1df00b994654">
-                          <File Id="e_sqlite3.dll_2440005969" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\runtimes\win-x64\native\e_sqlite3.dll" />
-                          <RemoveFolder Id="native.1" On="uninstall" />
-
-                          <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                            <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                          </RegistryKey>
-                        </Component>
-
-                      </Directory>
-
-                      <Component Id="win2dx64_" Guid="d56a3f69-deb4-4332-b726-1df03368861b">
-                        <RemoveFolder Id="win2dx64_" On="uninstall" />
-
-                        <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                          <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                        </RegistryKey>
-                      </Component>
-
-                    </Directory>
-
-                    <Directory Id="win2dx86_" Name="win-x86">
-                      <Directory Id="native.2" Name="native">
-
-                        <Component Id="Component.e_sqlite3.dll_3183420225" Guid="d56a3f69-deb4-4332-b726-1df02b6da2ae">
-                          <File Id="e_sqlite3.dll_3183420225" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\runtimes\win-x86\native\e_sqlite3.dll" />
-                          <RemoveFolder Id="native.2" On="uninstall" />
-
-                          <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                            <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                          </RegistryKey>
-                        </Component>
-
-                      </Directory>
-
-                      <Component Id="win2dx86_" Guid="d56a3f69-deb4-4332-b726-1df08f816f51">
-                        <RemoveFolder Id="win2dx86_" On="uninstall" />
-
-                        <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                          <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                        </RegistryKey>
-                      </Component>
-
-                    </Directory>
-
-                    <Component Id="runtimes" Guid="d56a3f69-deb4-4332-b726-1df0ee05fbe2">
-                      <RemoveFolder Id="runtimes" On="uninstall" />
-
-                      <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                        <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                      </RegistryKey>
-                    </Component>
-
-                  </Directory>
-
                   <Directory Id="sv" Name="sv">
 
                     <Component Id="Component.Xceed.Wpf.AvalonDock.resources.dll_2569159657" Guid="d56a3f69-deb4-4332-b726-1df0f28f9c62">
@@ -1103,32 +828,6 @@
                     <Component Id="Component.MaterialDesignExtensions.resources.dll_1610072284" Guid="d56a3f69-deb4-4332-b726-1df0cb6b4935">
                       <File Id="MaterialDesignExtensions.resources.dll_1610072284" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\uz-Latn-UZ\MaterialDesignExtensions.resources.dll" />
                       <RemoveFolder Id="uz2dLatn2dUZ" On="uninstall" />
-
-                      <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                        <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                      </RegistryKey>
-                    </Component>
-
-                  </Directory>
-
-                  <Directory Id="x64_" Name="x64">
-
-                    <Component Id="Component.e_sqlite3.dll_1075951030" Guid="d56a3f69-deb4-4332-b726-1df0d5cb1e04">
-                      <File Id="e_sqlite3.dll_1075951030" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\x64\e_sqlite3.dll" />
-                      <RemoveFolder Id="x64_" On="uninstall" />
-
-                      <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
-                        <RegistryValue Value="0" Type="string" KeyPath="yes" />
-                      </RegistryKey>
-                    </Component>
-
-                  </Directory>
-
-                  <Directory Id="x86_" Name="x86">
-
-                    <Component Id="Component.e_sqlite3.dll_2353388403" Guid="d56a3f69-deb4-4332-b726-1df0514c6151">
-                      <File Id="e_sqlite3.dll_2353388403" Source="..\KapibaraV2\bin\Release R22\publish\Revit 2022 Release R22 addin\KapibaraV2\x86\e_sqlite3.dll" />
-                      <RemoveFolder Id="x86_" On="uninstall" />
 
                       <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                         <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -2139,13 +1838,13 @@
 
                   </Directory>
 
-                  <Directory Id="runtimes.1" Name="runtimes">
-                    <Directory Id="win2darm.1" Name="win-arm">
-                      <Directory Id="native.3" Name="native">
+                  <Directory Id="runtimes" Name="runtimes">
+                    <Directory Id="win2darm" Name="win-arm">
+                      <Directory Id="native" Name="native">
 
                         <Component Id="Component.e_sqlite3.dll_1796874113" Guid="d56a3f69-deb4-4332-b726-1df08011acda">
                           <File Id="e_sqlite3.dll_1796874113" Source="..\KapibaraV2\bin\Release R23\publish\Revit 2023 Release R23 addin\KapibaraV2\runtimes\win-arm\native\e_sqlite3.dll" />
-                          <RemoveFolder Id="native.3" On="uninstall" />
+                          <RemoveFolder Id="native" On="uninstall" />
 
                           <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                             <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -2154,8 +1853,8 @@
 
                       </Directory>
 
-                      <Component Id="win2darm.1" Guid="d56a3f69-deb4-4332-b726-1df0f02cdb80">
-                        <RemoveFolder Id="win2darm.1" On="uninstall" />
+                      <Component Id="win2darm" Guid="d56a3f69-deb4-4332-b726-1df0f78ee661">
+                        <RemoveFolder Id="win2darm" On="uninstall" />
 
                         <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                           <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -2164,12 +1863,12 @@
 
                     </Directory>
 
-                    <Directory Id="win2dx64.1" Name="win-x64">
-                      <Directory Id="native.4" Name="native">
+                    <Directory Id="win2dx64_" Name="win-x64">
+                      <Directory Id="native.1" Name="native">
 
                         <Component Id="Component.e_sqlite3.dll_2839025897" Guid="d56a3f69-deb4-4332-b726-1df0a876d334">
                           <File Id="e_sqlite3.dll_2839025897" Source="..\KapibaraV2\bin\Release R23\publish\Revit 2023 Release R23 addin\KapibaraV2\runtimes\win-x64\native\e_sqlite3.dll" />
-                          <RemoveFolder Id="native.4" On="uninstall" />
+                          <RemoveFolder Id="native.1" On="uninstall" />
 
                           <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                             <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -2178,8 +1877,8 @@
 
                       </Directory>
 
-                      <Component Id="win2dx64.1" Guid="d56a3f69-deb4-4332-b726-1df03397862c">
-                        <RemoveFolder Id="win2dx64.1" On="uninstall" />
+                      <Component Id="win2dx64_" Guid="d56a3f69-deb4-4332-b726-1df03368861b">
+                        <RemoveFolder Id="win2dx64_" On="uninstall" />
 
                         <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                           <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -2188,12 +1887,12 @@
 
                     </Directory>
 
-                    <Directory Id="win2dx86.1" Name="win-x86">
-                      <Directory Id="native.5" Name="native">
+                    <Directory Id="win2dx86_" Name="win-x86">
+                      <Directory Id="native.2" Name="native">
 
                         <Component Id="Component.e_sqlite3.dll_961334752" Guid="d56a3f69-deb4-4332-b726-1df0d77c1807">
                           <File Id="e_sqlite3.dll_961334752" Source="..\KapibaraV2\bin\Release R23\publish\Revit 2023 Release R23 addin\KapibaraV2\runtimes\win-x86\native\e_sqlite3.dll" />
-                          <RemoveFolder Id="native.5" On="uninstall" />
+                          <RemoveFolder Id="native.2" On="uninstall" />
 
                           <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                             <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -2202,8 +1901,8 @@
 
                       </Directory>
 
-                      <Component Id="win2dx86.1" Guid="d56a3f69-deb4-4332-b726-1df08fb06f62">
-                        <RemoveFolder Id="win2dx86.1" On="uninstall" />
+                      <Component Id="win2dx86_" Guid="d56a3f69-deb4-4332-b726-1df08f816f51">
+                        <RemoveFolder Id="win2dx86_" On="uninstall" />
 
                         <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                           <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -2212,8 +1911,8 @@
 
                     </Directory>
 
-                    <Component Id="runtimes.1" Guid="d56a3f69-deb4-4332-b726-1df0f7a4fb5e">
-                      <RemoveFolder Id="runtimes.1" On="uninstall" />
+                    <Component Id="runtimes" Guid="d56a3f69-deb4-4332-b726-1df0ee05fbe2">
+                      <RemoveFolder Id="runtimes" On="uninstall" />
 
                       <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                         <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -2248,11 +1947,11 @@
 
                   </Directory>
 
-                  <Directory Id="x64.1" Name="x64">
+                  <Directory Id="x64_" Name="x64">
 
                     <Component Id="Component.e_sqlite3.dll_993778478" Guid="d56a3f69-deb4-4332-b726-1df060167d26">
                       <File Id="e_sqlite3.dll_993778478" Source="..\KapibaraV2\bin\Release R23\publish\Revit 2023 Release R23 addin\KapibaraV2\x64\e_sqlite3.dll" />
-                      <RemoveFolder Id="x64.1" On="uninstall" />
+                      <RemoveFolder Id="x64_" On="uninstall" />
 
                       <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                         <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -2261,11 +1960,11 @@
 
                   </Directory>
 
-                  <Directory Id="x86.1" Name="x86">
+                  <Directory Id="x86_" Name="x86">
 
                     <Component Id="Component.e_sqlite3.dll_2268991519" Guid="d56a3f69-deb4-4332-b726-1df0d7500ad4">
                       <File Id="e_sqlite3.dll_2268991519" Source="..\KapibaraV2\bin\Release R23\publish\Revit 2023 Release R23 addin\KapibaraV2\x86\e_sqlite3.dll" />
-                      <RemoveFolder Id="x86.1" On="uninstall" />
+                      <RemoveFolder Id="x86_" On="uninstall" />
 
                       <RegistryKey Root="HKCU" Key="Software\WixSharp\Used">
                         <RegistryValue Value="0" Type="string" KeyPath="yes" />
@@ -2327,8 +2026,8 @@
 
     <Feature Id="Complete" Title="Complete" Absent="allow" Level="1">
       <ComponentRef Id="Component.KapibaraV2.addin_2535241679" />
+      <ComponentRef Id="Component.KapibaraV2.rar_379024239" />
       <ComponentRef Id="Component.ActiveView.dll_942211236" />
-      <ComponentRef Id="Component.AdWindows.dll_1675836837" />
       <ComponentRef Id="Component.ChatGPT.dll_595441427" />
       <ComponentRef Id="Component.ChatGPT.pdb_679231425" />
       <ComponentRef Id="Component.ClosedXML.dll_1781467052" />
@@ -2357,31 +2056,12 @@
       <ComponentRef Id="Component.MaterialDesignThemes.Wpf.dll_3026504357" />
       <ComponentRef Id="Component.Microsoft.Bcl.AsyncInterfaces.dll_2963235252" />
       <ComponentRef Id="Component.Microsoft.Bcl.HashCode.dll_2447381836" />
-      <ComponentRef Id="Component.Microsoft.Data.Sqlite.dll_2575644123" />
-      <ComponentRef Id="Component.Microsoft.DotNet.PlatformAbstractions.dll_2807587813" />
-      <ComponentRef Id="Component.Microsoft.EntityFrameworkCore.Abstractions.dll_2151957093" />
-      <ComponentRef Id="Component.Microsoft.EntityFrameworkCore.dll_2072777490" />
-      <ComponentRef Id="Component.Microsoft.EntityFrameworkCore.Relational.dll_1059650518" />
-      <ComponentRef Id="Component.Microsoft.EntityFrameworkCore.Sqlite.dll_3796024287" />
-      <ComponentRef Id="Component.Microsoft.Extensions.Caching.Abstractions.dll_1389392655" />
-      <ComponentRef Id="Component.Microsoft.Extensions.Caching.Memory.dll_3352320851" />
-      <ComponentRef Id="Component.Microsoft.Extensions.Configuration.Abstractions.dll_3688912553" />
-      <ComponentRef Id="Component.Microsoft.Extensions.Configuration.Binder.dll_706419799" />
-      <ComponentRef Id="Component.Microsoft.Extensions.Configuration.dll_3253477382" />
-      <ComponentRef Id="Component.Microsoft.Extensions.DependencyInjection.Abstractions.dll_2113081594" />
-      <ComponentRef Id="Component.Microsoft.Extensions.DependencyInjection.dll_2946811178" />
-      <ComponentRef Id="Component.Microsoft.Extensions.DependencyModel.dll_3412262657" />
-      <ComponentRef Id="Component.Microsoft.Extensions.Logging.Abstractions.dll_3840822753" />
-      <ComponentRef Id="Component.Microsoft.Extensions.Logging.dll_1560505894" />
-      <ComponentRef Id="Component.Microsoft.Extensions.Options.dll_118800027" />
-      <ComponentRef Id="Component.Microsoft.Extensions.Primitives.dll_3244863770" />
       <ComponentRef Id="Component.Microsoft.Xaml.Behaviors.dll_303810593" />
       <ComponentRef Id="Component.Newtonsoft.Json.dll_2131822293" />
       <ComponentRef Id="Component.Nice3point.Revit.Extensions.dll_1736121892" />
       <ComponentRef Id="Component.Nice3point.Revit.Toolkit.dll_106303930" />
       <ComponentRef Id="Component.Ookii.Dialogs.Wpf.dll_2733226472" />
       <ComponentRef Id="Component.RBush.dll_1620417121" />
-      <ComponentRef Id="Component.Remotion.Linq.dll_1090093946" />
       <ComponentRef Id="Component.SharpVectors.Converters.Wpf.dll_3421801583" />
       <ComponentRef Id="Component.SharpVectors.Core.dll_1981944425" />
       <ComponentRef Id="Component.SharpVectors.Css.dll_2407818370" />
@@ -2391,22 +2071,17 @@
       <ComponentRef Id="Component.SharpVectors.Runtime.Wpf.dll_1346775106" />
       <ComponentRef Id="Component.SixLabors.Fonts.dll_2531147026" />
       <ComponentRef Id="Component.SolidIntersection.dll_4169692419" />
-      <ComponentRef Id="Component.SQLitePCLRaw.batteries_green.dll_1642791491" />
-      <ComponentRef Id="Component.SQLitePCLRaw.batteries_v2.dll_2275156190" />
-      <ComponentRef Id="Component.SQLitePCLRaw.core.dll_2992168931" />
-      <ComponentRef Id="Component.SQLitePCLRaw.provider.dynamic_cdecl.dll_916672027" />
-      <ComponentRef Id="Component.SQLitePCLRaw.provider.e_sqlite3.dll_1119456834" />
+      <ComponentRef Id="Component.SortingCategories.dll_1793141560" />
       <ComponentRef Id="Component.System.Buffers.dll_1125490921" />
-      <ComponentRef Id="Component.System.Collections.Immutable.dll_3169189008" />
       <ComponentRef Id="Component.System.ComponentModel.Annotations.dll_215272225" />
-      <ComponentRef Id="Component.System.Diagnostics.DiagnosticSource.dll_2991732530" />
-      <ComponentRef Id="Component.System.Interactive.Async.dll_1334780317" />
       <ComponentRef Id="Component.System.Memory.dll_1964752360" />
       <ComponentRef Id="Component.System.Numerics.Vectors.dll_1733781457" />
       <ComponentRef Id="Component.System.Runtime.CompilerServices.Unsafe.dll_406704194" />
       <ComponentRef Id="Component.System.Threading.Tasks.Extensions.dll_3632862375" />
       <ComponentRef Id="Component.ViewManager.dll_1567341699" />
       <ComponentRef Id="Component.WorkSetLinkFiles.dll_2265462525" />
+      <ComponentRef Id="Component.Wpf.Ui.Abstractions.dll_52036349" />
+      <ComponentRef Id="Component.Wpf.Ui.dll_2243965079" />
       <ComponentRef Id="Component.WpfResources.dll_390484142" />
       <ComponentRef Id="Component.WpfResources.pdb_2390773926" />
       <ComponentRef Id="Component.Xceed.Wpf.AvalonDock.dll_491957430" />
@@ -2438,13 +2113,8 @@
       <ComponentRef Id="Component.MaterialDesignExtensions.resources.dll_2751663300" />
       <ComponentRef Id="Component.Xceed.Wpf.AvalonDock.resources.dll_3657344308" />
       <ComponentRef Id="Component.MaterialDesignExtensions.resources.dll_1355793807" />
-      <ComponentRef Id="Component.e_sqlite3.dll_3889679666" />
-      <ComponentRef Id="Component.e_sqlite3.dll_2440005969" />
-      <ComponentRef Id="Component.e_sqlite3.dll_3183420225" />
       <ComponentRef Id="Component.Xceed.Wpf.AvalonDock.resources.dll_2569159657" />
       <ComponentRef Id="Component.MaterialDesignExtensions.resources.dll_1610072284" />
-      <ComponentRef Id="Component.e_sqlite3.dll_1075951030" />
-      <ComponentRef Id="Component.e_sqlite3.dll_2353388403" />
       <ComponentRef Id="Component.Xceed.Wpf.AvalonDock.resources.dll_1825835707" />
       <ComponentRef Id="Component.KapibaraV2.addin_2319431753" />
       <ComponentRef Id="Component.ActiveView.dll_472650179" />
@@ -2573,10 +2243,6 @@
       <ComponentRef Id="win2darm" />
       <ComponentRef Id="win2dx64_" />
       <ComponentRef Id="win2dx86_" />
-      <ComponentRef Id="runtimes.1" />
-      <ComponentRef Id="win2darm.1" />
-      <ComponentRef Id="win2dx64.1" />
-      <ComponentRef Id="win2dx86.1" />
     </Feature>
 
   </Product>
