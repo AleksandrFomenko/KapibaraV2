@@ -10,5 +10,6 @@ public sealed partial class ClashDetectiveView
         themeWatcherService.Watch(this);
         DataContext = viewModel;
         InitializeComponent();
+        
     }
 }

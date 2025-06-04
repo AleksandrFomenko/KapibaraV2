@@ -7,11 +7,14 @@ using System.Windows.Controls;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
+using Wpf.Ui.Markup;
 
 namespace KapibaraUI.Services.Appearance;
     public sealed class ThemeWatcherService : IThemeWatcherService
     {
         private static readonly List<FrameworkElement> ObservedElements = [];
+        private ThemesDictionary _theme = new();
+        private ControlsDictionary _controlsDictionary = new ();
 
         
         public static void Initialize()
@@ -22,13 +25,13 @@ namespace KapibaraUI.Services.Appearance;
             };
             ApplicationThemeManager.Changed += OnApplicationThemeManagerChanged;
         }
-
-        
         public static void ApplyTheme(ApplicationTheme theme)
         {
             ApplicationThemeManager.Apply(theme, WindowBackdropType.Auto);
             UpdateBackground(theme);
         }
+        
+
 
         private static void OnApplicationThemeManagerChanged(ApplicationTheme currentApplicationTheme, System.Windows.Media.Color systemAccent)
         {
@@ -88,6 +91,23 @@ namespace KapibaraUI.Services.Appearance;
         {
             foreach (var window in ObservedElements.Select(Window.GetWindow).Distinct())
             {
+               
+                WindowBackgroundManager.UpdateBackground(window, theme, WindowBackdropType.Auto);
+            }
+        }
+        
+        public void SetTheme(ApplicationTheme theme, FrameworkElement frameworkElement)
+        {
+            _theme.Theme = theme;
+            ApplicationThemeManager.Apply(theme);
+            if (!frameworkElement.Resources.MergedDictionaries.Contains(_theme))
+            {
+                frameworkElement.Resources.MergedDictionaries.Add(_theme);
+                frameworkElement.Resources.MergedDictionaries.Add(_controlsDictionary);
+            }
+
+            if (frameworkElement is Window window)
+            {
                 WindowBackgroundManager.UpdateBackground(window, theme, WindowBackdropType.Mica);
             }
         }
@@ -97,5 +117,6 @@ namespace KapibaraUI.Services.Appearance;
 public interface IThemeWatcherService
 {
     void Watch(FrameworkElement frameworkElement);
+    void SetTheme(ApplicationTheme theme, FrameworkElement frameworkElement);
 }
 

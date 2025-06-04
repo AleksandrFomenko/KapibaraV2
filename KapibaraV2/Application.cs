@@ -2,7 +2,7 @@
 using KapibaraUI.Services.Appearance;
 using Nice3point.Revit.Toolkit.External;
 using KapibaraV2.Commands.BIM;
-using Wpf.Ui.Appearance;
+
 
 
 namespace KapibaraV2
@@ -15,12 +15,18 @@ namespace KapibaraV2
     {
         public override void OnStartup()
         {
-            ApplyResources();
+            //ApplyResources();
             CreateRibbon();
         }
 
         private void CreateRibbon()
         {
+            
+            var panelSettings = Application.CreatePanel("Settings", "Kapibara");
+            var panelBackgroundSettings =
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(80, 200, 120));
+            
+            panelSettings.SetTitleBarBackground(panelBackgroundSettings);
             var panelBim = Application.CreatePanel("BIM", "Kapibara");
             var panelBackgroundBrushLightCoral =
                 new SolidColorBrush(System.Windows.Media.Color.FromRgb(240, 128, 128));
@@ -41,6 +47,12 @@ namespace KapibaraV2
                 new SolidColorBrush(System.Windows.Media.Color.FromRgb(175, 238, 238));
             var panelInfo = Application.CreatePanel("Разное", "Kapibara");
             panelInfo.SetTitleBarBackground(panelBackgroundBrushPaleTurquoise);
+            
+            //Settings
+            panelSettings.AddPushButton<Settings.Commands.StartupCommand>("Settings")
+                .SetImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png");
+            
             
             //BIM
             panelBim.AddPushButton<ExportModels>("Export\nmodels")
@@ -103,7 +115,6 @@ namespace KapibaraV2
         private static void ApplyResources()
         {
             ThemeWatcherService.Initialize();
-            //ThemeWatcherService.ApplyTheme(ApplicationTheme.Light);
         }
     }
 }

@@ -102,6 +102,7 @@
         <ProjectReference Include="..\ImportExcelByParameter\ImportExcelByParameter.csproj" />
         <ProjectReference Include="..\Insolation\Insolation.csproj" />
         <ProjectReference Include="..\LevelByFloor\LevelByFloor.csproj" />
+        <ProjectReference Include="..\Settings\Settings.csproj" />
         <ProjectReference Include="..\SolidIntersection\SolidIntersection.csproj" />
         <ProjectReference Include="..\SortingCategories\SortingCategories.csproj" />
         <ProjectReference Include="..\ViewManager\ViewManager.csproj" />

@@ -8,8 +8,8 @@ public sealed partial class SpaceHeaterView
 {
     public SpaceHeaterView(SpaceHeaterViewModel viewModel, IThemeWatcherService themeWatcherService)
     {
-        themeWatcherService.Watch(this);
         DataContext = viewModel;
         InitializeComponent();
-    }
+        themeWatcherService.Watch(this);
+    } 
 }

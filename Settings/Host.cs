@@ -1,10 +1,9 @@
-using HeatingDevices.ViewModels;
-using HeatingDevices.Views;
 using KapibaraUI.Services.Appearance;
 using Microsoft.Extensions.DependencyInjection;
-using Wpf.Ui.Appearance;
+using Settings.Views;
+using Settings.ViewModels;
 
-namespace HeatingDevices;
+namespace Settings;
 
 /// <summary>
 ///     Provides a host for the application's services and manages their lifetimes
@@ -20,11 +19,10 @@ public static class Host
     {
         var services = new ServiceCollection();
 
-        services.AddSingleton<SpaceHeaterViewModel>();
-        services.AddSingleton<SpaceHeaterView>();
         if (Context.ActiveDocument != null) services.AddSingleton(Context.ActiveDocument);
+        services.AddSingleton<SettingsViewModel>();
+        services.AddSingleton<SettingsView>();
         services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
-
 
         _serviceProvider = services.BuildServiceProvider();
     }
