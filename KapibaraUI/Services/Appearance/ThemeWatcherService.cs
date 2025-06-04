@@ -11,7 +11,7 @@ using Wpf.Ui.Controls;
 namespace KapibaraUI.Services.Appearance;
     public sealed class ThemeWatcherService : IThemeWatcherService
     {
-        private static readonly List<FrameworkElement> ObservedElements = new List<FrameworkElement>();
+        private static readonly List<FrameworkElement> ObservedElements = [];
 
         
         public static void Initialize()

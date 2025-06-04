@@ -51,8 +51,8 @@ namespace KapibaraV2
                 .SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png");
             panelBim.AddPushButton<ClashDetective.Commands.StartupCommand>("Clash\nNavigator")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ClashNavigator.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ClashNavigator.png");
+                .SetImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png");
             
             //panelBim.AddPushButton<FsmModules.Command.StartupCommand>("Prefab")
                 //.SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
@@ -87,10 +87,14 @@ namespace KapibaraV2
             panelMepGeneral.AddPushButton<EngineeringSystems.Commands.StartupCommand>("System\nname")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+            panelMepGeneral.AddPushButton<HeatingDevices.Commands.StartupCommand>("Space\nHeater")
+                .SetImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png");
+            /*
             panelMepGeneral.AddPushButton<Insolation.Commands.StartupCommand>("ываываыва")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
-
+*/
             // Разное
             panelInfo.AddPushButton<ChatGPT.Commands.ChatGpt>("ChatGPT")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ai.png")
@@ -99,8 +103,7 @@ namespace KapibaraV2
         private static void ApplyResources()
         {
             ThemeWatcherService.Initialize();
-            ThemeWatcherService.ApplyTheme(ApplicationTheme.Dark);
-       
+            //ThemeWatcherService.ApplyTheme(ApplicationTheme.Light);
         }
     }
 }
