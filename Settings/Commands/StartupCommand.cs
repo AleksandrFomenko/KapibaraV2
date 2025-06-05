@@ -1,6 +1,9 @@
 ﻿using Autodesk.Revit.Attributes;
 using KapibaraUI.Services.Appearance;
 using Nice3point.Revit.Toolkit.External;
+using Settings.Configuration;
+using Settings.Models;
+using Settings.ViewModels;
 using Settings.Views;
 using Wpf.Ui.Appearance;
 
@@ -17,10 +20,10 @@ public class StartupCommand : ExternalCommand
     {
         Host.Start();
         var view = Host.GetService<SettingsView>();
-        var tws = Host.GetService<IThemeWatcherService>();
-        ThemeWatcherService.Initialize();
+        var vm = Host.GetService<SettingsViewModel>();
         
-        tws.SetTheme(ApplicationTheme.Light,view);
+        vm.SetSetting();
         view.ShowDialog();
+
     }
 }

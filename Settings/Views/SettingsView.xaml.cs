@@ -7,8 +7,8 @@ public sealed partial class SettingsView
 {
     public SettingsView(SettingsViewModel viewModel, IThemeWatcherService themeWatcherService)
     {
-        DataContext = viewModel;
         InitializeComponent();
+        DataContext = viewModel;
         themeWatcherService.Watch(this);
     }
 }

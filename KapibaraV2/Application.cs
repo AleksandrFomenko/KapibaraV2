@@ -2,7 +2,7 @@
 using KapibaraUI.Services.Appearance;
 using Nice3point.Revit.Toolkit.External;
 using KapibaraV2.Commands.BIM;
-
+using Wpf.Ui.Appearance;
 
 
 namespace KapibaraV2
@@ -15,7 +15,7 @@ namespace KapibaraV2
     {
         public override void OnStartup()
         {
-            //ApplyResources();
+            ApplyResources();
             CreateRibbon();
         }
 
@@ -50,8 +50,8 @@ namespace KapibaraV2
             
             //Settings
             panelSettings.AddPushButton<Settings.Commands.StartupCommand>("Settings")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png");
+                .SetImage("/KapibaraV2;component/Resources/Icons/Settings32.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/Settings32.png");
             
             
             //BIM
@@ -115,6 +115,7 @@ namespace KapibaraV2
         private static void ApplyResources()
         {
             ThemeWatcherService.Initialize();
+            ThemeWatcherService.ApplyTheme(ApplicationTheme.Light);
         }
     }
 }

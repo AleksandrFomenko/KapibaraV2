@@ -87,6 +87,8 @@
         <Resource Include="Resources\Icons\ClashDetective.png" />
         <None Remove="Resources\Icons\SpaceHeater32.png" />
         <Resource Include="Resources\Icons\SpaceHeater32.png" />
+        <None Remove="Resources\Icons\Settings32.png" />
+        <Resource Include="Resources\Icons\Settings32.png" />
     </ItemGroup>
 
     <ItemGroup>

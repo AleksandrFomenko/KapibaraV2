@@ -15,7 +15,6 @@ namespace KapibaraUI.Services.Appearance;
         private static readonly List<FrameworkElement> ObservedElements = [];
         private ThemesDictionary _theme = new();
         private ControlsDictionary _controlsDictionary = new ();
-
         
         public static void Initialize()
         {
@@ -31,8 +30,6 @@ namespace KapibaraUI.Services.Appearance;
             UpdateBackground(theme);
         }
         
-
-
         private static void OnApplicationThemeManagerChanged(ApplicationTheme currentApplicationTheme, System.Windows.Media.Color systemAccent)
         {
             foreach (var frameworkElement in ObservedElements)
@@ -91,7 +88,6 @@ namespace KapibaraUI.Services.Appearance;
         {
             foreach (var window in ObservedElements.Select(Window.GetWindow).Distinct())
             {
-               
                 WindowBackgroundManager.UpdateBackground(window, theme, WindowBackdropType.Auto);
             }
         }
@@ -118,5 +114,6 @@ public interface IThemeWatcherService
 {
     void Watch(FrameworkElement frameworkElement);
     void SetTheme(ApplicationTheme theme, FrameworkElement frameworkElement);
+    
 }
 

@@ -2,25 +2,22 @@
 using System.Reflection;
 using Autodesk.Revit.UI;
 using Newtonsoft.Json;
+using Settings.Models;
 using KapibaraConfig = KapibaraCore.Configuration;
 
-namespace ImportExcelByParameter.Configuration;
+namespace Settings.Configuration;
 
-internal class Config
+public class Config
 {
     private static readonly string DllPath = Assembly.GetExecutingAssembly().Location;
     private static readonly string DllDirectory = Path.GetDirectoryName(DllPath);
-    private string _configFilePath = Path.Combine(DllDirectory, "ImportExcelConfig", "config.json");
+    private string _configFilePath = Path.Combine(DllDirectory, "SettingsConfig", "config.json");
     
-    public string PathStr { get; set; }
-    public string ListStr { get; set; }
-    public int Number { get; set; }
-    public string Category { get; set; }
-    public string Parameter { get; set; }
+    public Setting Setting { get; set; }
 
-    internal Config()
+    public Config()
     {
-        var directoryName = "ImportExcelConfig";
+        var directoryName = "SettingsConfig";
         var configName = "config.json";
         
         // path to dll
@@ -40,12 +37,7 @@ internal class Config
         if (!File.Exists(pathCfg))
         {
             KapibaraConfig.Configuration.CreateEmptyJsonFile(dirCfg, configName);
-            Category = string.Empty;
-            ListStr = string.Empty;
-            Number = 1;
-            Parameter = string.Empty;
-            PathStr = string.Empty;
-    
+            Setting = new Setting("Светлая", Theme.Light);
             SaveConfig();
         }
     }

@@ -53,6 +53,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\External\WPF.UI\source\WPF.UI\WPF.UI.csproj" />
+      <ProjectReference Include="..\KapibaraCore\KapibaraCore.csproj" />
       <ProjectReference Include="..\KapibaraUI\KapibaraUI.csproj" />
     </ItemGroup>
 

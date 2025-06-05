@@ -1,5 +1,7 @@
+using System.Windows;
 using KapibaraUI.Services.Appearance;
 using Microsoft.Extensions.DependencyInjection;
+using Settings.Configuration;
 using Settings.Views;
 using Settings.ViewModels;
 
@@ -12,9 +14,6 @@ public static class Host
 {
     private static IServiceProvider _serviceProvider;
 
-    /// <summary>
-    ///     Starts the host and configures the application's services
-    /// </summary>
     public static void Start()
     {
         var services = new ServiceCollection();
@@ -23,15 +22,12 @@ public static class Host
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<SettingsView>();
         services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
+        services.AddSingleton<Config>();
+            
 
         _serviceProvider = services.BuildServiceProvider();
     }
-
-    /// <summary>
-    ///     Get service of type <typeparamref name="T"/>
-    /// </summary>
-    /// <typeparam name="T">The type of service object to get</typeparam>
-    /// <exception cref="System.InvalidOperationException">There is no service of type <typeparamref name="T"/></exception>
+    
     public static T GetService<T>() where T : class
     {
         return _serviceProvider.GetRequiredService<T>();
