@@ -1,7 +1,7 @@
-﻿using ClashDetective.ViewModels;
-using KapibaraUI.Services.Appearance;
+﻿using KapibaraUI.Services.Appearance;
+using ClashDetectiveViewModel = ClashHub.ViewModels.ClashDetectiveViewModel;
 
-namespace ClashDetective.Views;
+namespace ClashHub.Views;
 
 public sealed partial class ClashDetectiveView
 {

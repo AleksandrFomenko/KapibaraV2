@@ -1,8 +1,6 @@
-﻿using ClashDetective.Models.Parsers;
-using ClashDetective.Structure;
+﻿using ClashHub.Models.Parsers;
 
-
-namespace ClashDetective.ViewModels.Format;
+namespace ClashHub.ViewModels.Format;
 
 public class Format<TModel, TItem> : IFormat<TItem>
 {

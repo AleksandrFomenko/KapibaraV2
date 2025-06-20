@@ -94,7 +94,7 @@
     <ItemGroup>
         <ProjectReference Include="..\ActiveView\ActiveView.csproj" />
         <ProjectReference Include="..\ChatGPT\ChatGPT.csproj" />
-        <ProjectReference Include="..\ClashNavigator\ClashNavigator.csproj" />
+        <ProjectReference Include="..\ClashHub\ClashHub.csproj" />
         <ProjectReference Include="..\ColorsByParameters\ColorsByParameters.csproj" />
         <ProjectReference Include="..\EngineeringSystems\EngineeringSystems.csproj" />
         <ProjectReference Include="..\ExporterModels\ExporterModels.csproj" />

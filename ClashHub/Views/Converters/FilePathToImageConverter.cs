@@ -1,11 +1,10 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
-namespace ClashDetective.Views.Converters
+namespace ClashHub.Views.Converters
 {
     public class FilePathToImageConverter : IValueConverter
     {

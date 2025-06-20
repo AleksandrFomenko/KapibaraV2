@@ -22,6 +22,7 @@
     <ItemGroup>
       <ProjectReference Include="..\External\WPF.UI\source\WPF.UI.Abstractions\WPF.UI.Abstractions.csproj" />
       <ProjectReference Include="..\External\WPF.UI\source\WPF.UI\WPF.UI.csproj" />
+      <ProjectReference Include="..\KapibaraCore\KapibaraCore.csproj" />
     </ItemGroup>
     
 

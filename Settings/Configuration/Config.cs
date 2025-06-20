@@ -56,7 +56,7 @@ public class Config
         }
         catch (Exception ex)
         {
-            TaskDialog.Show("Error", $"An error occurred while saving the configuration: {ex.Message}");
+            TaskDialog.Show("Error", $"Ошибка с сохранние конфигурации: {ex.Message}");
         }
     }
 }

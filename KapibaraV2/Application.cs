@@ -62,7 +62,7 @@ namespace KapibaraV2
             panelBim.AddPushButton<FamilyCleaner.Commands.StartupCommand>("Cleaning\nFamily")
                 .SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png");
-            panelBim.AddPushButton<ClashDetective.Commands.StartupCommand>("Clash\nNavigator")
+            panelBim.AddPushButton<ClashHub.Commands.StartupCommand>("Clash\nNavigator")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png");
             

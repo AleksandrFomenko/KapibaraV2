@@ -1,4 +1,4 @@
-﻿namespace ClashDetective.Models.Parsers;
+﻿namespace ClashHub.Models.Parsers;
 
 public interface IFileParser<out T>
 {

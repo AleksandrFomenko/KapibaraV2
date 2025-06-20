@@ -1,11 +1,11 @@
 ﻿using Autodesk.Revit.Attributes;
-using Nice3point.Revit.Toolkit.External;
-using ClashDetective.ViewModels;
-using ClashDetective.Views;
+using ClashHub.Views;
 using KapibaraUI.Services.Appearance;
 using Microsoft.Extensions.DependencyInjection;
+using Nice3point.Revit.Toolkit.External;
+using ClashDetectiveViewModel = ClashHub.ViewModels.ClashDetectiveViewModel;
 
-namespace ClashDetective.Commands;
+namespace ClashHub.Commands;
 
 [UsedImplicitly]
 [Transaction(TransactionMode.Manual)]
@@ -15,14 +15,16 @@ public class StartupCommand : ExternalCommand
     {
         var document = Context.ActiveDocument;
         var services = new ServiceCollection();
-        
-        services.AddSingleton(document);
+
+        if (document != null) services.AddSingleton(document);
         services.AddSingleton<ClashDetectiveViewModel>();
         services.AddSingleton<ClashDetectiveView>();
         services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
         
         var serviceProvider = services.BuildServiceProvider();
-        var view = serviceProvider.GetRequiredService<ClashDetectiveView>(); 
+        var view = serviceProvider.GetRequiredService<ClashDetectiveView>();
+        var tws = serviceProvider.GetRequiredService<IThemeWatcherService>();
+        tws.SetConfigTheme(view);
         view.Show();
     }
 }

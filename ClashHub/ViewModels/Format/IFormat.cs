@@ -1,6 +1,4 @@
-﻿using ClashDetective.Structure;
-
-namespace ClashDetective.ViewModels.Format;
+﻿namespace ClashHub.ViewModels.Format;
 
 public interface IFormat;
 

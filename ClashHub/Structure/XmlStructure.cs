@@ -1,10 +1,9 @@
 ﻿using System.Xml.Serialization;
-using ClashDetective.ViewModels;
 
-namespace ClashDetective.Structure;
+namespace ClashHub.Structure;
 
 [XmlRoot("exchange")]
-public class XmlStructure
+public class XmlStructure : ObservableObject
 {
     [XmlAttribute("units")]
     public string Units { get; set; }
@@ -13,7 +12,7 @@ public class XmlStructure
     public Batchtest Batchtest { get; set; }
 }
 
-public class Batchtest
+public class Batchtest : ObservableObject
 {
     [XmlElement("clashtests")]
     public Clashtests Clashtests { get; set; }
@@ -25,7 +24,7 @@ public class Clashtests
     public List<Clashtest> ClashTestList { get; set; }
 }
 
-public class Clashtest
+public class Clashtest : ObservableObject
 {
     [XmlAttribute("name")]
     public string Name { get; set; }
@@ -40,7 +39,7 @@ public class Clashtest
     public ClashResults ClashResults { get; set; }
 }
 
-public class Summary
+public class Summary : ObservableObject
 {
     [XmlAttribute("total")]
     public string Total { get; set; }
@@ -64,13 +63,13 @@ public class Summary
     public string TestType { get; set; }
 }
 
-public class ClashResults
+public class ClashResults : ObservableObject
 {
     [XmlElement("clashresult")]
     public List<ClashResult> Results { get; set; }
 }
 
-public class ClashResult
+public partial class ClashResult : ObservableObject
     {
         [XmlAttribute("name")]
         public string Name { get; set; }
@@ -105,6 +104,8 @@ public class ClashResult
         [XmlElement("clashobjects")]
         public ClashObjects ClashObjects { get; set; }
 
+        public string[] StatusTest => Enum.GetNames(typeof(StatusEnum));
+        
         [XmlIgnore]
         public DateTime Created => new DateTime(
             CreatedDate.Date.Year,
@@ -194,4 +195,13 @@ public class ClashResult
 
         [XmlElement("value")]
         public string Value { get; set; }
+    }
+
+    public enum StatusEnum
+    {
+        New,
+        Active,
+        Reviewed,
+        Approved,
+        Resolved
     }

@@ -6,7 +6,7 @@ using KapibaraConfig = KapibaraCore.Configuration;
 
 namespace ImportExcelByParameter.Configuration;
 
-internal class Config
+public class Config
 {
     private static readonly string DllPath = Assembly.GetExecutingAssembly().Location;
     private static readonly string DllDirectory = Path.GetDirectoryName(DllPath);
@@ -18,7 +18,7 @@ internal class Config
     public string Category { get; set; }
     public string Parameter { get; set; }
 
-    internal Config()
+    public Config()
     {
         var directoryName = "ImportExcelConfig";
         var configName = "config.json";

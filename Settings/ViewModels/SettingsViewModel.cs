@@ -3,6 +3,8 @@ using Settings.Configuration;
 using Settings.Models;
 using Settings.Views;
 using Wpf.Ui.Appearance;
+using Setting = Settings.Models.Setting;
+using Theme = Settings.Models.Theme;
 
 namespace Settings.ViewModels;
 
@@ -11,12 +13,12 @@ public sealed partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private List<Setting> _settings;
     [ObservableProperty] private Setting _setting;
     private Config Cfg { get; }
-    private IThemeWatcherService themeWatcherService { get; set; }
+    private IThemeWatcherService ThemeWatcherService { get; set; }
 
     public SettingsViewModel(Config cfg, IThemeWatcherService tws)
     {
         var path = cfg.GetPath();
-        themeWatcherService = tws;
+        ThemeWatcherService = tws;
         Cfg = KapibaraCore.Configuration.Configuration.LoadConfig<Config>(path);
         GetSettings();
     }
@@ -30,9 +32,7 @@ public sealed partial class SettingsViewModel : ObservableObject
     {
         var them = value.Theme == Theme.Dark ? ApplicationTheme.Dark : ApplicationTheme.Light; 
         var view = Host.GetService<SettingsView>();
-        themeWatcherService.SetTheme(them, view);
-        
-        
+        ThemeWatcherService.SetTheme(them, view);
         Cfg.Setting = value;
         Cfg.SaveConfig();
     }

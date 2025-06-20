@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.IO;
+using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
@@ -15,6 +12,13 @@ namespace KapibaraUI.Services.Appearance;
         private static readonly List<FrameworkElement> ObservedElements = [];
         private ThemesDictionary _theme = new();
         private ControlsDictionary _controlsDictionary = new ();
+        
+        private static readonly string DllPath = Assembly.GetExecutingAssembly().Location;
+        private static readonly string DllDirectory = Path.GetDirectoryName(DllPath);
+        private const string DirectoryName = "SettingsConfig";
+        private const string ConfigName = "config.json";
+        
+        private string _configFilePath = Path.Combine(DllDirectory, DirectoryName, ConfigName);
         
         public static void Initialize()
         {
@@ -107,13 +111,30 @@ namespace KapibaraUI.Services.Appearance;
                 WindowBackgroundManager.UpdateBackground(window, theme, WindowBackdropType.Mica);
             }
         }
+
+        public void SetConfigTheme(FrameworkElement frameworkElement)
+        {
+            if (!File.Exists(_configFilePath))
+            {
+                SetTheme(ApplicationTheme.Light, frameworkElement);
+                return;
+            }
+            var wrapper = KapibaraCore.Configuration.Configuration.LoadConfig<ConfigWrapper>(_configFilePath);
+            var setting = wrapper?.Setting;
+            if (setting == null)
+            {
+                SetTheme(ApplicationTheme.Light, frameworkElement);
+                return;
+            }
+            var theme = setting.Theme == Theme.Dark ? ApplicationTheme.Dark : ApplicationTheme.Light;
+            SetTheme(theme, frameworkElement);
+        }
     }
-    
-    
-public interface IThemeWatcherService
+
+    public interface IThemeWatcherService
 {
     void Watch(FrameworkElement frameworkElement);
     void SetTheme(ApplicationTheme theme, FrameworkElement frameworkElement);
-    
+    void SetConfigTheme(FrameworkElement frameworkElement);
 }
 

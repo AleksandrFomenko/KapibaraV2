@@ -7,114 +7,54 @@ using Visibility = System.Windows.Visibility;
 
 namespace ActiveView.ViewModels;
 
-public sealed class ActiveViewViewModel : INotifyPropertyChanged
+public sealed partial class ActiveViewViewModel : ObservableObject
 {
-    private readonly Document _doc;
-    private List<string> _parameters;
-    private string _parameter;
-    private string _value;
-    private readonly ActiveViewModel _model;
+    [ObservableProperty] private List<string> _parameters;
+    [ObservableProperty] private string _parameter;
+    [ObservableProperty] private string _value;
+    [ObservableProperty] private bool _boolValue = true;
+    [ObservableProperty] private string _headingParameterSelection = "Выбор параметра";
+    [ObservableProperty] private string _headingValue = "Значение";
+    [ObservableProperty] private string _headingNotEmpty = "Пропустить заполненное";
+    [ObservableProperty] private bool _skipNotEmpty = false;
+    [ObservableProperty] private bool _isTextBoxVisible = true;
+    [ObservableProperty] private bool _isToggleVisible = false;
+    public Document Document { get; set; }
     public static Action Close;
-    private Visibility _textBoxVisibility = Visibility.Visible;
-    private Visibility _toggleButtonVisibility = Visibility.Hidden;
-
-    public RelayCommand StartCommand { get; }
-
-    internal ActiveViewViewModel(Document doc)
+    private readonly IModelActiveView _model;
+    
+    public ActiveViewViewModel(IModelActiveView model, Document document)
     {
-        _doc = doc ?? throw new ArgumentNullException(nameof(doc));
-        _model = new ActiveViewModel(doc);
+        Document = document;
+        _model = model;
         _parameters = _model.GetParameters();
-        StartCommand = new RelayCommand(
-            execute: _ => Execute(),
-            canExecute: _ => CanExecute()
-        );
     }
-    public List<string> Parameters
-    {
-        get => _parameters ??=new List<string>();
-        set => SetProperty(ref _parameters, value);
-    }
-    public string Parameter
-    {
-        get => _parameter ??=string.Empty;
-        set
-        {
-            SetProperty(ref _parameter, value);
-            CheckParameter();
-        }
-    }
-    public string Value
-    {
-        get => _value;
-        set => SetProperty(ref _value, value);
-    }
-    private bool _isActive;
-    public bool IsActive
-    {
-        get => _isActive;
-        set
-        {
-            SetProperty(ref _isActive, value);
-            Value = value ? "1" : "0";
-        }
-    }
-    public Visibility TextBoxVisibility
-    {
-        get => _textBoxVisibility;
-        set
-        {
-            _textBoxVisibility = value;
-            OnPropertyChanged();
-        }
-    }
-    public Visibility ToggleButtonVisibility
-    {
-        get => _toggleButtonVisibility;
-        set
-        {
-            _toggleButtonVisibility = value;
-            OnPropertyChanged();
-        }
-    }
-    private void CheckParameter()
-    {
-        var definition = _doc.GetProjectParameterDefinition(Parameter);
 
+    partial void OnBoolValueChanged(bool value)
+    {
+        Value = value ? "1" : "0";
+    }
+    
+    partial void OnParameterChanged(string value)
+    {
+        var definition = Document.GetProjectParameterDefinition(value);
         if (definition.GetDataType().Equals(SpecTypeId.Boolean.YesNo))
         {
-            TextBoxVisibility = Visibility.Hidden;
-            ToggleButtonVisibility = Visibility.Visible;
+            IsTextBoxVisible = false;
+            IsToggleVisible = !IsTextBoxVisible;
+            Value = IsToggleVisible ?  "1" : "0";
         }
         else
         {
-            TextBoxVisibility = Visibility.Visible;
-            ToggleButtonVisibility = Visibility.Hidden;
+            IsTextBoxVisible = true;
+            IsToggleVisible = !IsTextBoxVisible;
         }
-        OnPropertyChanged(nameof(TextBoxVisibility));
-        OnPropertyChanged(nameof(ToggleButtonVisibility));
     }
-    private bool CanExecute()
-    {
-        return true;
-    }
+
+    [RelayCommand]
     private void Execute()
     {
-        _model.Execute(Parameter, Value);
+        _model.Execute(Parameter, Value, SkipNotEmpty);
         Close();
-    }
-    
-    public event PropertyChangedEventHandler PropertyChanged;
-    private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-    private void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
-    {
-        if (!EqualityComparer<T>.Default.Equals(field, value))
-        {
-            field = value;
-            OnPropertyChanged(propertyName);
-        }
     }
 }

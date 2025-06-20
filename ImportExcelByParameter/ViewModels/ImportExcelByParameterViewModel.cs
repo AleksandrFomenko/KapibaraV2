@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+using Autodesk.Revit.UI;
 using ImportExcelByParameter.Configuration;
 using ImportExcelByParameter.Models;
 using Microsoft.Win32;
@@ -12,12 +13,12 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
 {
     private Document _doc;
     private readonly ExcelByParameterModel _model;
-    
-    internal Config Cfg { get; set; }
+
+    private Config Cfg { get; set; }
     public RelayCommand StartCommand { get; }
     public RelayCommand SelectPathCommand { get; }
     internal static Action CloseWindow { get; set; }
-    internal ImportExcelByParameterViewModel(Document doc, Config qwe)
+    public ImportExcelByParameterViewModel(Document doc, Config qwe)
     {
         var path = qwe.GetPath();
         Cfg = KapibaraCore.Configuration.Configuration.LoadConfig<Config>(path);
@@ -49,7 +50,7 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
             }
             catch (Exception)
             {
-                Sheets = new List<string>();
+                Sheets = [];
             }
         }
         
@@ -147,7 +148,7 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
         } 
     }
 
-    private int _rowNumber = 1;
+    private int _rowNumber;
     public int RowNumber
     {
         get => Cfg.Number;
@@ -171,18 +172,16 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
     }
     private void SelectPath()
     {
-        OpenFileDialog openFileDialog = new OpenFileDialog
+        var openFileDialog = new OpenFileDialog
         {
             Filter = "Excel files (*.xls;*.xlsx)|*.xls;*.xlsx|All files (*.*)|*.*"
         };
-        if (openFileDialog.ShowDialog() == true)
-        {
-            Cfg.PathStr = openFileDialog.FileName;
-            Cfg.SaveConfig();
-            LoadSheets(Cfg.PathStr);
-            OnPropertyChanged(nameof(PathExcel));
-            StartCommand.RaiseCanExecuteChanged();
-        }
+        if (openFileDialog.ShowDialog() != true) return;
+        Cfg.PathStr = openFileDialog.FileName;
+        Cfg.SaveConfig();
+        LoadSheets(Cfg.PathStr);
+        OnPropertyChanged(nameof(PathExcel));
+        StartCommand.RaiseCanExecuteChanged();
     }
 
     private void Execute()

@@ -47,9 +47,9 @@ public class StartupCommand: ExternalCommand
         var view1 = serviceProvider.GetRequiredService<MainFamilies>(); 
         var view2 = serviceProvider.GetRequiredService<SubFamilies>(); 
         
-        tws.SetTheme(ApplicationTheme.Light,view);
-        tws.SetTheme(ApplicationTheme.Light,view1);
-        tws.SetTheme(ApplicationTheme.Light,view2);
+        tws.SetConfigTheme(view);
+        tws.SetConfigTheme(view1);
+        tws.SetConfigTheme(view2);
         view.ShowDialog();
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace ClashDetective.ViewModels;
+﻿namespace ClashHub.ViewModels;
 
 public class ClashResultItem
 {

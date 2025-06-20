@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Xml.Serialization;
 
-namespace ClashDetective.Models.Parsers.Xml;
+namespace ClashHub.Models.Parsers.Xml;
 
 public class XmlFileParser<T> : IFileParser<T>
 {
