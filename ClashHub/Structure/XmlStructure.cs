@@ -69,51 +69,49 @@ public class ClashResults : ObservableObject
     public List<ClashResult> Results { get; set; }
 }
 
-public partial class ClashResult : ObservableObject
-    {
-        [XmlAttribute("name")]
-        public string Name { get; set; }
+public class ClashResult : ObservableObject 
+{
+    [XmlAttribute("name")]
+    public string Name { get; set; }
 
-        [XmlAttribute("guid")]
-        public string Guid { get; set; }
+    [XmlAttribute("guid")]
+    public string Guid { get; set; }
 
-        [XmlAttribute("href")]
-        public string Href { get; set; }
+    [XmlAttribute("href")]
+    public string Href { get; set; }
 
-        [XmlAttribute("status")]
-        public string Status { get; set; }
+    [XmlAttribute("status")]
+    public string Status { get; set; }
 
-        [XmlAttribute("distance")]
-        public double Distance { get; set; }
+    [XmlAttribute("distance")]
+    public double Distance { get; set; }
 
-        [XmlElement("description")]
-        public string Description { get; set; }
+    [XmlElement("description")]
+    public string Description { get; set; }
 
-        [XmlElement("resultstatus")]
-        public string ResultStatus { get; set; }
+    [XmlElement("resultstatus")]
+    public string ResultStatus { get; set; }
+    
+    [XmlElement("clashpoint")]
+    public ClashPoint ClashPoint { get; set; }
 
-        [XmlElement("clashpoint")]
-        public ClashPoint ClashPoint { get; set; }
+    [XmlElement("gridlocation")]
+    public string GridLocation { get; set; }
 
-        [XmlElement("gridlocation")]
-        public string GridLocation { get; set; }
+    [XmlElement("createddate")]
+    public CreatedDate CreatedDate { get; set; }
 
-        [XmlElement("createddate")]
-        public CreatedDate CreatedDate { get; set; }
-
-        [XmlElement("clashobjects")]
-        public ClashObjects ClashObjects { get; set; }
-
-        public string[] StatusTest => Enum.GetNames(typeof(StatusEnum));
+    [XmlElement("clashobjects")]
+    public ClashObjects ClashObjects { get; set; }
         
-        [XmlIgnore]
-        public DateTime Created => new DateTime(
-            CreatedDate.Date.Year,
-            CreatedDate.Date.Month,
-            CreatedDate.Date.Day,
-            CreatedDate.Date.Hour,
-            CreatedDate.Date.Minute,
-            CreatedDate.Date.Second);
+    [XmlIgnore]
+    public DateTime Created => new DateTime(
+        CreatedDate.Date.Year,
+        CreatedDate.Date.Month,
+        CreatedDate.Date.Day,
+        CreatedDate.Date.Hour,
+        CreatedDate.Date.Minute,
+        CreatedDate.Date.Second);
     }
 
     public class ClashPoint
@@ -195,13 +193,5 @@ public partial class ClashResult : ObservableObject
 
         [XmlElement("value")]
         public string Value { get; set; }
-    }
-
-    public enum StatusEnum
-    {
-        New,
-        Active,
-        Reviewed,
-        Approved,
-        Resolved
+        
     }

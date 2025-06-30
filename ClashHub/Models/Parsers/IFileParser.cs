@@ -1,6 +1,9 @@
-﻿namespace ClashHub.Models.Parsers;
+﻿using ClashHub.Domain.Entities;
+
+namespace ClashHub.Models.Parsers;
 
 public interface IFileParser<out T>
 {
-    T Parse(string filePath);
+    IEnumerable<ClashTest> Parse(string filePath);
+    string FormatName { get; }
 }

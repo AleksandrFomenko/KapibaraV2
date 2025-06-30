@@ -32,7 +32,7 @@
             <ComboBox
                 ItemsSource="{Binding Formats}"
                 SelectedItem="{Binding SelectedFormat}"
-                DisplayMemberPath="Name"/>
+                DisplayMemberPath="FormatName"/>
             <Separator Width="20" Visibility="Hidden"/>
             <ui:Button
                 Appearance="Primary" 
@@ -53,14 +53,14 @@
                      CanUserAddRows="False"
                      CanUserDeleteRows="False" >
             <ui:DataGrid.Columns>
-                <DataGridTextColumn Header="Name"  Binding="{Binding Name}" />
-                <DataGridTextColumn Header="Total"      Binding="{Binding Summary.Total}" />
-                <DataGridTextColumn Header="New"      Binding="{Binding Summary.New}" />
-                <DataGridTextColumn Header="Active"     Binding="{Binding Summary.Active}" />
-                <DataGridTextColumn Header="Reviewed"     Binding="{Binding Summary.Reviewed}" />
-                <DataGridTextColumn Header="Approved"     Binding="{Binding Summary.Approved}" />
-                <DataGridTextColumn Header="Resolved"     Binding="{Binding Summary.Resolved}" />
-                <DataGridTextColumn Header="Test Type"  Binding="{Binding Summary.TestType}" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Total" Binding="{Binding Summary.Total}" />
+                <DataGridTextColumn Header="New" Binding="{Binding Summary.New}" />
+                <DataGridTextColumn Header="Active" Binding="{Binding Summary.Active}" />
+                <DataGridTextColumn Header="Reviewed" Binding="{Binding Summary.Reviewed}" />
+                <DataGridTextColumn Header="Approved" Binding="{Binding Summary.Approved}" />
+                <DataGridTextColumn Header="Resolved" Binding="{Binding Summary.Resolved}" />
+                <DataGridTextColumn Header="Test Type" Binding="{Binding Summary.TestType}" />
             </ui:DataGrid.Columns>
         </ui:DataGrid>
         <Grid Grid.Row="3">
@@ -85,7 +85,9 @@
                             <DataTemplate>
                                 <ComboBox
                                     Margin="5"
-                                    ItemsSource="{Binding StatusTest}" 
+                                    ItemsSource="{Binding StatusList}" 
+                                    SelectedItem="{Binding StatusFromList,
+                                    Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                     DisplayMemberPath="."/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
