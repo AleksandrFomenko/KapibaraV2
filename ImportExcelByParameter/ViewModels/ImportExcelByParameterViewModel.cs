@@ -18,9 +18,9 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
     public RelayCommand StartCommand { get; }
     public RelayCommand SelectPathCommand { get; }
     internal static Action CloseWindow { get; set; }
-    public ImportExcelByParameterViewModel(Document doc, Config qwe)
+    public ImportExcelByParameterViewModel(Document doc, Config config)
     {
-        var path = qwe.GetPath();
+        var path = config.GetPath();
         Cfg = KapibaraCore.Configuration.Configuration.LoadConfig<Config>(path);
         
         _doc = doc;
@@ -62,7 +62,7 @@ public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
             }
             catch (Exception)
             {
-                Parameters = new List<string>();
+                Parameters = [];
             }
         }
     }

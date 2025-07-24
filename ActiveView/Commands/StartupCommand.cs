@@ -3,7 +3,6 @@ using Autodesk.Revit.Attributes;
 using Nice3point.Revit.Toolkit.External;
 using ActiveView.ViewModels;
 using ActiveView.Views;
-using ActiveView.Views.Converters;
 using KapibaraUI.Services.Appearance;
 using Microsoft.Extensions.DependencyInjection;
 

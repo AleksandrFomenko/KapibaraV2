@@ -1,7 +1,6 @@
 ﻿using Autodesk.Revit.Attributes;
 using Nice3point.Revit.Toolkit.External;
-using EngineeringSystems.ViewModels;
-using EngineeringSystems.Views;
+
 
 namespace EngineeringSystems.Commands;
 
@@ -14,9 +13,6 @@ public class StartupCommand : ExternalCommand
 {
     public override void Execute()
     {
-        var doc = Context.ActiveDocument;
-        var viewModel = new EngineeringSystemsViewModel(doc);
-        var view = new EngineeringSystemsView(viewModel);
-        view.ShowDialog();
+        Host.Start();
     }
 }

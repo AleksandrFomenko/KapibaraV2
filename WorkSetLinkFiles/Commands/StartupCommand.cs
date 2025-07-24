@@ -14,9 +14,6 @@ public class StartupCommand : ExternalCommand
 {
     public override void Execute()
     {
-        Document doc = Context.ActiveDocument;
-        var viewModel = new WorkSetLinkFilesViewModel(doc);
-        var view = new WorkSetLinkFilesView(viewModel);
-        view.ShowDialog();
+        Host.Start();
     }
 }

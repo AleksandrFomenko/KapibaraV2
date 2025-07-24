@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using EngineeringSystems.Configuration;
 using EngineeringSystems.Model;
 using KapibaraCore.Parameters;
 using RelayCommand = KapibaraCore.RelayCommand.RelayCommand;
@@ -10,8 +12,9 @@ namespace EngineeringSystems.ViewModels;
 
 public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
 {
-    private readonly Document _doc;
-    private Data _data;
+    private IData _data;
+    private IEngineeringSystemsModel _model;
+    private Config Cfg { get; set; }
     private GridLength _firstColumnWidth;
     private GridLength _secondColumnWidth;
     private double _windowWidth;
@@ -22,6 +25,8 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
     private string _userParameter;
     private List<Options> _options;
     private Options _option;
+    private List<FilterOption> _filterOptions;
+    private FilterOption _filterOption;
     private List<EngineeringSystem> _engineeringSystems;
     private EngineeringSystem _engineeringSystem;
     private string _filterByName = string.Empty;
@@ -29,10 +34,8 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
     private bool _сreateView;
     private bool _toggleButtonEnabled;
     internal static Action Close;
-    
-    
-    
-    public RelayCommand StartCommand { get; }
+    public RelayCommand StartCommand { get; set; }
+
     public GridLength FirstColumnWidth
     {
         get => _firstColumnWidth;
@@ -71,9 +74,11 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
 
     public string UserParameter
     {
-        get => _userParameter;
+        get => Cfg.UserParameter;
         set
         {
+            Cfg.UserParameter = value;
+            Cfg.SaveConfig();
             SetField(ref _userParameter, value);
             StartCommand.RaiseCanExecuteChanged();
         }
@@ -89,6 +94,21 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
         set
         {
             SetField(ref _option, value);
+            CheckOptions();
+        }
+    }
+    
+    public List<FilterOption> FilterOptions
+    {
+        get => _filterOptions;
+        private set => SetField(ref _filterOptions, value);
+    }
+    public FilterOption FilterOption
+    {
+        get => _filterOption;
+        set
+        {
+            SetField(ref _filterOption, value);
             CheckOptions();
         }
     }
@@ -137,9 +157,19 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
         get => _toggleButtonEnabled;
         set => SetField(ref _toggleButtonEnabled, value);
     }
-    internal EngineeringSystemsViewModel(Document doc)
+    public EngineeringSystemsViewModel(IData data, IEngineeringSystemsModel model, Config config)
     {
-        _doc = doc;
+        var path = config.GetPath();
+        Cfg = KapibaraCore.Configuration.Configuration.LoadConfig<Config>(path);
+        _data = data;
+        _model = model;
+        StartWindow();
+        
+       
+    }
+
+    private void StartWindow()
+    {
         StartCommand = new RelayCommand(
             execute: _ => Execute(),
             canExecute: _ => CanExecute()
@@ -147,30 +177,38 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
         
         FirstColumnWidth = new GridLength(1, GridUnitType.Star);
         SecondColumnWidth = new GridLength(0, GridUnitType.Pixel);
-
-        SystemParameters = new List<SystemParameters>()
-        {
-            new SystemParameters("Имя системы"),
-            new SystemParameters("Сокращение системы")
-        };
-        SystemParameter = SystemParameters[0];
-        UserParameters = _doc.GetProjectParameters(SpecTypeId.String.Text).ToList();
-        Options = new List<Options>()
-        {
-            new Options("Записать в элементы на активном виде", 400, 500,
-                new GridLength(1, GridUnitType.Star), 
-                new GridLength(0, GridUnitType.Pixel), 
-                true
-                ),
-            new Options("Выбрать систему", 1000,600,
+        
+        Options = [
+            new Options("Выбрать систему", 1100, 750,
                 new GridLength(0.5, GridUnitType.Star),
                 new GridLength(1, GridUnitType.Star),
-                false)
-        };
-        Option = Options[0];
+                false),
+            
+            new Options("Записать в элементы на активном виде", 500, 750,
+                new GridLength(1, GridUnitType.Star),
+                new GridLength(0, GridUnitType.Pixel),
+                true
+            )
+        ];
+        Option = Options.FirstOrDefault();
 
-        _data = new Data(_doc);
+        FilterOptions =
+        [
+            new FilterOption("Не содержит", "CreateNotContainsRule"),
+            new FilterOption("Не равно", "CreateNotEqualsRule"),
+            new FilterOption("Не начинается с", "CreateNotBeginsWithRule")
+
+        ];
+        FilterOption = FilterOptions.FirstOrDefault();
         ReloadEngineeringSystems();
+        
+        SystemParameters =
+        [
+            new SystemParameters("Имя системы"),
+            new SystemParameters("Сокращение системы")
+        ];
+        SystemParameter = SystemParameters[0];
+        UserParameters = _model.GetUserParameters().OrderBy(s => s).ToList();
     }
     private void ReloadEngineeringSystems()
     {
@@ -206,10 +244,9 @@ public sealed class EngineeringSystemsViewModel : INotifyPropertyChanged
     }
     private void Execute()
     {
-        var model = new EngineeringSystemsModel(_doc, Option);
         var flag = SystemParameter.Name == "Имя системы";
         var systemString = GetCheckedSystemNames(flag);
-        model.Execute(systemString, UserParameter, flag, CreateView);
+        _model.Execute(systemString, UserParameter, flag, CreateView, _option, _filterOption);
         Close();
     }
     public event PropertyChangedEventHandler PropertyChanged;

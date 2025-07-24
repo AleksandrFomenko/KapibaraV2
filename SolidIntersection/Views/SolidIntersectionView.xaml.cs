@@ -1,23 +1,19 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using KapibaraUI.Services.Appearance;
 using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 using SolidIntersection.ViewModels;
 
 namespace SolidIntersection.Views;
 
-public sealed partial class SolidIntersectionView: Window
+public sealed partial class SolidIntersectionView
 {
-    public SolidIntersectionView(SolidIntersectionViewModel viewModel)
+    public SolidIntersectionView(SolidIntersectionViewModel viewModel, IThemeWatcherService themeWatcherService)
     {
         SolidIntersectionViewModel.Close = Close;
-        InitializeMaterialDesign();
         DataContext = viewModel;
+        themeWatcherService.Watch(this);
         InitializeComponent();
-    }
-    private void InitializeMaterialDesign()
-    {
-        var card = new Card();
-        var hue = new Hue("Dummy", Colors.Black, Colors.White);
     }
 }

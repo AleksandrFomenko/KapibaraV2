@@ -2,16 +2,13 @@
 
 namespace EngineeringSystems.Model;
 
-internal class Data
+public class Data(Document doc) : IData
 {
-    private Document _doc;
+    private Document _doc = doc;
     private const string SystemNameMissing = "Отсутствует";
     private const string SystemNameCutMissing = "Отсутствует";
 
-    internal Data(Document doc)
-    {
-        _doc = doc;
-    }
+    
     private string GetCutSystemName(Element mepSystem)
     {
         var typeSystemId = mepSystem.GetTypeId();
@@ -26,7 +23,7 @@ internal class Data
         return par?.AsString() == "" ? null : par?.AsString();
     }
     
-    internal List<EngineeringSystem> GetSystems(string filter)
+    public List<EngineeringSystem> GetSystems(string filter)
     {
         var cats = new List<BuiltInCategory>
         {
@@ -51,13 +48,14 @@ internal class Data
             })
             .ToList();
         var filteredResult = result
-            .Where(s => s.NameSystem?.Contains(filter) ?? false)
+            .Where(s => s.NameSystem?.ToLower().Contains(filter.ToLower()) ?? false)
+            .OrderBy(s => s.NameSystem)
             .ToList();
 
         return filteredResult.Any() 
             ? filteredResult 
-            : new List<EngineeringSystem>
-            {
+            :
+            [
                 new EngineeringSystem
                 {
                     NameSystem = "Не найдено подходящих систем",
@@ -65,6 +63,6 @@ internal class Data
                     CutSystemName = string.Empty,
                     SystemId = 0
                 }
-            };
+            ];
     }
 }
