@@ -3,11 +3,11 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using Visibility = System.Windows.Visibility;
 
-namespace TestLib.Views.Converters;
+namespace ViewByParameter.Views.Converters;
 
-public class EnumVisibilityConverter<TEnum> : MarkupExtension, IValueConverter where TEnum : Enum
+public class EnumCollapsedVisibilityConverter<TEnum> : MarkupExtension, IValueConverter where TEnum : Enum
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not TEnum valueEnum)
         {
@@ -21,10 +21,10 @@ public class EnumVisibilityConverter<TEnum> : MarkupExtension, IValueConverter w
 
         return EqualityComparer<TEnum>.Default.Equals(valueEnum, parameterEnum)
             ? Visibility.Visible
-            : Visibility.Hidden;
+            : Visibility.Collapsed;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotSupportedException();
     }

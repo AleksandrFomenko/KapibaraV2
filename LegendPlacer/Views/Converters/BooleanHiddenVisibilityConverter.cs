@@ -3,16 +3,16 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using Visibility = System.Windows.Visibility;
 
-namespace TestLib.Views.Converters;
+namespace LegendPlacer.Views.Converters;
 
-public class BoolVisibilityConverter : MarkupExtension, IValueConverter
+public sealed class BooleanHiddenVisibilityConverter : MarkupExtension, IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return (bool)value! ? Visibility.Visible : Visibility.Hidden;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         return (Visibility)value! == Visibility.Visible;
     }

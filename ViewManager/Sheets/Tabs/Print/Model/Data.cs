@@ -113,8 +113,8 @@ public class FolderItem : INotifyPropertyChanged
         }
     }
 
-    public ObservableCollection<FolderItem> SubFolders { get; set; } = new ObservableCollection<FolderItem>();
-    public ObservableCollection<SheetItem> Sheets { get; set; } = new ObservableCollection<SheetItem>();
+    public ObservableCollection<FolderItem> SubFolders { get; set; } = [];
+    public ObservableCollection<SheetItem> Sheets { get; set; } = [];
 
     public event PropertyChangedEventHandler PropertyChanged;
 

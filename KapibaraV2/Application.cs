@@ -1,4 +1,8 @@
-﻿using System.Windows.Media;
+﻿using System.Reflection;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Autodesk.Revit.UI;
+using Autodesk.Windows;
 using KapibaraUI.Services.Appearance;
 using Nice3point.Revit.Toolkit.External;
 using KapibaraV2.Commands.BIM;
@@ -84,6 +88,17 @@ namespace KapibaraV2
                 .SetImage("/KapibaraV2;component/Resources/Icons/LevelByFloor.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/LevelByFloor.png");
             
+            var stackPanel1 = panelGeneral.AddStackPanel();
+            stackPanel1.AddPushButton<ViewByParameter.Commands.StartupCommand>("Filter view")
+                .SetImage("/KapibaraV2;component/Resources/Icons/ViewByParameter.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ViewByParameter.png");
+            stackPanel1.AddPushButton<LegendPlacer.Commands.StartupCommand>("Legend placer")
+                .SetImage("/KapibaraV2;component/Resources/Icons/LedendPlacer.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/LedendPlacer.png");
+            UpdateRibbonButton<ViewByParameter.Commands.StartupCommand>("Kapibara", "Общие");
+            UpdateRibbonButton<LegendPlacer.Commands.StartupCommand>("Kapibara", "Общие");
+            
+            
             var stackPanel = panelGeneral.AddStackPanel();
             stackPanel.AddPushButton<SortingCategories.Commands.StartupCommand>("Sorting")
                 .SetImage("/KapibaraV2;component/Resources/Icons/Sort.png");
@@ -116,6 +131,45 @@ namespace KapibaraV2
         {
             ThemeWatcherService.Initialize();
             ThemeWatcherService.ApplyTheme(ApplicationTheme.Light);
+        }
+
+        private PushButtonData CreatePushButtonData<TCommand>(string buttonText) where TCommand : IExternalCommand, new()
+        {
+            var command = typeof(TCommand);
+            return new PushButtonData(command.FullName, buttonText, Assembly.GetAssembly(command)!.Location, command.FullName);
+        }
+        
+        private static void UpdateRibbonButton(string tabId, string panelName, string commandId)
+        {
+            foreach (RibbonTab tab in Autodesk.Windows.ComponentManager.Ribbon.Tabs)
+            {
+                if (tab.KeyTip != null)
+                    continue;
+
+                if (tab.Id == tabId)
+                {
+                    foreach (var panel in tab.Panels)
+                    {
+                        if (panel.Source.Name == panelName)
+                        {
+                            foreach (object item in panel.Source.ItemsView)
+                            {
+                                if (item is Autodesk.Windows.RibbonButton ribbonButton &&
+                                    ribbonButton.Id == $"CustomCtrl_%CustomCtrl_%{tabId}%{panelName}%{commandId}")
+                                {
+                                    ribbonButton.Size = RibbonItemSize.Large;
+                                   
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        private static void UpdateRibbonButton<TCommand>(string tabId, string panelName) where TCommand : IExternalCommand
+        {
+            UpdateRibbonButton(tabId, panelName, typeof(TCommand).FullName);
         }
     }
 }
