@@ -31,6 +31,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\LegendPlacer\LegendPlacer.csproj" />
+      <ProjectReference Include="..\ViewByParameter\ViewByParameter.csproj" />
     </ItemGroup>
 
 </Project>

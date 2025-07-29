@@ -1,5 +1,6 @@
-﻿using System.Windows;
-using LegendPlacer.Commands;
+﻿using HostViewByParameter = ViewByParameter.Commands.Host;
+using HostLegendPlacer = LegendPlacer.Commands.Host;
+
 
 namespace TestUI;
 
@@ -10,6 +11,7 @@ public partial class MainWindow
 {
     public MainWindow()
     {
-        Host.StartTestUi();
+        //HostLegendPlacer.StartTestUi();
+        HostViewByParameter.StartTestUi();
     }
 }

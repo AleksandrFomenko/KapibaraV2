@@ -13,7 +13,6 @@ public class StartupCommand : ExternalCommand
 {
     public override void Execute()
     {
-        var view = Host.GetService<ViewByParameterView>();
-        view.ShowDialog();
+        Host.Start();
     }
 }
