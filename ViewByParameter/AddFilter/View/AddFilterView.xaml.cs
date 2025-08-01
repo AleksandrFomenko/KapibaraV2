@@ -11,6 +11,7 @@ public partial class AddFilterView
     {
         ViewModel = viewModel;
         DataContext = viewModel;
+        ViewModel.CloseWindow += Close;
         themeWatcherService.Watch(this);
         InitializeComponent();
     }

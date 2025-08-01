@@ -22,7 +22,7 @@ public static class Host
         {
             services.AddSingleton(doc);
         }
-        services.AddSingleton<Action>(AddFilter.Host.Host.Start);
+        services.AddSingleton<Func<AddFilterView?>>(_ => AddFilter.Host.Host.Start);
         services.AddSingleton<IViewByParameterModel,ViewByParameterModel>();
         services.AddSingleton<ViewByParameterViewModel>();
         services.AddSingleton<ViewByParameterView>();

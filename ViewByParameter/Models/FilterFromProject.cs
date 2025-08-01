@@ -1,16 +1,28 @@
 ﻿namespace ViewByParameter.Models;
 
-public partial class FilterFromProject(string name) : ObservableObject
+public sealed partial class FilterFromProject(string name) : ObservableObject
 {
-    public event Action<bool>? SetAllChecked; 
+    public event Action<bool>? SetAllChecked;
+    public event Action? CheckButton;
     
-    [ObservableProperty] public bool _isChecked;
+    [ObservableProperty] private bool _isChecked;
     public string Name {get; set; } = name;
     public bool IsEnabled {get; set; } = true;
     public bool IsVisible {get; set; } = true;
 
-    public virtual void OnSetAllChecked(bool obj)
+
+    partial void OnIsCheckedChanged(bool value)
+    {
+        OnCheckButton();
+    }
+
+    public void OnSetAllChecked(bool obj)
     {
         SetAllChecked?.Invoke(obj);
+    }
+
+    private void OnCheckButton()
+    {
+        CheckButton?.Invoke();
     }
 }

@@ -9,7 +9,7 @@ namespace ViewByParameter.AddFilter.Host;
 
 public static class Host
 {
-    public static void Start()
+    public static AddFilterView? Start()
     {
         var services = new ServiceCollection();
         
@@ -20,7 +20,7 @@ public static class Host
         }
         
         services.AddSingleton<IAddFilterModel, AddFilterModel>();
-        services.AddSingleton<AddFilterModel>();
+        services.AddSingleton<AddFilterViewModel>();
         services.AddSingleton<AddFilterView>();
         services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
         
@@ -30,6 +30,7 @@ public static class Host
         var view = serviceProvider.GetService<AddFilterView>();
         tws?.SetConfigTheme(view);
         view?.ShowDialog();
+        return view;
     }
     
     public static AddFilterView? StartTestUi()

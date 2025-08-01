@@ -7,34 +7,32 @@ namespace ViewByParameter.ViewModels;
 
 public sealed partial class ViewByParameterViewModel : ObservableObject
 {
-    private readonly IViewByParameterModel _model;
     [ObservableProperty] private List<ViewOption?> _viewOptions = null!;
     [ObservableProperty] private ViewOption? _viewOption;
     [ObservableProperty] private List<FilterOption?> _filterOptions = null!;
     [ObservableProperty] private FilterOption? _filterOption;
     [ObservableProperty] private List<string?> _projectParameters = null!;
     [ObservableProperty] private string? _projectParameter;
-    [ObservableProperty] private List<FilterFromProject?> _filtersFromProject = null!;
+    [ObservableProperty] private List<FilterFromProject> _filtersFromProject = [];
+    [ObservableProperty] private FilterFromProject _filterFromProject;
     [ObservableProperty] private bool _isCheckedAll = true;
     [ObservableProperty] private bool _isCheckedAllFilters = true;
 
-    private Func<AddFilterView?> ShowAddFilterWindow;
+    private readonly Func<AddFilterView?> _showAddFilterWindow;
 
     [ObservableProperty] private List<ElementsByParameter>  _elementsByParameters = null!;
     
     
     public ViewByParameterViewModel(IViewByParameterModel model, Func<AddFilterView?> showAddFilterWindow)
     {
-        _model = model;
-        ShowAddFilterWindow = showAddFilterWindow;
-        ViewOptions = _model.GetViewOption();
+        _showAddFilterWindow = showAddFilterWindow;
+        ViewOptions = model.GetViewOption();
         ViewOption = ViewOptions.FirstOrDefault();
-        FilterOptions = _model.GetFilterOption();
+        FilterOptions = model.GetFilterOption();
         FilterOption = FilterOptions.FirstOrDefault();
-        ProjectParameters = _model.GetProjectParameters();
+        ProjectParameters = model.GetProjectParameters();
         ProjectParameter = ProjectParameters.FirstOrDefault();
-        ElementsByParameters = _model.GetElementsByParameter();
-        //FiltersFromProject = _model.GetFiltersFromProject();
+        ElementsByParameters = model.GetElementsByParameter();
         
         SubscribeToElementsByParameterChanges();
     }
@@ -61,14 +59,24 @@ public sealed partial class ViewByParameterViewModel : ObservableObject
     
     private void OnFiltersChanged(object sender, FilterChangedEventArgs e)
     {
-        FiltersFromProject = e.SelectedFilters;
-    }
-    
+        var newFilters = e.SelectedFilters
+            .Where(f => !FiltersFromProject.Any(x => x.Name == f.Name))
+            .Select(f =>
+            {
+                f.IsVisible = false;
+                return f;
+            });
 
+        FiltersFromProject = FiltersFromProject
+            .Concat(newFilters)
+            .ToList();
+    }
+
+    
     [RelayCommand]
     private void AddFilter()
     {
-        var view = ShowAddFilterWindow.Invoke();
+        var view = _showAddFilterWindow.Invoke();
         
         var viewModel = view?.ViewModel;
 
@@ -77,6 +85,15 @@ public sealed partial class ViewByParameterViewModel : ObservableObject
         view?.ShowDialog(); 
             
         viewModel.FiltersChanged -= OnFiltersChanged;
+    }
+    
+    [RelayCommand]
+    private void DeleteFilter()
+    {
+        if (FilterFromProject == null) return;
+        FiltersFromProject = FiltersFromProject
+            .Where(f => f.Name != FilterFromProject.Name)
+            .ToList();
     }
 
     [RelayCommand(CanExecute = nameof(CanExecute))]

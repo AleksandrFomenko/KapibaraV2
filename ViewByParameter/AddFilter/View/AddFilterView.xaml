@@ -7,14 +7,15 @@
     xmlns:ui="http://Kapibara/xaml"
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen"
-    Height="500"
+    Height="650"
     Width="300">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="100" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         
         <ui:TitleBar
@@ -56,7 +57,30 @@
                 </ListBox.ItemTemplate>
             </ListBox>
         </ui:Card>
-        <ui:Button Grid.Row="3"
+        <StackPanel 
+            Grid.Row="3"
+            Orientation="Horizontal"
+            FlowDirection="RightToLeft">
+            <Separator Width="20" Visibility="Hidden"/>
+            <ui:Button
+                       Appearance="Primary"
+                       FontSize="10"
+                       Content="Отменить выбор"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Command="{Binding CancelSelectionCommand}" />
+            
+            <ui:Button 
+                Appearance="Primary"
+                FontSize="10"
+                Content="Выбрать все"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Command="{Binding SelectAllCommand}" />
+            
+        </StackPanel>
+        
+        <ui:Button Grid.Row="4"
                    Appearance="Primary"
                    Content="Добавить"
                    HorizontalAlignment="Center"
