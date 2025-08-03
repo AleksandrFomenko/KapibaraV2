@@ -26,10 +26,9 @@ public static class Host
         
         var serviceProvider = services.BuildServiceProvider();
         
-        var tws = serviceProvider.GetService<ThemeWatcherService>();
+        var tws = serviceProvider.GetService<IThemeWatcherService>();
         var view = serviceProvider.GetService<AddFilterView>();
         tws?.SetConfigTheme(view);
-        view?.ShowDialog();
         return view;
     }
     

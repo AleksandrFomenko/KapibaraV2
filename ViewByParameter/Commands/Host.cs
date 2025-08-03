@@ -7,9 +7,6 @@ using ViewByParameter.Views;
 
 namespace ViewByParameter.Commands;
 
-/// <summary>
-///     Provides a host for the application's services and manages their lifetimes
-/// </summary>
 public static class Host
 {
 
@@ -30,7 +27,7 @@ public static class Host
         
         var serviceProvider = services.BuildServiceProvider();
         
-        var tws = serviceProvider.GetService<ThemeWatcherService>();
+        var tws = serviceProvider.GetService<IThemeWatcherService>();
         var view = serviceProvider.GetService<ViewByParameterView>();
         tws?.SetConfigTheme(view);
         view?.ShowDialog();
@@ -47,7 +44,7 @@ public static class Host
         
         var serviceProvider = services.BuildServiceProvider();
         
-        var tws = serviceProvider.GetService<ThemeWatcherService>();
+        var tws = serviceProvider.GetService<IThemeWatcherService>();
         var view = serviceProvider.GetService<ViewByParameterView>();
         tws?.SetConfigTheme(view);
         view?.ShowDialog();

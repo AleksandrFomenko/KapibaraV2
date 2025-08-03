@@ -3,7 +3,7 @@ using ViewByParameter.Models;
 
 namespace ViewByParameter.AddFilter.ViewModels;
 
-public partial class AddFilterViewModel : ObservableObject
+public sealed partial class AddFilterViewModel : ObservableObject
 {
     private readonly IAddFilterModel _model;
 
@@ -39,8 +39,8 @@ public partial class AddFilterViewModel : ObservableObject
     {
         return FiltersFromProject!.Any(f => f.IsChecked);
     }
-    
-    protected virtual void OnCloseWindow()
+
+    private void OnCloseWindow()
     {
         CloseWindow?.Invoke();
     }

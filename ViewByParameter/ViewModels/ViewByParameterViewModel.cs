@@ -14,7 +14,7 @@ public sealed partial class ViewByParameterViewModel : ObservableObject
     [ObservableProperty] private List<string?> _projectParameters = null!;
     [ObservableProperty] private string? _projectParameter;
     [ObservableProperty] private List<FilterFromProject> _filtersFromProject = [];
-    [ObservableProperty] private FilterFromProject _filterFromProject;
+    [ObservableProperty] private FilterFromProject _filterFromProject = null!;
     [ObservableProperty] private bool _isCheckedAll = true;
     [ObservableProperty] private bool _isCheckedAllFilters = true;
 

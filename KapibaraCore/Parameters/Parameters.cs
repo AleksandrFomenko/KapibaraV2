@@ -178,11 +178,11 @@ public static class Parameters
     /// <returns>Параметры категории</returns>
     public static List<string> GetProjectParameters(this Document doc)
     {
-        if (doc == null) return new List<string>();
+        if (doc == null) return [];
         
         var bindingMap = doc.ParameterBindings;
         if (bindingMap == null)
-            return new List<string>();
+            return [];
 
         var parameterNames = new List<string>();
         var iterator = bindingMap.ForwardIterator();
