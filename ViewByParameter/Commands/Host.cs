@@ -2,6 +2,7 @@ using KapibaraUI.Services.Appearance;
 using Microsoft.Extensions.DependencyInjection;
 using ViewByParameter.AddFilter.View;
 using ViewByParameter.Models;
+using ViewByParameter.services;
 using ViewByParameter.ViewModels;
 using ViewByParameter.Views;
 
@@ -23,6 +24,8 @@ public static class Host
         services.AddSingleton<IViewByParameterModel,ViewByParameterModel>();
         services.AddSingleton<ViewByParameterViewModel>();
         services.AddSingleton<ViewByParameterView>();
+        services.AddSingleton<FilterCreationService>();
+        services.AddSingleton<ViewCreationService>();
         services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
         
         var serviceProvider = services.BuildServiceProvider();

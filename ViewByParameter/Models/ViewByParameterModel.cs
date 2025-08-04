@@ -1,15 +1,19 @@
 ﻿using KapibaraCore.Parameters;
+using ViewByParameter.services;
 
 namespace ViewByParameter.Models;
 
-public class ViewByParameterModel(Document document) : IViewByParameterModel
+public class ViewByParameterModel(
+    Document document, 
+    FilterCreationService filterCreationService, 
+    ViewCreationService viewCreationService) : IViewByParameterModel
 {
     public List<ViewOption?> GetViewOption()
     {
         return
         [
             GetViewOption("3D вид", ViewFamily.ThreeDimensional),
-            GetViewOption("План", ViewFamily.FloorPlan),
+            //GetViewOption("План", ViewFamily.FloorPlan),
         ];
     }
 
@@ -25,7 +29,6 @@ public class ViewByParameterModel(Document document) : IViewByParameterModel
         return new ViewOption(name, types);
     }
     
-
     public List<FilterOption?> GetFilterOption()
     {
         return
@@ -40,29 +43,99 @@ public class ViewByParameterModel(Document document) : IViewByParameterModel
             new FilterOption("Не заканчивается на", "CreateNotEndsWithRule")
         ];
     }
-
     public List<FilterFromProject?> GetFiltersFromProject()
     {
         return [..new List<FilterFromProject?>(new List<FilterFromProject?>())];
     }
-
     public List<string?> GetProjectParameters()
     {
         return document.GetProjectParameters();
     }
-
-    public List<ElementsByParameter> GetElementsByParameter()
+    public List<ElementsByParameter> GetElementsByParameter(string? parameterName)
     {
-        return
-        [
-            new ElementsByParameter("а", 1)
-        ];
+        List<ElementsByParameter> result = [];
+        var dict = GetParameterValueStatistics(parameterName);
+
+        result.AddRange(dict.Select(person => new ElementsByParameter(person.Key, person.Value)));
+        return result;
     }
     
-    
-
-    public void Execute()
+    private Dictionary<string, int> GetParameterValueStatistics(string? parameterName)
     {
-       
+        var parameterValueCounts = new Dictionary<string, int>();
+
+        var projectElements = new FilteredElementCollector(document)
+            .WhereElementIsNotElementType()
+            .ToList();
+
+        foreach (var projectElement in projectElements)
+        {
+            var parameter = projectElement.GetParameterByName(parameterName);
+
+            if (parameter == null)
+            {
+                continue;
+            }
+
+            var parameterResult = parameter.AsValueString();
+
+            if (string.IsNullOrEmpty(parameterResult))
+            {
+                continue;
+            }
+
+            IncrementCount(parameterValueCounts, parameterResult);
+        }
+
+        return parameterValueCounts;
+    }
+
+    private void IncrementCount(Dictionary<string, int> dict, string key)
+    {
+        if (dict.TryGetValue(key, out int count))
+            dict[key] = count + 1;
+        else
+            dict[key] = 1;
+    }
+
+    private ParameterFilterElement? GetFilterProject(string name)
+    {
+        return new FilteredElementCollector(document)
+            .OfClass(typeof(ParameterFilterElement))
+            .Cast<ParameterFilterElement>()
+            .FirstOrDefault(f => f.Name == name);
+    }
+    
+    public void Execute(
+        List<ElementsByParameter> elementsByParameters,
+        List<FilterFromProject> filtersFromProject,
+        ViewOption viewOption, 
+        string parameterName,
+        FilterOption filterOption)
+    {
+
+        using (var t = new Transaction(document, "View by filters"))
+        {
+            t.Start();
+            
+            foreach (var elementsByParameter in elementsByParameters)
+            {
+                var view = viewCreationService.CreateView3D(parameterName,elementsByParameter.Value, viewOption);
+                var filter = filterCreationService.CreateFilter(parameterName, elementsByParameter.Value, filterOption);
+                view.AddFilter(filter.Id);
+                view.SetFilterVisibility(filter.Id, elementsByParameter.FilterVisible);
+
+                foreach (var filterFromProject in filtersFromProject)
+                {
+                    var filterProject = GetFilterProject(filterFromProject.Name);
+                    view.AddFilter(filterProject?.Id);
+                    view.SetFilterVisibility(filterProject?.Id, filterFromProject.IsVisible);
+                    view.SetIsFilterEnabled(filterProject?.Id, filterFromProject.IsEnabled);
+                    
+                }
+            }
+            t.Commit();
+        }
+        
     }
 }

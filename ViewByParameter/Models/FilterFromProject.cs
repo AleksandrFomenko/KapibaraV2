@@ -21,7 +21,7 @@ public sealed partial class FilterFromProject(string name) : ObservableObject
         SetAllChecked?.Invoke(obj);
     }
 
-    private void OnCheckButton()
+    public void OnCheckButton()
     {
         CheckButton?.Invoke();
     }

@@ -5,7 +5,8 @@ public partial class ElementsByParameter(string value, int count) : ObservableOb
     public event Action<bool>? SetCheck;
     public event Action? CheckButton; 
 
-    [ObservableProperty] public bool _isChecked = true;
+    [ObservableProperty] private bool _isChecked = true;
+    [ObservableProperty] private bool _filterVisible ;
     public string Value { get; set; } = value;
     public int Count { get; set; } = count;
 

@@ -9,6 +9,7 @@ public sealed partial class ViewByParameterView
     {
         DataContext = viewModel;
         themeWatcherService.Watch(this);
+        viewModel.Close = Close;
         InitializeComponent();
     }
 }

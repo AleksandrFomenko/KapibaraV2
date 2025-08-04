@@ -25,7 +25,7 @@ public class ViewByParameterModelTestUi : IViewByParameterModel
             new FilterOption("Не равно", "NotEquals")
         ];
     }
-
+    
     public List<FilterFromProject?> GetFiltersFromProject()
     {
         return
@@ -45,7 +45,7 @@ public class ViewByParameterModelTestUi : IViewByParameterModel
         ];
     }
 
-    public List<ElementsByParameter> GetElementsByParameter()
+    public List<ElementsByParameter> GetElementsByParameter(string? parameterName)
     {
         List<ElementsByParameter> result = [];
         for (var i = 0; i < 20; i++)
@@ -56,8 +56,14 @@ public class ViewByParameterModelTestUi : IViewByParameterModel
         return result;
     }
 
-    public void Execute()
+    public void Execute(
+        List<ElementsByParameter> elementsByParameters, 
+        List<FilterFromProject> filtersFromProject, 
+        ViewOption viewOption, 
+        string parameterName,
+        FilterOption filterOption)
     {
         
     }
+    
 }

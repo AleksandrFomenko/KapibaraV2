@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen"
     Height="800"
-    Width="1200">
+    Width="1300">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
@@ -19,7 +19,6 @@
         <ui:TitleBar
             Grid.Row="0"
             Title="View by parameter"/>
-        
         
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -125,12 +124,12 @@
                             <RowDefinition Height="*"/> 
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
-                            <Grid 
-                                Margin="13,0,0,0">
+                            <Grid Margin="13,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="30"/> 
                                     <ColumnDefinition Width="*"/> 
                                     <ColumnDefinition Width="150"/> 
+                                    <ColumnDefinition Width="80"/> 
                                 </Grid.ColumnDefinitions>
                                 <CheckBox Grid.Column="0"
                                           IsChecked="{Binding IsCheckedAll}" />
@@ -148,11 +147,19 @@
                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                               Text="Кол-во элементов"
                                               TextWrapping="WrapWithOverflow" />
+                                <ui:TextBlock Grid.Column="3"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Appearance="Secondary"
+                                              Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                              Text="Видимость фильтра"
+                                              TextWrapping="WrapWithOverflow" />
                         </Grid>
                     </Grid>
                     
                     <ListBox 
                         Grid.Row="1"
+                        HorizontalAlignment="Stretch"
                         ItemsSource="{Binding ElementsByParameters}"
                         SelectedItem="{Binding ElementsByParameter}">
                             <ListBox.ItemTemplate>
@@ -162,6 +169,7 @@
                                             <ColumnDefinition Width="30"/>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="150"/>
+                                            <ColumnDefinition Width="100"/>
                                         </Grid.ColumnDefinitions>
 
                                         <CheckBox
@@ -179,6 +187,11 @@
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
                                             Text="{Binding Count}"/>
+                                        
+                                        <CheckBox
+                                            Grid.Column="3"
+                                            HorizontalAlignment="Center"
+                                            IsChecked="{Binding FilterVisible}"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
