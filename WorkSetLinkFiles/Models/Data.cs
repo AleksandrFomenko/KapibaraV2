@@ -2,7 +2,7 @@
 
 internal class Data
 {
-    private Document _doc;
+    private readonly Document _doc;
 
     internal Data(Document doc)
     {
@@ -10,21 +10,22 @@ internal class Data
     }
     internal List<LinkFiles> GetTestLinks()
     {
-        return new List<LinkFiles>()
-        {
+        return
+        [
             new LinkFiles()
             {
                 IsChecked = true,
                 RevitModelName = "Somethink",
                 WorksetName = "Workset"
-            }, 
+            },
+
             new LinkFiles()
             {
                 IsChecked = false,
                 RevitModelName = "Somethink2",
                 WorksetName = "Workset2"
             }
-        };
+        ];
     }
     internal List<LinkFiles> GetLinks()
     {

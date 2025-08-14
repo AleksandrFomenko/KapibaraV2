@@ -1,4 +1,8 @@
-﻿using System.Windows.Media;
+﻿using System.Reflection;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Autodesk.Revit.UI;
+using Autodesk.Windows;
 using KapibaraUI.Services.Appearance;
 using Nice3point.Revit.Toolkit.External;
 using KapibaraV2.Commands.BIM;
@@ -21,6 +25,12 @@ namespace KapibaraV2
 
         private void CreateRibbon()
         {
+            
+            var panelSettings = Application.CreatePanel("Settings", "Kapibara");
+            var panelBackgroundSettings =
+                new SolidColorBrush(System.Windows.Media.Color.FromRgb(80, 200, 120));
+            
+            panelSettings.SetTitleBarBackground(panelBackgroundSettings);
             var panelBim = Application.CreatePanel("BIM", "Kapibara");
             var panelBackgroundBrushLightCoral =
                 new SolidColorBrush(System.Windows.Media.Color.FromRgb(240, 128, 128));
@@ -42,6 +52,12 @@ namespace KapibaraV2
             var panelInfo = Application.CreatePanel("Разное", "Kapibara");
             panelInfo.SetTitleBarBackground(panelBackgroundBrushPaleTurquoise);
             
+            //Settings
+            panelSettings.AddPushButton<Settings.Commands.StartupCommand>("Settings")
+                .SetImage("/KapibaraV2;component/Resources/Icons/Settings32.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/Settings32.png");
+            
+            
             //BIM
             panelBim.AddPushButton<ExportModels>("Export\nmodels")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ExportModels.png")
@@ -50,9 +66,9 @@ namespace KapibaraV2
             panelBim.AddPushButton<FamilyCleaner.Commands.StartupCommand>("Cleaning\nFamily")
                 .SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png");
-            panelBim.AddPushButton<ClashDetective.Commands.StartupCommand>("Clash\nNavigator")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ClashNavigator.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ClashNavigator.png");
+            panelBim.AddPushButton<ClashHub.Commands.StartupCommand>("Clash\nNavigator")
+                .SetImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png");
             
             //panelBim.AddPushButton<FsmModules.Command.StartupCommand>("Prefab")
                 //.SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
@@ -72,6 +88,17 @@ namespace KapibaraV2
                 .SetImage("/KapibaraV2;component/Resources/Icons/LevelByFloor.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/LevelByFloor.png");
             
+            var stackPanel1 = panelGeneral.AddStackPanel();
+            stackPanel1.AddPushButton<ViewByParameter.Commands.StartupCommand>("Filter view")
+                .SetImage("/KapibaraV2;component/Resources/Icons/ViewByParameter.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ViewByParameter.png");
+            stackPanel1.AddPushButton<LegendPlacer.Commands.StartupCommand>("Legend placer")
+                .SetImage("/KapibaraV2;component/Resources/Icons/LedendPlacer.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/LedendPlacer.png");
+            UpdateRibbonButton<ViewByParameter.Commands.StartupCommand>("Kapibara", "Общие");
+            UpdateRibbonButton<LegendPlacer.Commands.StartupCommand>("Kapibara", "Общие");
+            
+            
             var stackPanel = panelGeneral.AddStackPanel();
             stackPanel.AddPushButton<SortingCategories.Commands.StartupCommand>("Sorting")
                 .SetImage("/KapibaraV2;component/Resources/Icons/Sort.png");
@@ -87,10 +114,14 @@ namespace KapibaraV2
             panelMepGeneral.AddPushButton<EngineeringSystems.Commands.StartupCommand>("System\nname")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+            panelMepGeneral.AddPushButton<HeatingDevices.Commands.StartupCommand>("Space\nHeater")
+                .SetImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png");
+            /*
             panelMepGeneral.AddPushButton<Insolation.Commands.StartupCommand>("ываываыва")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
-
+*/
             // Разное
             panelInfo.AddPushButton<ChatGPT.Commands.ChatGpt>("ChatGPT")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ai.png")
@@ -99,8 +130,46 @@ namespace KapibaraV2
         private static void ApplyResources()
         {
             ThemeWatcherService.Initialize();
-            ThemeWatcherService.ApplyTheme(ApplicationTheme.Dark);
-       
+            ThemeWatcherService.ApplyTheme(ApplicationTheme.Light);
+        }
+
+        private PushButtonData CreatePushButtonData<TCommand>(string buttonText) where TCommand : IExternalCommand, new()
+        {
+            var command = typeof(TCommand);
+            return new PushButtonData(command.FullName, buttonText, Assembly.GetAssembly(command)!.Location, command.FullName);
+        }
+        
+        private static void UpdateRibbonButton(string tabId, string panelName, string commandId)
+        {
+            foreach (RibbonTab tab in Autodesk.Windows.ComponentManager.Ribbon.Tabs)
+            {
+                if (tab.KeyTip != null)
+                    continue;
+
+                if (tab.Id == tabId)
+                {
+                    foreach (var panel in tab.Panels)
+                    {
+                        if (panel.Source.Name == panelName)
+                        {
+                            foreach (object item in panel.Source.ItemsView)
+                            {
+                                if (item is Autodesk.Windows.RibbonButton ribbonButton &&
+                                    ribbonButton.Id == $"CustomCtrl_%CustomCtrl_%{tabId}%{panelName}%{commandId}")
+                                {
+                                    ribbonButton.Size = RibbonItemSize.Large;
+                                   
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        private static void UpdateRibbonButton<TCommand>(string tabId, string panelName) where TCommand : IExternalCommand
+        {
+            UpdateRibbonButton(tabId, panelName, typeof(TCommand).FullName);
         }
     }
 }

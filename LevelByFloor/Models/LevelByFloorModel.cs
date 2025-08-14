@@ -8,15 +8,9 @@ using System.Globalization;
 
 namespace LevelByFloor.Models;
 
-internal class LevelByFloorModel
+public class LevelByFloorModel(Document doc)
 {
-    private Document _doc;
     private Options _options;
-
-    internal LevelByFloorModel(Document doc)
-    {
-        _doc = doc;
-    }
 
     internal void SetOpt(Options opt)
     {
@@ -25,7 +19,7 @@ internal class LevelByFloorModel
 
     internal List<string> LoadParameters()
     {
-        return _doc.GetProjectParameters(SpecTypeId.String.Text).ToList();
+        return doc.GetProjectParameters(SpecTypeId.String.Text).ToList();
     }
     private Solid CreateSolidFromBoundingBox(BoundingBoxXYZ bb)
     {
@@ -55,13 +49,13 @@ internal class LevelByFloorModel
     }
     private DirectShape CreateDirectShape(GeometryObject solid, string categoryName)
     {
-        var categoryId = _doc.Settings.Categories
+        var categoryId = doc.Settings.Categories
             .Cast<Category>()
             .Where(c => c.Name.Equals(categoryName, StringComparison.OrdinalIgnoreCase))
             .Select(c => c.Id)
             .FirstOrDefault();
         var geometryElement = new List<GeometryObject>() { solid };
-        var shape = DirectShape.CreateElement(_doc, categoryId);
+        var shape = DirectShape.CreateElement(doc, categoryId);
         shape.SetShape(geometryElement);
         return shape;
     }
@@ -70,7 +64,7 @@ internal class LevelByFloorModel
         BoundingBoxXYZ combinedBoundingBox = new BoundingBoxXYZ();
         bool isFirstBoundingBox = true;
         
-        var elements = new FilteredElementCollector(_doc)
+        var elements = new FilteredElementCollector(doc)
             .WhereElementIsNotElementType()
             .ToElements();
 
@@ -142,13 +136,13 @@ internal class LevelByFloorModel
     private Dictionary<ElementId, int> CreateLevelSolids(BoundingBoxXYZ bb, string indent)
     {
         var dict = new Dictionary<ElementId, int>();
-        var levels = new FilteredElementCollector(_doc, _doc.ActiveView.Id)
+        var levels = new FilteredElementCollector(doc, doc.ActiveView.Id)
             .OfCategory(BuiltInCategory.OST_Levels)
             .WhereElementIsNotElementType()
             .Cast<Level>()
             .OrderBy(level => level.ProjectElevation)
             .ToList();
-        var levelsBelowZero = new FilteredElementCollector(_doc, _doc.ActiveView.Id)
+        var levelsBelowZero = new FilteredElementCollector(doc, doc.ActiveView.Id)
             .OfCategory(BuiltInCategory.OST_Levels)
             .WhereElementIsNotElementType()
             .Cast<Level>()
@@ -194,7 +188,7 @@ internal class LevelByFloorModel
     internal void Execute(string parameter, string suffix, string prefix, string indent)
     {
         var elems = _options.Fec.WhereElementIsNotElementType().ToElements();
-        if (_doc.ActiveView is not View3D)
+        if (doc.ActiveView is not View3D)
         {
             TaskDialog.Show("", "Активный вид не является 3D видом");
             LevelByFloorViewModel.Close();
@@ -202,13 +196,13 @@ internal class LevelByFloorModel
         try
         {
             Dictionary<ElementId, int> dictionary;
-            using (var t1 = new Transaction(_doc, "Create solids"))
+            using (var t1 = new Transaction(doc, "Create solids"))
             {
                 t1.Start();
                 dictionary = CreateLevelSolids(GetBoundingBoxForAllElements(), indent);
                 t1.Commit();
             }
-            using (var t2 = new Transaction(_doc, "Set level"))
+            using (var t2 = new Transaction(doc, "Set level"))
             {
                 t2.Start();
                 Element resultElem = null;
@@ -218,7 +212,7 @@ internal class LevelByFloorModel
                     double maxVolume = 0;
                     foreach (var dict in dictionary)
                     {
-                        var checkElem = _doc.GetElement(dict.Key);
+                        var checkElem = doc.GetElement(dict.Key);
                         if(checkElem == null) continue;
                         
                         var volume = CheckIntersection(elem, checkElem);
@@ -238,12 +232,12 @@ internal class LevelByFloorModel
                 }
                 t2.Commit();
             }
-            using (var t3 = new Transaction(_doc, "Delete solids"))
+            using (var t3 = new Transaction(doc, "Delete solids"))
             {
                 t3.Start();
                 foreach (var dict in dictionary)
                 {
-                    _doc.Delete(dict.Key);
+                    doc.Delete(dict.Key);
                 }
                 t3.Commit();
             }

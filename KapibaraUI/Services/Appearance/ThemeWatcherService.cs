@@ -1,18 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.IO;
+using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
+using Wpf.Ui.Markup;
 
 namespace KapibaraUI.Services.Appearance;
     public sealed class ThemeWatcherService : IThemeWatcherService
     {
-        private static readonly List<FrameworkElement> ObservedElements = new List<FrameworkElement>();
-
+        private static readonly List<FrameworkElement> ObservedElements = [];
+        private ThemesDictionary _theme = new();
+        private ControlsDictionary _controlsDictionary = new ();
+        
+        private static readonly string DllPath = Assembly.GetExecutingAssembly().Location;
+        private static readonly string DllDirectory = Path.GetDirectoryName(DllPath);
+        private const string DirectoryName = "SettingsConfig";
+        private const string ConfigName = "config.json";
+        
+        private string _configFilePath = Path.Combine(DllDirectory, DirectoryName, ConfigName);
         
         public static void Initialize()
         {
@@ -22,14 +28,12 @@ namespace KapibaraUI.Services.Appearance;
             };
             ApplicationThemeManager.Changed += OnApplicationThemeManagerChanged;
         }
-
-        
         public static void ApplyTheme(ApplicationTheme theme)
         {
             ApplicationThemeManager.Apply(theme, WindowBackdropType.Auto);
             UpdateBackground(theme);
         }
-
+        
         private static void OnApplicationThemeManagerChanged(ApplicationTheme currentApplicationTheme, System.Windows.Media.Color systemAccent)
         {
             foreach (var frameworkElement in ObservedElements)
@@ -88,14 +92,49 @@ namespace KapibaraUI.Services.Appearance;
         {
             foreach (var window in ObservedElements.Select(Window.GetWindow).Distinct())
             {
+                WindowBackgroundManager.UpdateBackground(window, theme, WindowBackdropType.Auto);
+            }
+        }
+        
+        public void SetTheme(ApplicationTheme theme, FrameworkElement frameworkElement)
+        {
+            _theme.Theme = theme;
+            ApplicationThemeManager.Apply(theme);
+            if (!frameworkElement.Resources.MergedDictionaries.Contains(_theme))
+            {
+                frameworkElement.Resources.MergedDictionaries.Add(_theme);
+                frameworkElement.Resources.MergedDictionaries.Add(_controlsDictionary);
+            }
+
+            if (frameworkElement is Window window)
+            {
                 WindowBackgroundManager.UpdateBackground(window, theme, WindowBackdropType.Mica);
             }
         }
+
+        public void SetConfigTheme(FrameworkElement frameworkElement)
+        {
+            if (!File.Exists(_configFilePath))
+            {
+                SetTheme(ApplicationTheme.Light, frameworkElement);
+                return;
+            }
+            var wrapper = KapibaraCore.Configuration.Configuration.LoadConfig<ConfigWrapper>(_configFilePath);
+            var setting = wrapper?.Setting;
+            if (setting == null)
+            {
+                SetTheme(ApplicationTheme.Light, frameworkElement);
+                return;
+            }
+            var theme = setting.Theme == Theme.Dark ? ApplicationTheme.Dark : ApplicationTheme.Light;
+            SetTheme(theme, frameworkElement);
+        }
     }
-    
-    
-public interface IThemeWatcherService
+
+    public interface IThemeWatcherService
 {
     void Watch(FrameworkElement frameworkElement);
+    void SetTheme(ApplicationTheme theme, FrameworkElement frameworkElement);
+    void SetConfigTheme(FrameworkElement frameworkElement);
 }
 

@@ -4,37 +4,33 @@ using System.Windows;
 
 namespace EngineeringSystems.ViewModels;
 
-public class Options
+public class Options(
+    string name,
+    double width,
+    double height,
+    GridLength firstColumnWidth,
+    GridLength secondColumnWidth,
+    bool flag)
 {
-    public string NameOpt { get; set; }
-    public double Width { get; }
-    public double Height { get; }
-    public GridLength FirstColumnWidth { get; }
-    public GridLength SecondColumnWidth { get; }
-    public bool Flag { get; set; }
-
-    public Options(string name, double width, double height, GridLength firstColumnWidth, GridLength secondColumnWidth,
-        bool flag)
-    {
-        NameOpt = name;
-        Width = width;
-        Height = height;
-        FirstColumnWidth = firstColumnWidth;
-        SecondColumnWidth = secondColumnWidth;
-        Flag = flag;
-    }
+    public string NameOpt { get; set; } = name;
+    public double Width { get; } = width;
+    public double Height { get; } = height;
+    public GridLength FirstColumnWidth { get; } = firstColumnWidth;
+    public GridLength SecondColumnWidth { get; } = secondColumnWidth;
+    public bool Flag { get; set; } = flag;
 }
 
-public class SystemParameters
+public class SystemParameters(string name)
 {
-    public string Name { get; set; }
-    
-    public SystemParameters(string name)
-    {
-        this.Name = name;
-    }
+    public string Name { get; set; } = name;
 }
-public class EngineeringSystem : INotifyPropertyChanged
+
+public class FilterOption(string name, string revitApiMethodName)
+{
+    public string Name { get; set; } = name;
+    public string RevitApiMethodName { get; set; } = revitApiMethodName;
+}
+public sealed class EngineeringSystem : INotifyPropertyChanged
 {
     private bool _isChecked;
     private string _nameSystem;
@@ -66,12 +62,12 @@ public class EngineeringSystem : INotifyPropertyChanged
     }
     public event PropertyChangedEventHandler PropertyChanged;
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    private bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
         field = value;

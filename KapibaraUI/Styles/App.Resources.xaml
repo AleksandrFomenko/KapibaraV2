@@ -5,7 +5,6 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ui:ThemesDictionary /> 
-        <ui:ThemesDictionary Theme="Dark" />
         <ui:ControlsDictionary />
     </ResourceDictionary.MergedDictionaries>
 

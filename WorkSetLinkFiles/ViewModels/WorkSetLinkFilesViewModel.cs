@@ -85,7 +85,7 @@ public sealed partial class WorkSetLinkFilesViewModel : ObservableObject
         return LinksRevitModels.Where(l => l.IsChecked).ToList();
     }
 
-    internal WorkSetLinkFilesViewModel(Document doc)
+    public WorkSetLinkFilesViewModel(Document doc)
     {
         _doc = doc;
         _data = new Data(doc);
@@ -157,7 +157,7 @@ public sealed partial class WorkSetLinkFilesViewModel : ObservableObject
     {
         if (e.PropertyName == nameof(LinkFiles.IsChecked))
         {
-            bool anyChecked = LinksRevitModels.Any(link => link.IsChecked);
+            var anyChecked = LinksRevitModels.Any(link => link.IsChecked);
             if (IsCheckedAllLinks && IsCheckedAllLinks != anyChecked)
             {
                 IsCheckedAllLinks = anyChecked;

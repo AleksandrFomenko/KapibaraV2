@@ -9,29 +9,32 @@ namespace SolidIntersection.ViewModels;
 public partial class SolidIntersectionViewModel : ObservableObject
 {
     private readonly Document _doc;
-    private readonly SolidIntersectionModel _model;
+    private readonly ISolidIntersectionModel _model;
     internal static Action Close;
 
     [ObservableProperty] private string _value;
-    [ObservableProperty] private List<SelectedItems> _itemsList= new ();
+    [ObservableProperty] private List<SelectedItems> _itemsList= [];
     [ObservableProperty] private SelectedItems _selectedItem;
+    [ObservableProperty] private List<Project> _projects;
+    [ObservableProperty] private Project _project;
     [ObservableProperty] private List<string> _parameters;
     [ObservableProperty] private string _parameter;
-    [ObservableProperty] private string _filterByName;
+    [ObservableProperty] private string _filterByName = string.Empty;
     [ObservableProperty] private bool _allItems;
     [ObservableProperty] private bool _toggleButton;
-    [ObservableProperty] private bool _oneValueForEveryone = false;
+    [ObservableProperty] private bool _oneValueForEveryone;
     [ObservableProperty] private Visibility _showBorderWithValue = Visibility.Hidden;
     [ObservableProperty] private Visibility _textBoxVisibility = Visibility.Visible;
     [ObservableProperty] private Visibility _toggleButtonVisibility = Visibility.Hidden;
 
-    public SolidIntersectionViewModel()
+    public SolidIntersectionViewModel(ISolidIntersectionModel model)
     {
         _doc = Context.ActiveDocument;
-        _model = new SolidIntersectionModel(_doc);
-        
-        LoadedParameters();
-        LoadedFamilies();
+        _model = model;
+        Projects = _model.LoadedProject();
+        Project = Projects.LastOrDefault() ?? new Project("Текущий файл", 1);
+        Parameters = _model.LoadedParameters();
+        ItemsList = _model.LoadedFamilies(string.Empty, Project);
     }
     partial void OnValueChanged(string value) => ExecuteCommand.NotifyCanExecuteChanged();
 
@@ -43,6 +46,11 @@ public partial class SolidIntersectionViewModel : ObservableObject
             item.VisibleTextBox = value ? Visibility.Hidden : Visibility.Visible;
         });
 
+    }
+
+    partial void OnProjectChanged(Project value)
+    {
+        ItemsList = _model.LoadedFamilies(FilterByName, Project);
     }
     
     partial void OnParameterChanged(string value)
@@ -61,23 +69,16 @@ public partial class SolidIntersectionViewModel : ObservableObject
     {
         Value = value ? "1" : "0";
     }
-    partial void OnSelectedItemChanged(SelectedItems selectedItems)
+    partial void OnSelectedItemChanged(SelectedItems value)
     {
-        selectedItems.IsChecked = !selectedItems.IsChecked;
+        value.IsChecked = ! value.IsChecked;
     }
 
     partial void OnFilterByNameChanged(string value)
     {
-        ItemsList = _model.LoadedFamilies(value);
+        ItemsList = _model.LoadedFamilies(value, Project);
     }
-    private void LoadedParameters()
-    {
-        Parameters = _doc.GetProjectParameters();
-    }
-    private void LoadedFamilies()
-    {
-        ItemsList = _model.LoadedFamilies(string.Empty);
-    }
+    
     private void CheckParameter()
     {
         var definition = _doc.GetProjectParameterDefinition(Parameter);
@@ -98,19 +99,19 @@ public partial class SolidIntersectionViewModel : ObservableObject
         return Parameter != null;
     }
     [RelayCommand(CanExecute = nameof(CanExecuteCommand))]
-    private void Execute(Window window)
+    private void Execute()
     {
         var selectedItems = ItemsList.Where(item => item.IsChecked);
         var flag1 = OneValueForEveryone;
         if (flag1)
         {
-            _model.Execute(selectedItems, Parameter, Value);
-            Close();
+            _model.Execute(selectedItems, Parameter, Value, Project);
         }
         else
         {
-            _model.Execute(selectedItems, Parameter);
-            Close();
+            _model.Execute(selectedItems, Parameter, Project);
         }
+
+        Close();
     }
 }

@@ -36,6 +36,7 @@
 
     <ItemGroup>
         <PackageReference Include="MaterialDesignThemes" Version="5.*" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.*" />
         <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="2.*" />
         <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*" />
@@ -51,6 +52,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\External\WPF.UI\source\WPF.UI.Abstractions\WPF.UI.Abstractions.csproj" />
+      <ProjectReference Include="..\External\WPF.UI\source\WPF.UI\WPF.UI.csproj" />
+      <ProjectReference Include="..\KapibaraUI\KapibaraUI.csproj" />
       <ProjectReference Include="..\WpfResources\WpfResources.csproj" />
     </ItemGroup>
 

@@ -8,7 +8,7 @@ using SortingCategories.ViewModels;
 using SortingCategories.Views;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
-
+using Wpf.Ui.Appearance;
 
 
 namespace SortingCategories.Commands;
@@ -24,6 +24,7 @@ public class StartupCommand: ExternalCommand
     {
         var document = Context.ActiveDocument;
         var services = new ServiceCollection();
+        if(document != null) services.AddSingleton(document);
         //Window & pages
         services.AddSingleton<SortingCategoriesView>();
         services.AddSingleton<MainFamilies>();
@@ -32,24 +33,23 @@ public class StartupCommand: ExternalCommand
         services.AddSingleton<SortingCategoriesViewModel>();
         services.AddSingleton<SubFamiliesViewModel>();
         //Model
-        services.AddSingleton(provider =>
-        {
-            return new ParametersMainFamiliesModel(document);
-        });
-        services.AddSingleton(provider =>
-        {
-            return new SubFamiliesModel(document);
-        });
-        
+        services.AddSingleton<ParametersMainFamiliesModel>();
+        services.AddSingleton<SubFamiliesModel>();
         // services
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
         services.AddSingleton<INavigationViewPageProvider, PageService>();
 
         var serviceProvider = services.BuildServiceProvider();
-        var view = serviceProvider.GetRequiredService<SortingCategoriesView>(); 
         
+        var tws = serviceProvider.GetRequiredService<IThemeWatcherService>();
+        var view = serviceProvider.GetRequiredService<SortingCategoriesView>(); 
+        var view1 = serviceProvider.GetRequiredService<MainFamilies>(); 
+        var view2 = serviceProvider.GetRequiredService<SubFamilies>(); 
+        
+        tws.SetConfigTheme(view);
+        tws.SetConfigTheme(view1);
+        tws.SetConfigTheme(view2);
         view.ShowDialog();
-
     }
 }

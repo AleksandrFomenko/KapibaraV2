@@ -3,7 +3,7 @@ using System.Windows.Data;
 using System.Windows.Markup;
 using Visibility = System.Windows.Visibility;
 
-namespace SolidIntersector.Views.Converters;
+namespace SolidIntersection.Views.Converters;
 
 public class BoolVisibilityConverter : MarkupExtension, IValueConverter
 {

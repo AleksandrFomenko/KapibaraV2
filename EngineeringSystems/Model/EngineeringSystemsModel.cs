@@ -1,47 +1,20 @@
-﻿using System.Diagnostics;
-using System.Text;
-using Autodesk.Revit.Attributes;
+﻿using System.Text;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
-using Autodesk.Revit.UI;
+using EngineeringSystems.ViewModels;
 using KapibaraCore.Elements;
 using KapibaraCore.Parameters;
 using Options = EngineeringSystems.ViewModels.Options;
 
 namespace EngineeringSystems.Model;
 
-internal class EngineeringSystemsModel
+public class EngineeringSystemsModel(Document document) : IEngineeringSystemsModel
 {
-    private Document _doc;
-    private Options _options;
-    private List<BuiltInCategory> _mepCats = new List<BuiltInCategory>()
+    private Document _doc = document;
+ 
+    private  List<Element> GetElementsOnActiveView(List<BuiltInCategory> categories)
     {
-        BuiltInCategory.OST_DuctCurves,
-        BuiltInCategory.OST_FlexDuctCurves,
-        BuiltInCategory.OST_DuctInsulations,
-        BuiltInCategory.OST_DuctLinings,
-        BuiltInCategory.OST_MechanicalEquipment,
-        BuiltInCategory.OST_DuctAccessory,
-        BuiltInCategory.OST_DuctTerminal,
-        BuiltInCategory.OST_DuctFitting,
-        BuiltInCategory.OST_PipeCurves,
-        BuiltInCategory.OST_PipeInsulations,
-        BuiltInCategory.OST_PipeAccessory,
-        BuiltInCategory.OST_PipeFitting,
-        BuiltInCategory.OST_MechanicalEquipment,
-        BuiltInCategory.OST_Sprinklers,
-        BuiltInCategory.OST_PlumbingFixtures,
-        BuiltInCategory.OST_FlexPipeCurves
-    };
-
-    public EngineeringSystemsModel(Document doc, Options options)
-    {
-        _doc = doc;
-        _options = options;
-    }
-    private  List<Element> GetElementsOnActiveView()
-    {
-        var catFilter = new ElementMulticategoryFilter(_mepCats);
+        var catFilter = new ElementMulticategoryFilter(categories);
     
         var elements =  new FilteredElementCollector(_doc, _doc.ActiveView.Id)
             .WherePasses(catFilter)
@@ -51,6 +24,56 @@ internal class EngineeringSystemsModel
 
         return elements;
     }
+
+    private List<BuiltInCategory> GetCategoriesByParameter(string parameterName)
+    {
+        var bindingMap = _doc.ParameterBindings;
+        var iterator = bindingMap.ForwardIterator();
+        iterator.Reset();
+
+        while (iterator.MoveNext())
+        {
+            var definition = iterator.Key;
+            var binding = iterator.Current;
+
+            if (definition != null && definition.Name == parameterName)
+            {
+                CategorySet categories = null;
+
+                if (binding is InstanceBinding instanceBinding)
+                    categories = instanceBinding.Categories;
+                else if (binding is TypeBinding typeBinding)
+                    categories = typeBinding.Categories;
+
+                if (categories != null)
+                {
+                    var builtInCategories = new List<BuiltInCategory>();
+                    var catIterator = categories.ForwardIterator();
+                    catIterator.Reset();
+
+                    while (catIterator.MoveNext())
+                    {
+                        var category = catIterator.Current as Category;
+                        if (category == null)
+                            continue;
+
+                        var id = category.Id.IntegerValue;
+                        
+                        if (Enum.IsDefined(typeof(BuiltInCategory), id))
+                        {
+                            var bic = (BuiltInCategory)id;
+                            builtInCategories.Add(bic);
+                        }
+                    }
+
+                    return builtInCategories;
+                }
+            }
+        }
+
+        return null;
+    }
+    
     private string GetSystemType(Element elem)
     {
         var result = "";
@@ -233,11 +256,21 @@ internal class EngineeringSystemsModel
             }
         }
     }
-    public void Execute(List<string> systemNames,string parametersUser, bool flag1, bool flag2)
+    public void Execute(
+        List<string> systemNames,
+        string parametersUser,
+        bool flag1, 
+        bool flag2, 
+        Options options, 
+        FilterOption filterOption)
     {
-        var elements = _options.Flag ?
-            GetElementsOnActiveView() :
+        var cats = GetCategoriesByParameter(parametersUser);
+        
+        var elements = options.Flag ?
+            GetElementsOnActiveView(cats) :
             GetElementsInSystem(systemNames, flag1);
+        
+       
         using (var t = new Transaction(_doc, "Engineering systems"))
         {
             t.Start();
@@ -249,12 +282,18 @@ internal class EngineeringSystemsModel
                 foreach (var sysName in systemNames)
                 {
                     var view = view3D.CreateView3D(sysName);
-                    var filt = filter.CreateFilter(_mepCats, parametersUser, sysName);
+                    var filt = filter.CreateFilter(cats, parametersUser, sysName, 
+                        filterOption);
                     view.AddFilter(filt.Id);
                     view.SetFilterVisibility(filt.Id, false);
                 }
             }
             t.Commit();
         }
+    }
+
+    public List<string> GetUserParameters()
+    {
+        return _doc.GetProjectParameters(SpecTypeId.String.Text).ToList();
     }
 }

@@ -16,6 +16,7 @@ public sealed partial class SortingCategoriesView
         themeWatcherService.Watch(this);
         DataContext = viewModel;
         
+        
         Loaded += (_, __) =>
         {
             RootNavigationView.SetPageProviderService(serviceProvider);

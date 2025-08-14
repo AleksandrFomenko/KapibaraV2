@@ -36,8 +36,8 @@
 
     <ItemGroup>
         <PackageReference Include="ClosedXML" Version="0.104.2" />
-        <PackageReference Include="MaterialDesignThemes" Version="5.2.*" />
-        <PackageReference Include="MaterialDesignColors" Version="5.2.*" />
+        <PackageReference Include="FluentIcons.Wpf" Version="1.1.302" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.*" />
         <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="2.*" />
         <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*" />
@@ -45,15 +45,11 @@
         <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
     </ItemGroup>
-
+    
     <ItemGroup>
-      <Reference Include="MaterialDesignThemes.Wpf">
-        <HintPath>..\..\..\..\.nuget\packages\materialdesignthemes\3.2.0\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
+      <ProjectReference Include="..\External\WPF.UI\source\WPF.UI\WPF.UI.csproj" />
       <ProjectReference Include="..\KapibaraCore\KapibaraCore.csproj" />
+      <ProjectReference Include="..\KapibaraUI\KapibaraUI.csproj" />
       <ProjectReference Include="..\WpfResources\WpfResources.csproj" />
     </ItemGroup>
 

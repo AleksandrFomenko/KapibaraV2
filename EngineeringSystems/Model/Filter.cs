@@ -1,4 +1,6 @@
-﻿namespace EngineeringSystems.Model;
+﻿using EngineeringSystems.ViewModels;
+
+namespace EngineeringSystems.Model;
 
 internal class Filter
 {
@@ -9,7 +11,11 @@ internal class Filter
         _doc = doc;
     }
     
-    internal ParameterFilterElement CreateFilter(List <BuiltInCategory> categories, string nameParameter, string value)
+    internal ParameterFilterElement CreateFilter(
+        List <BuiltInCategory> categories,
+        string nameParameter, 
+        string value,
+        FilterOption filterOption)
     {
         /*
         var parameterId = searchParameter(nameParameter);
@@ -25,15 +31,18 @@ internal class Filter
         var uniqueName = GetUniqueFilterName(value);
         return ParameterFilterElement.Create(Context.Document, uniqueName, categoryIds, filter);
         */
-        var parameterId = SearchParameter(nameParameter);
 
-        List<FilterRule> filterRule = new List<FilterRule>();
+        var parameterId = SearchParameter(nameParameter);
+        List<FilterRule> filterRule = filterOption.RevitApiMethodName switch
+        {
+            "CreateNotContainsRule" => [ParameterFilterRuleFactory.CreateNotContainsRule(parameterId, value, true)],
+            "CreateNotEqualsRule" => [ParameterFilterRuleFactory.CreateNotEqualsRule(parameterId, value, true)],
+            "CreateNotBeginsWithRule" => [ParameterFilterRuleFactory.CreateNotBeginsWithRule(parameterId, value, true)],
+            _ => null
+        };
         
-        filterRule.Add(ParameterFilterRuleFactory.CreateNotContainsRule(parameterId, value, true));
         var categoryIds = categories.Select(cat => new ElementId(cat)).ToList();
-        
         var uniqueName = GetUniqueFilterName(value);
-        
         var filter = new ElementParameterFilter(filterRule);
         return ParameterFilterElement.Create(_doc, uniqueName, categoryIds, filter);
     }

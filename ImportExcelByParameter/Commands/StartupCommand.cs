@@ -1,26 +1,38 @@
-﻿using System.Reflection;
-using System.Windows.Shapes;
-using Autodesk.Revit.Attributes;
+﻿using Autodesk.Revit.Attributes;
 using ImportExcelByParameter.Configuration;
 using Nice3point.Revit.Toolkit.External;
 using ImportExcelByParameter.ViewModels;
 using ImportExcelByParameter.Views;
-using Path = System.IO.Path;
+using KapibaraUI.Services.Appearance;
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace ImportExcelByParameter.Commands;
 
-/// <summary>
-///     External command entry point invoked from the Revit interface
-/// </summary>
+
 [UsedImplicitly]
 [Transaction(TransactionMode.Manual)]
 public class StartupCommand : ExternalCommand
 {
     public override void Execute()
     {
-        var cfg = new Config();
-        var viewModel = new ImportExcelByParameterViewModel(Context.ActiveDocument, cfg);
-        var view = new ImportExcelByParameterView(viewModel);
+        var services = new ServiceCollection();
+        var doc = Context.ActiveDocument;
+        if (doc != null)
+        {
+            services.AddSingleton(doc);
+        }
+
+        services.AddSingleton<Config>();
+        services.AddSingleton<ImportExcelByParameterViewModel>();
+        services.AddSingleton<ImportExcelByParameterView>();
+        services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
+
+        var serviceBuilder = services.BuildServiceProvider();
+        var view = serviceBuilder.GetRequiredService<ImportExcelByParameterView>();
+        var themeWatcherService = serviceBuilder.GetRequiredService<IThemeWatcherService>();
+        
+        themeWatcherService.SetConfigTheme(view);
         view.ShowDialog();
     }
 }

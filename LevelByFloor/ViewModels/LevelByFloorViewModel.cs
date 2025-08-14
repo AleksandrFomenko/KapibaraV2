@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using LevelByFloor.Models;
 using Options = LevelByFloor.Models.Options;
 
@@ -32,7 +31,7 @@ public partial class LevelByFloorViewModel : ObservableObject
     [ObservableProperty]
     private string _indent = "0";
 
-    internal LevelByFloorViewModel(Document doc, LevelByFloorModel model)
+    public LevelByFloorViewModel(Document doc, LevelByFloorModel model)
     {
         _doc = doc;
         _model = model;

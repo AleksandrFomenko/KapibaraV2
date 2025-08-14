@@ -5,22 +5,21 @@ using KapibaraCore.Parameters;
 
 namespace ActiveView.Models;
 
-internal class ActiveViewModel
+public class ActiveViewModel : IModelActiveView
 {
     private Document _doc;
-    internal ActiveViewModel(Document doc)
+    public ActiveViewModel(Document doc)
     {
         _doc = doc;
     }
 
-    internal List<string> GetParameters()
+    public List<string> GetParameters()
     {
         return _doc.GetProjectParameters();
     }
-    
-    internal void Execute(string parameterName, string value)
+
+    public void Execute(string parameterName, string value, bool skipNotEmpty)
     {
-        
         var elems = new FilteredElementCollector(_doc, _doc.ActiveView.Id)
             .WhereElementIsNotElementType()
             .ToElements();
@@ -30,9 +29,21 @@ internal class ActiveViewModel
             foreach (var elem in elems) 
             { 
                 var parameter = elem.GetParameterByName(parameterName);
+                if (skipNotEmpty)
+                {
+                   if(CheckParameterValue(parameter)) continue;
+                }
                 parameter.SetParameterValue(value);
             }
             t.Commit();
         }
+    }
+
+    private static bool CheckParameterValue(Parameter parameter)
+    {
+        if (parameter is null) return true;
+        if (!parameter.HasValue) return false;
+    
+        return !string.IsNullOrEmpty(parameter.AsValueString());
     }
 }

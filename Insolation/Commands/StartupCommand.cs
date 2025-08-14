@@ -48,7 +48,7 @@ public class StartupCommand : ExternalCommand
     
     private void OnViewLoaded(object sender, RoutedEventArgs e)
     {
-        var _vertices = new List<XYZ>
+        var _vertigces = new List<XYZ>
         {
             new XYZ(0, 0, 0),
             new XYZ(1 /304.8 * 1000, 0, 0),
