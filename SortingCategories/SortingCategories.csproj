@@ -56,11 +56,5 @@
       <ProjectReference Include="..\KapibaraCore\KapibaraCore.csproj" />
       <ProjectReference Include="..\KapibaraUI\KapibaraUI.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Microsoft.Extensions.DependencyInjection">
-        <HintPath>..\..\..\..\..\Program Files\Autodesk\Revit 2022\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
+    
 </Project>

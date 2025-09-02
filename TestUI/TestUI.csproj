@@ -30,6 +30,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ExporterModels\ExporterModels.csproj" />
       <ProjectReference Include="..\LegendPlacer\LegendPlacer.csproj" />
       <ProjectReference Include="..\ViewByParameter\ViewByParameter.csproj" />
     </ItemGroup>

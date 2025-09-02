@@ -52,7 +52,6 @@ public sealed partial class LegendPlacerViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(CanExecute))]
     private void Execute()
     {
-        Console.WriteLine(12);
         try
         {
             _model?.Execute(TreeItems, Legend, Corner, ChangeX, ChangeY);

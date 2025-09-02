@@ -42,17 +42,17 @@ public static class Configuration
         }
         catch (FileNotFoundException ex)
         {
-            TaskDialog.Show("File Not Found", ex.Message);
+            Console.WriteLine($"File Not Found :{ex.Message}");
             return null;
         }
         catch (JsonException ex)
         {
-            TaskDialog.Show("JSON Error", $"An error occurred while deserializing the JSON: {ex.Message}");
+            Console.WriteLine($"An error occurred while deserializing the JSON: {ex.Message}");
             return null;
         }
         catch (Exception ex)
         {
-            TaskDialog.Show("Error", $"An unexpected error occurred: {ex.Message}");
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             return null;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ClashHub.Structure;
 

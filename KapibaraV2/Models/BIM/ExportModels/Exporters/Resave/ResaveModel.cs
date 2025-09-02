@@ -1,12 +1,5 @@
 ﻿using KapibaraV2.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.ApplicationServices;
-using Autodesk.Revit.DB;
 using System.IO;
 
 namespace KapibaraV2.Models.BIM.ExportModels.Exporters.Resave
@@ -62,8 +55,7 @@ namespace KapibaraV2.Models.BIM.ExportModels.Exporters.Resave
             {
                 return;
             }
-
-            // Обработка всех внешних ссылок и установка их в состояние "не загружать"
+            
             ICollection<ElementId> externalReferences = transData.GetAllExternalFileReferenceIds();
             foreach (ElementId refId in externalReferences)
             {

@@ -1,12 +1,6 @@
-﻿using KapibaraV2.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+﻿using System.IO;
 using KapibaraV2.Models.BIM.ExportModels.OpenDoc;
-using Autodesk.Revit.DB;
+
 
 namespace KapibaraV2.Models.BIM.ExportModels.Exporters.Resave
 {

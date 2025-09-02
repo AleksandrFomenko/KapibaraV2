@@ -59,7 +59,7 @@ namespace KapibaraV2
             
             
             //BIM
-            panelBim.AddPushButton<ExportModels>("Export\nmodels")
+            panelBim.AddPushButton<ExporterModels.Commands.StartupCommand>("Export\nmodels")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ExportModels.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ExportModels.png");
 

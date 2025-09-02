@@ -68,72 +68,119 @@ public class SolidIntersectionModel(Document doc) : ISolidIntersectionModel
     }
     
     private List<Element> FindIntersectingElements(string elementName, Project project)
+{
+    var link = GetLink(project);
+    var document = doc;
+    Transform transform = null;
+    if (link != null)
     {
-        var link = GetLink(project);
-        var document = doc;
-        Transform transform = null;
-        if (link != null)
-        {
-            document = link.GetLinkDocument();
-            transform = link.GetTransform();
-        }
-        var element = new FilteredElementCollector(document)
-            .OfCategory(BuiltInCategory.OST_GenericModel)
-            .WhereElementIsNotElementType()
-            .FirstOrDefault(e => e.Name.Equals(elementName));
-        if (element == null) return [];
-        
-        // Фильтр с BB
-        var boundingBox = element.get_BoundingBox(null);
-        if (boundingBox == null) return [];
-
-        var originalMin = boundingBox.Min;
-        var originalMax = boundingBox.Max;
-
-        XYZ boundingBoxMin, boundingBoxMax;
-
-        if (transform != null)
-        {
-            var corners = GetBoundingBoxCorners(originalMin, originalMax);
-            var transformedCorners = corners
-                .Select(p => transform.OfPoint(p))
-                .ToList();
-
-            boundingBoxMin = new XYZ(
-                transformedCorners.Min(p => p.X),
-                transformedCorners.Min(p => p.Y),
-                transformedCorners.Min(p => p.Z)
-            );
-            boundingBoxMax = new XYZ(
-                transformedCorners.Max(p => p.X),
-                transformedCorners.Max(p => p.Y),
-                transformedCorners.Max(p => p.Z)
-            );
-        }
-        else
-        {
-            boundingBoxMin = originalMin;
-            boundingBoxMax = originalMax;
-        }
-
-        var outline = new Outline(boundingBoxMin, boundingBoxMax);
-        var filter = new BoundingBoxIntersectsFilter(outline);
-        
-        // Фильтр с солидом
-        var solid = element.GetSolid();
-        if (transform != null)
-        {
-            solid = SolidUtils.CreateTransformed(solid, transform);
-        }
-        var solidFilter = new ElementIntersectsSolidFilter(solid);
-        
-        var elements = new FilteredElementCollector(doc)
-            .WherePasses(filter)
-            .WherePasses(solidFilter)
-            .WhereElementIsNotElementType()
-            .ToList();
-        return elements;
+        document = link.GetLinkDocument();
+        transform = link.GetTransform();
     }
+
+    var element = new FilteredElementCollector(document)
+        .OfCategory(BuiltInCategory.OST_GenericModel)
+        .WhereElementIsNotElementType()
+        .FirstOrDefault(e => e.Name.Equals(elementName));
+    if (element == null) return new List<Element>();
+
+    // --- исходный solid целевого элемента (с трансформацией из линка в хост) ---
+    var srcSolid = element.GetSolid();
+    if (srcSolid == null) return new List<Element>();
+    if (transform != null)
+        srcSolid = SolidUtils.CreateTransformed(srcSolid, transform);
+
+    // --- фильтр по BBox + пересечение solidом для обычных элементов (как было) ---
+    var bb = element.get_BoundingBox(null);
+    if (bb == null) return new List<Element>();
+
+    XYZ bbMin, bbMax;
+    if (transform != null)
+    {
+        var corners = GetBoundingBoxCorners(bb.Min, bb.Max);
+        var tCorners = corners.Select(p => transform.OfPoint(p)).ToList();
+        bbMin = new XYZ(tCorners.Min(p => p.X), tCorners.Min(p => p.Y), tCorners.Min(p => p.Z));
+        bbMax = new XYZ(tCorners.Max(p => p.X), tCorners.Max(p => p.Y), tCorners.Max(p => p.Z));
+    }
+    else
+    {
+        bbMin = bb.Min; bbMax = bb.Max;
+    }
+
+    var outline = new Outline(bbMin, bbMax);
+    var bbFilter = new BoundingBoxIntersectsFilter(outline);
+    var solidFilter = new ElementIntersectsSolidFilter(srcSolid);
+
+    var result = new List<Element>();
+    var seenIds = new HashSet<ElementId>();
+    
+    foreach (var e in new FilteredElementCollector(doc)
+                     .WherePasses(bbFilter)
+                     .WherePasses(solidFilter)
+                     .WhereElementIsNotElementType()
+                     .ToElements())
+    {
+        if (seenIds.Add(e.Id))
+            result.Add(e);
+    }
+    
+    var spatialCats = new[]
+    {
+        BuiltInCategory.OST_Rooms,
+        BuiltInCategory.OST_MEPSpaces
+    };
+    var spatialFilter = new ElementMulticategoryFilter(spatialCats);
+    var spatialElems = new FilteredElementCollector(doc)
+        .WherePasses(spatialFilter)
+        .WhereElementIsNotElementType()
+        .Cast<SpatialElement>()
+        .ToList();
+
+    var seCalc = new SpatialElementGeometryCalculator(doc, new SpatialElementBoundaryOptions());
+
+    foreach (var se in spatialElems)
+    {
+        var seSolid = GetSpatialElementSolidSafe(seCalc, se);
+        if (seSolid == null) continue;
+
+        if (IntersectsByBoolean(srcSolid, seSolid))
+        {
+            if (seenIds.Add(se.Id))
+                result.Add(se);
+        }
+    }
+    
+
+    return result;
+}
+
+    
+private static bool IntersectsByBoolean(Solid a, Solid b, double volumeEps = 1e-6)
+{
+    if (a == null || b == null) return false;
+    try
+    {
+        var inter = BooleanOperationsUtils.ExecuteBooleanOperation(a, b, BooleanOperationsType.Intersect);
+        return inter != null && inter.Volume > volumeEps;
+    }
+    catch
+    {
+        return false;
+    }
+}
+
+private static Solid GetSpatialElementSolidSafe(SpatialElementGeometryCalculator calc, SpatialElement se)
+{
+    try
+    {
+        var res = calc.CalculateSpatialElementGeometry(se);
+        return res?.GetGeometry();
+    }
+    catch
+    {
+        return null;
+    }
+}
 
     public void Execute(IEnumerable<SelectedItems> selectedItems, string parameterName, Project project)
     {

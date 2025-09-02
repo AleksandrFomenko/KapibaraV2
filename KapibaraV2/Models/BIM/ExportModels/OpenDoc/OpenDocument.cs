@@ -8,7 +8,7 @@ namespace KapibaraV2.Models.BIM.ExportModels.OpenDoc
     public class OpenDocument
     {
         public Document OpenDocumentAsDetach(string filePath, string badNameWorkset, bool deleteLinksDwg, 
-            bool closeAllWorset)
+            bool closeAllWorset) 
         {
             var app = RevitApi.UiApplication;
             ModelPath modelPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(filePath);

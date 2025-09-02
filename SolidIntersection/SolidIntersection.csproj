@@ -53,13 +53,7 @@
         <Using Include="Nice3point.Revit.Extensions" />
         <Using Include="JetBrains.Annotations" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="MaterialDesignThemes.Wpf">
-        <HintPath>..\..\..\..\..\.nuget\packages\materialdesignthemes\5.1.1-ci691\lib\net462\MaterialDesignThemes.Wpf.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
+    
     <ItemGroup>
       <ProjectReference Include="..\External\WPF.UI\source\WPF.UI.Abstractions\WPF.UI.Abstractions.csproj" />
       <ProjectReference Include="..\External\WPF.UI\source\WPF.UI\WPF.UI.csproj" />
