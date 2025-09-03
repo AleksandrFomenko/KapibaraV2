@@ -1,5 +1,6 @@
 ﻿using ActiveView.ViewModels;
 using KapibaraUI.Services.Appearance;
+using Wpf.Ui.Appearance;
 
 namespace ActiveView.Views;
 

@@ -29,7 +29,7 @@ public static class Host
         var serviceProvider = services.BuildServiceProvider();
         var view = serviceProvider.GetRequiredService<EngineeringSystemsView>();
         var tws = serviceProvider.GetRequiredService<IThemeWatcherService>();
-        tws.SetConfigTheme(view);
+        view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
         view.ShowDialog();
     }
 }

@@ -26,30 +26,11 @@ public static class Host
         var windowOwnerProvider = GetService<IWindowOwnerProvider>();
         windowOwnerProvider.SetOwner(view);
         var tws = GetService<IThemeWatcherService>();
-        tws?.SetConfigTheme(view);
-        view.Loaded += async (sender, args) => tws.SetConfigTheme(view);
+        view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
         view.Show(Context.UiApplication.MainWindowHandle);
+        
     }
-
-    public static void StartMock()
-    {
-        var services = new ServiceCollection();
-        services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
-        services.AddSingleton<IWindowOwnerProvider, WindowOwnerProvider>();
-        services.AddSingleton<ConfigurationService>();
-        services.AddTransient<ExporterModelsViewModel>();
-        services.AddTransient<ExporterModelsView>();
-
-        _serviceProvider = services.BuildServiceProvider();
-
-        var view = GetService<ExporterModelsView>();
-        var windowOwnerProvider = GetService<IWindowOwnerProvider>();
-        windowOwnerProvider.SetOwner(view);
-        var tws = GetService<IThemeWatcherService>();
-        view.Show();
-        view.Loaded += async (sender, args) => tws.SetConfigTheme(view);
-    }
-
+    
     public static T GetService<T>() where T : class
     {
         return _serviceProvider!.GetRequiredService<T>();

@@ -1,11 +1,9 @@
 ﻿using System.Reflection;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Autodesk.Revit.UI;
 using Autodesk.Windows;
 using KapibaraUI.Services.Appearance;
 using Nice3point.Revit.Toolkit.External;
-using KapibaraV2.Commands.BIM;
 using Wpf.Ui.Appearance;
 
 
@@ -19,7 +17,8 @@ namespace KapibaraV2
     {
         public override void OnStartup()
         {
-            ApplyResources();
+            var theme = new ThemeWatcherService();
+            theme.Initialize();
             CreateRibbon();
         }
 
@@ -127,12 +126,7 @@ namespace KapibaraV2
                 .SetImage("/KapibaraV2;component/Resources/Icons/ai.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ai.png");
         }
-        private static void ApplyResources()
-        {
-            ThemeWatcherService.Initialize();
-            ThemeWatcherService.ApplyTheme(ApplicationTheme.Light);
-        }
-
+        
         private PushButtonData CreatePushButtonData<TCommand>(string buttonText) where TCommand : IExternalCommand, new()
         {
             var command = typeof(TCommand);

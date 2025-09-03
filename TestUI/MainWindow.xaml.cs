@@ -11,8 +11,6 @@ public partial class MainWindow
     {
         //HostLegendPlacer.StartTestUi();
         //HostViewByParameter.StartTestUi();
-        ExporterModelsHost .StartMock();
-        
-        
+        ExporterModelsHost.Start();
     }
 }

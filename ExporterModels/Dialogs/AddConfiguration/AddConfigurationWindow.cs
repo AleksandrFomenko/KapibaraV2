@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using ExporterModels.Dialogs.AddConfiguration.Model;
 using ExporterModels.Dialogs.AddConfiguration.View;
 using ExporterModels.Dialogs.AddConfiguration.ViewModel;
 using KapibaraUI.Services.Appearance;
@@ -19,11 +18,9 @@ public static class AddConfigurationWindow
     {
         var services = new ServiceCollection();
         services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
-        services.AddSingleton<AddConfigurationModel>();
         services.AddSingleton(provider =>
         {
-            var model = provider.GetService<AddConfigurationModel>();
-            return new AddConfigurationViewModel(model, title, placeHolderText, buttonContent, run);
+            return new AddConfigurationViewModel(title, placeHolderText, buttonContent, run);
         });
         services.AddSingleton<AddConfigurationView>();
 
@@ -31,8 +28,7 @@ public static class AddConfigurationWindow
         var view = provider.GetService<AddConfigurationView>();
         if (view != null) view.Owner = owner;
         var tws = provider.GetService<IThemeWatcherService>();
-        tws?.SetConfigTheme(view);
-
+        
         onStateChanged?.Invoke(false);
 
         var tcs = new TaskCompletionSource<bool>();
@@ -40,6 +36,7 @@ public static class AddConfigurationWindow
         view.Closed += (s, e) => { tcs.SetResult(true); };
 
         view?.Show();
+        tws?.SetConfigTheme(view);
 
         await tcs.Task;
 

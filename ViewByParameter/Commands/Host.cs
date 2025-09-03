@@ -32,7 +32,9 @@ public static class Host
         
         var tws = serviceProvider.GetService<IThemeWatcherService>();
         var view = serviceProvider.GetService<ViewByParameterView>();
-        tws?.SetConfigTheme(view);
+        tws?.Initialize();
+        view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
+        
         view?.ShowDialog();
     }
     

@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
 using KapibaraUI.Services.Appearance;
 using SortingCategories.ViewModels;
 using Wpf.Ui.Abstractions.Controls;
@@ -7,13 +7,12 @@ namespace SortingCategories.Views;
 
 public partial class MainFamilies : INavigableView<SortingCategoriesViewModel>
 {
-    public MainFamilies(SortingCategoriesViewModel viewModel, IThemeWatcherService themeWatcherService)
+    public SortingCategoriesViewModel ViewModel { get; }
+    public MainFamilies(SortingCategoriesViewModel viewModel, IThemeWatcherService themeService)
     {
-        themeWatcherService.Watch(this);
+        themeService.Watch(this);
         ViewModel = viewModel;
         DataContext = this;
         InitializeComponent();
     }
-
-    public SortingCategoriesViewModel ViewModel { get; }
 }

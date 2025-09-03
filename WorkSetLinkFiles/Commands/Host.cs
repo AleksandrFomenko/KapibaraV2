@@ -21,8 +21,10 @@ public static class Host
       services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
       var serviceProvider = services.BuildServiceProvider();
       var view = serviceProvider.GetRequiredService<WorkSetLinkFilesView>();
-      var theme = serviceProvider.GetRequiredService<IThemeWatcherService>();
-      theme.SetConfigTheme(view);
+      var tws = serviceProvider.GetRequiredService<IThemeWatcherService>();
+      tws.Initialize();
+      view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
+      
       view.ShowDialog();
    }
 }

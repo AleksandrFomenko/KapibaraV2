@@ -21,7 +21,7 @@ public static class Host
         if (Context.ActiveDocument != null) services.AddSingleton(Context.ActiveDocument);
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<SettingsView>();
-        services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
+        services.AddScoped<IThemeWatcherService, ThemeWatcherService>();
         services.AddSingleton<Config>();
             
 

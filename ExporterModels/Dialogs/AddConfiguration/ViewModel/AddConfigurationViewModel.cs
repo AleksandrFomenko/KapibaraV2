@@ -1,5 +1,4 @@
-﻿using ExporterModels.Dialogs.AddConfiguration.Model;
-
+﻿
 namespace ExporterModels.Dialogs.AddConfiguration.ViewModel;
 
 public partial class AddConfigurationViewModel : ObservableObject
@@ -10,8 +9,7 @@ public partial class AddConfigurationViewModel : ObservableObject
 
     [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(ExecuteCommand))]
     private string _configName;
-
-    private AddConfigurationModel _model;
+    
 
     [ObservableProperty] private string? _placeHolderText;
 
@@ -19,13 +17,11 @@ public partial class AddConfigurationViewModel : ObservableObject
 
 
     public AddConfigurationViewModel(
-        AddConfigurationModel model,
         string? title,
         string? placeHolderText,
         string? buttonContent,
         Action<string> execute)
     {
-        _model = model;
         Title = title;
         _placeHolderText = placeHolderText;
         _buttonContent = buttonContent;

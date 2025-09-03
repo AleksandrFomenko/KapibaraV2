@@ -33,7 +33,8 @@ public class StartupCommand : ExternalCommand
         var serviceProvider = services.BuildServiceProvider();
         var view = serviceProvider.GetRequiredService<LevelByFloorView>();
         var tws = serviceProvider.GetRequiredService<IThemeWatcherService>();
-        tws.SetConfigTheme(view);
+        tws?.Initialize();
+        view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
         view.ShowDialog();
     }
 }

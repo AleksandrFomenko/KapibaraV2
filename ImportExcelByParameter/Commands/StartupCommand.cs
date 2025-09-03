@@ -30,9 +30,9 @@ public class StartupCommand : ExternalCommand
 
         var serviceBuilder = services.BuildServiceProvider();
         var view = serviceBuilder.GetRequiredService<ImportExcelByParameterView>();
-        var themeWatcherService = serviceBuilder.GetRequiredService<IThemeWatcherService>();
+        var tws = serviceBuilder.GetRequiredService<IThemeWatcherService>();
         
-        themeWatcherService.SetConfigTheme(view);
+        view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
         view.ShowDialog();
     }
 }

@@ -49,7 +49,6 @@
     <ItemGroup>
       <ProjectReference Include="..\KapibaraCore\KapibaraCore.csproj" />
       <ProjectReference Include="..\KapibaraUI\KapibaraUI.csproj" />
-      <ProjectReference Include="..\WpfResources\WpfResources.csproj" />
     </ItemGroup>
 
 </Project>

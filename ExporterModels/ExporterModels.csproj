@@ -61,4 +61,8 @@
         <ProjectReference Include="..\Settings\Settings.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Dialogs\AddConfiguration\Model\" />
+    </ItemGroup>
+
 </Project>

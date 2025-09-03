@@ -20,47 +20,41 @@ namespace KapibaraUI.Services.Appearance;
         
         private string _configFilePath = Path.Combine(DllDirectory, DirectoryName, ConfigName);
         
-        public static void Initialize()
+        public void Initialize()
         {
             UiApplication.Current.Resources = new ResourceDictionary
             {
                 Source = new Uri("pack://application:,,,/KapibaraUI;component/Styles/App.Resources.xaml", UriKind.Absolute)
             };
+
             ApplicationThemeManager.Changed += OnApplicationThemeManagerChanged;
         }
-        public static void ApplyTheme(ApplicationTheme theme)
-        {
-            ApplicationThemeManager.Apply(theme, WindowBackdropType.Auto);
-            UpdateBackground(theme);
-        }
         
-        private static void OnApplicationThemeManagerChanged(ApplicationTheme currentApplicationTheme, System.Windows.Media.Color systemAccent)
+        private void OnApplicationThemeManagerChanged(ApplicationTheme currentApplicationTheme, System.Windows.Media.Color systemAccent)
         {
             foreach (var frameworkElement in ObservedElements)
             {
                 ApplicationThemeManager.Apply(frameworkElement);
+                UpdateBackground(currentApplicationTheme);
                 UpdateDictionary(frameworkElement);
             }
         }
 
         private static void UpdateDictionary(FrameworkElement frameworkElement)
         {
-            
             var themedResources = frameworkElement.Resources.MergedDictionaries
-                .Where(dictionary => dictionary.Source.OriginalString.Contains("KapibaraUI;", StringComparison.OrdinalIgnoreCase))
+                .Where(dictionary => dictionary.Source.OriginalString.Contains("WPF.UI;", StringComparison.OrdinalIgnoreCase))
                 .ToArray();
 
-            if (UiApplication.Current.Resources.MergedDictionaries.Count >= 2)
-            {
-                frameworkElement.Resources.MergedDictionaries.Insert(0, UiApplication.Current.Resources.MergedDictionaries[0]);
-                frameworkElement.Resources.MergedDictionaries.Insert(1, UiApplication.Current.Resources.MergedDictionaries[1]);
-            }
+            frameworkElement.Resources.MergedDictionaries.Insert(0, UiApplication.Current.Resources.MergedDictionaries[0]);
+            frameworkElement.Resources.MergedDictionaries.Insert(1, UiApplication.Current.Resources.MergedDictionaries[1]);
 
             foreach (var themedResource in themedResources)
             {
                 frameworkElement.Resources.MergedDictionaries.Remove(themedResource);
             }
         }
+
 
         public void Watch(FrameworkElement frameworkElement)
         {
@@ -71,14 +65,15 @@ namespace KapibaraUI.Services.Appearance;
 
         private void OnWatchedElementLoaded(object sender, RoutedEventArgs e)
         {
-            var element = (FrameworkElement)sender;
+            var element = (FrameworkElement) sender;
             ObservedElements.Add(element);
-
+           
             if (element.Resources.MergedDictionaries[0].Source.OriginalString != UiApplication.Current.Resources.MergedDictionaries[0].Source.OriginalString)
             {
                 ApplicationThemeManager.Apply(element);
                 UpdateDictionary(element);
             }
+            UpdateBackground(ApplicationThemeManager.GetAppTheme());
         }
 
         private void OnWatchedElementUnloaded(object sender, RoutedEventArgs e)
@@ -92,8 +87,14 @@ namespace KapibaraUI.Services.Appearance;
         {
             foreach (var window in ObservedElements.Select(Window.GetWindow).Distinct())
             {
-                WindowBackgroundManager.UpdateBackground(window, theme, WindowBackdropType.Auto);
+                WindowBackgroundManager.UpdateBackground(window, theme, WindowBackdropType.Acrylic);
             }
+        }
+
+        public void ApplyTheme(ApplicationTheme theme)
+        {
+            ApplicationThemeManager.Apply(theme, WindowBackdropType.Acrylic);
+            UpdateBackground(theme);
         }
         
         public void SetTheme(ApplicationTheme theme, FrameworkElement frameworkElement)
@@ -108,9 +109,28 @@ namespace KapibaraUI.Services.Appearance;
 
             if (frameworkElement is Window window)
             {
-                WindowBackgroundManager.UpdateBackground(window, theme, WindowBackdropType.Mica);
+                WindowBackgroundManager.UpdateBackground(window, theme, WindowBackdropType.Acrylic);
             }
         }
+
+        public void SetConfigTheme()
+        {
+            if (!File.Exists(_configFilePath))
+            {
+                ApplyTheme(ApplicationTheme.Light);
+                return;
+            }
+            var wrapper = KapibaraCore.Configuration.Configuration.LoadConfig<ConfigWrapper>(_configFilePath);
+            var setting = wrapper?.Setting;
+            if (setting == null)
+            {
+                ApplyTheme(ApplicationTheme.Light);
+                return;
+            }
+            var theme = setting.Theme == Theme.Dark ? ApplicationTheme.Dark : ApplicationTheme.Light;
+            ApplyTheme(theme);
+        }
+        
 
         public void SetConfigTheme(FrameworkElement frameworkElement)
         {
@@ -132,9 +152,12 @@ namespace KapibaraUI.Services.Appearance;
     }
 
     public interface IThemeWatcherService
-{
-    void Watch(FrameworkElement frameworkElement);
-    void SetTheme(ApplicationTheme theme, FrameworkElement frameworkElement);
-    void SetConfigTheme(FrameworkElement frameworkElement);
+    {
+        void ApplyTheme(ApplicationTheme theme);
+        public void Initialize(); 
+        void Watch(FrameworkElement frameworkElement); 
+        void SetTheme(ApplicationTheme theme, FrameworkElement frameworkElement); 
+        void SetConfigTheme(FrameworkElement frameworkElement); 
+        void SetConfigTheme();
 }
 

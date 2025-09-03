@@ -1,8 +1,9 @@
-﻿using KapibaraUI.Services.Appearance;
+﻿using System.Windows;
+using System.Windows.Threading;
+using KapibaraUI.Services.Appearance;
 using SortingCategories.ViewModels;
 using Wpf.Ui.Abstractions;
-using Wpf.Ui.Appearance;
-using Wpf.Ui.Controls;
+
 
 namespace SortingCategories.Views;
 
@@ -12,16 +13,19 @@ public sealed partial class SortingCategoriesView
         IThemeWatcherService themeWatcherService, 
         INavigationViewPageProvider serviceProvider)
     {
-        InitializeComponent();
         themeWatcherService.Watch(this);
         DataContext = viewModel;
         
-        
-        Loaded += (_, __) =>
+        Loaded += async (sender, e) =>
         {
             RootNavigationView.SetPageProviderService(serviceProvider);
+            themeWatcherService.Watch(this);
+            await Dispatcher.Yield(DispatcherPriority.ContextIdle);
             RootNavigationView.Navigate(typeof(MainFamilies));
+            themeWatcherService.SetConfigTheme();
         };
-       
+        
+        InitializeComponent();
     }
+    
 }

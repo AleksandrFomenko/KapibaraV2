@@ -25,6 +25,7 @@ public static class RemoveProjectWindow
         tws?.SetConfigTheme(view);
         view.Owner = owner;
         view.Show();
+        tws?.SetConfigTheme(view);
         view.Closed += (_, _) => { onClosed?.Invoke(); };
         return view;
     }

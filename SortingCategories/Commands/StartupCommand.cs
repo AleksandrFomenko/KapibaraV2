@@ -8,7 +8,6 @@ using SortingCategories.ViewModels;
 using SortingCategories.Views;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
-using Wpf.Ui.Appearance;
 
 
 namespace SortingCategories.Commands;
@@ -41,15 +40,11 @@ public class StartupCommand: ExternalCommand
         services.AddSingleton<INavigationViewPageProvider, PageService>();
 
         var serviceProvider = services.BuildServiceProvider();
-        
-        var tws = serviceProvider.GetRequiredService<IThemeWatcherService>();
         var view = serviceProvider.GetRequiredService<SortingCategoriesView>(); 
-        var view1 = serviceProvider.GetRequiredService<MainFamilies>(); 
-        var view2 = serviceProvider.GetRequiredService<SubFamilies>(); 
+        var tws = serviceProvider.GetRequiredService<IThemeWatcherService>(); 
         
-        tws.SetConfigTheme(view);
-        tws.SetConfigTheme(view1);
-        tws.SetConfigTheme(view2);
+        view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
+        
         view.ShowDialog();
     }
 }

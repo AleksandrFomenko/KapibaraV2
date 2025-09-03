@@ -6,10 +6,6 @@ namespace ExporterModels.RevitExporters;
 
 public class NwcExporter : RevitExporter
 {
-    /// <summary>
-    ///     Асинхронно экспортирует один файл в NWC.
-    ///     Должен вызываться в контексте Revit API (UI поток).
-    /// </summary>
     public async Task ExportSingleAsync(
         UIApplication uiApp,
         string filePath,
@@ -27,14 +23,12 @@ public class NwcExporter : RevitExporter
                 ExportToNwc(doc, directoryPath);
                 doc.Close(false);
             }
-
-            Console.WriteLine($"✅ [NwcExporter] Успешно экспортирован: {filePath}");
+            
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ [NwcExporter] Ошибка при экспорте {filePath}: {ex.Message}");
-            Console.WriteLine($"Stack: {ex.StackTrace}");
-            throw; // Чтобы вызывающий код мог обработать
+            Console.WriteLine($"🔧 [NwcExporter] ошибкаа: {ex.Message}");
+            throw; 
         }
     }
 
@@ -42,8 +36,7 @@ public class NwcExporter : RevitExporter
     {
         if (doc == null) return;
         if (!Directory.Exists(directoryPath)) return;
-
-        // Поиск 3D-вида с "navisworks" в названии
+        
         var navisworksViewCollector = new FilteredElementCollector(doc)
             .OfCategory(BuiltInCategory.OST_Views)
             .WhereElementIsNotElementType()

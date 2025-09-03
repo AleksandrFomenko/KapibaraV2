@@ -25,11 +25,10 @@ public static class SettingsWindow
         var tws = provider.GetService<IThemeWatcherService>();
         if (vm != null) vm.OwnerView = view;
         if (view != null) view.Owner = owner;
-        tws?.SetConfigTheme(view);
-
+       
         view.Show();
-        tws?.SetConfigTheme(view);
-        view.Loaded += (_, __) => tws.SetConfigTheme(view);
+        tws.SetConfigTheme(view);
+        //view.Loaded += (_, __) => tws.SetConfigTheme(view);
 
         view.Closed += (_, _) => { onClosed?.Invoke(); };
         return view;

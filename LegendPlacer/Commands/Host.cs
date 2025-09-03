@@ -4,6 +4,7 @@ using LegendPlacer.Services;
 using LegendPlacer.ViewModels;
 using LegendPlacer.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Nice3point.Revit.Toolkit;
 
 namespace LegendPlacer.Commands;
 
@@ -28,7 +29,8 @@ public static class Host
 
         var view = serviceProvider.GetService<LegendPlacerView>();
         var tws = serviceProvider.GetService<IThemeWatcherService>();
-        tws?.SetConfigTheme(view);
+        tws?.Initialize();
+        view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
         view?.ShowDialog();
     }
     

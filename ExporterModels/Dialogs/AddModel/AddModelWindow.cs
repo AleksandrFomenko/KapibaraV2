@@ -28,7 +28,7 @@ public static class AddModelWindow
         tws.SetConfigTheme(view);
         view.Owner = owner;
         view.Show();
-        view.Loaded += (_, __) => tws.SetConfigTheme(view);
+        tws?.SetConfigTheme(view);
         view.Closed += (_, _) => { onClosed?.Invoke(); };
         return view;
     }

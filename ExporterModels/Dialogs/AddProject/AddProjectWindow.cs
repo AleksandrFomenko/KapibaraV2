@@ -22,9 +22,9 @@ public static class AddProjectWindow
 
         var view = provider.GetService<AddProjectView>();
         var tws = provider.GetService<IThemeWatcherService>();
-        tws?.SetConfigTheme(view);
         view.Owner = owner;
         view.Show();
+        tws?.SetConfigTheme(view);
         view.Closed += (_, _) => { onClosed?.Invoke(); };
         return view;
     }
