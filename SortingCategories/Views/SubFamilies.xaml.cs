@@ -8,14 +8,11 @@ namespace SortingCategories.Views;
 public partial class SubFamilies :  INavigableView<SubFamiliesViewModel>
 {
     public SubFamiliesViewModel ViewModel { get; }
-    private readonly IThemeWatcherService _themeService;
     public SubFamilies(SubFamiliesViewModel viewModel,IThemeWatcherService themeService)
     {
-
         ViewModel = viewModel;
         DataContext = this;
-        _themeService = themeService;
-        _themeService.Watch(this);
+        themeService.Watch(this);
         InitializeComponent();
     }
 }

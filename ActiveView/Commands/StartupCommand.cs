@@ -31,7 +31,6 @@ public class StartupCommand : ExternalCommand
 
         var serviceProvider = services.BuildServiceProvider();
         var themeService = serviceProvider.GetRequiredService<IThemeWatcherService>();
-        themeService.Initialize();
         var view = serviceProvider.GetRequiredService<ActiveViewView>();
         themeService.SetConfigTheme();
         view.SourceInitialized += (sender, args) => themeService.SetConfigTheme();

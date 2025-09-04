@@ -22,9 +22,7 @@ public static class Host
       var serviceProvider = services.BuildServiceProvider();
       var view = serviceProvider.GetRequiredService<WorkSetLinkFilesView>();
       var tws = serviceProvider.GetRequiredService<IThemeWatcherService>();
-      tws.Initialize();
       view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
-      
       view.ShowDialog();
    }
 }

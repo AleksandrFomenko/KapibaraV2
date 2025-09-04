@@ -30,7 +30,7 @@ public sealed partial class SettingsViewModel : ObservableObject
     }
     partial void OnSettingChanged(Setting value)
     {
-        var them = value.Theme == Theme.Dark ? ApplicationTheme.Dark : ApplicationTheme.Light; 
+        var them = value.Theme == Theme.Dark ? ApplicationTheme.Dark : ApplicationTheme.Light;
         ThemeWatcherService.ApplyTheme(them);
         Cfg.Setting = value;
         Cfg.SaveConfig();

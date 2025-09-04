@@ -1,22 +1,19 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json; 
 
 namespace ChatGPT.model;
 
 
 
-internal class ChatGPTModel
+internal class ChatGptModel
 {
     private readonly string _host = "http://185.240.51.72";
     // всем пофиг на этот ключ, так что пусть будет тут
     private readonly string _apiKey = "qweqweqweqweqweqwe";
     private readonly HttpClient _httpClient;
     
-    public ChatGPTModel()
+    public ChatGptModel()
     {
         _httpClient = new HttpClient
         {

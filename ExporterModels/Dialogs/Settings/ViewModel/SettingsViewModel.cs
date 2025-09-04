@@ -46,10 +46,11 @@ public partial class SettingsViewModel : ObservableObject
 
     partial void OnSelectedConfigurationChanged(Configuration? value)
     {
-        Save();
+     
         var path = value?.Path;
         if (!string.IsNullOrWhiteSpace(path))
             WeakReferenceMessenger.Default.Send(new SelectedConfigurationChangedMessage(path));
+        Save();
     }
 
     [RelayCommand]
@@ -89,8 +90,7 @@ public partial class SettingsViewModel : ObservableObject
 
         if (!string.IsNullOrWhiteSpace(SelectedConfiguration.Path) && File.Exists(SelectedConfiguration.Path))
             File.Copy(SelectedConfiguration.Path, newPath, true);
-
-        // 4. создать новую конфигурацию и добавить в список
+        
         var newConfig = new Configuration(newName, newPath);
         Configurations.Add(newConfig);
         SelectedConfiguration = newConfig;

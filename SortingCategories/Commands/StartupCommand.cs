@@ -12,9 +12,6 @@ using Wpf.Ui.Abstractions;
 
 namespace SortingCategories.Commands;
 
-/// <summary>
-///     External command entry point invoked from the Revit interface
-/// </summary>
 [UsedImplicitly]
 [Transaction(TransactionMode.Manual)]
 public class StartupCommand: ExternalCommand
@@ -40,8 +37,11 @@ public class StartupCommand: ExternalCommand
         services.AddSingleton<INavigationViewPageProvider, PageService>();
 
         var serviceProvider = services.BuildServiceProvider();
-        var view = serviceProvider.GetRequiredService<SortingCategoriesView>(); 
+        
         var tws = serviceProvider.GetRequiredService<IThemeWatcherService>(); 
+        var view = serviceProvider.GetRequiredService<SortingCategoriesView>(); 
+        var view1 = serviceProvider.GetRequiredService<MainFamilies>(); 
+        var view2 = serviceProvider.GetRequiredService<SubFamilies>(); 
         
         view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
         

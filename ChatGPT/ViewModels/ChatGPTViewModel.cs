@@ -10,7 +10,7 @@ public partial class ChatGptViewModel : INotifyPropertyChanged
     private string _request;
     private string _result;
 
-    private ChatGPTModel _model = new ChatGPTModel();
+    private ChatGptModel _model = new ChatGptModel();
     public string Request
     {
         get => _request;
