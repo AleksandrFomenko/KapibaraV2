@@ -1,3 +1,4 @@
 [submodule "External/WPF.UI"]
 	path = External/WPF.UI
 	url = https://github.com/AleksandrFomenko/WPF.UI
+	branch = main
