@@ -1,44 +1,41 @@
 ﻿using System.IO;
-using Autodesk.Revit.UI;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace KapibaraCore.Configuration;
 
 public static class Configuration
 {
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        WriteIndented = true,
+        Converters = { new JsonStringEnumConverter() }
+    };
+
     public static void CreateDir(string dllPath, string directoryName)
     {
         var dllDirectory = Path.GetDirectoryName(dllPath);
-        var configDirectoryPath = Path.Combine(dllDirectory, directoryName);
+        var configDirectoryPath = Path.Combine(dllDirectory!, directoryName);
         if (!Directory.Exists(configDirectoryPath))
-        {
-            var x = Directory.CreateDirectory(configDirectoryPath);
-        }
+            Directory.CreateDirectory(configDirectoryPath);
     }
+
     public static void CreateEmptyJsonFile(string directoryPath, string fileName)
     {
         var filePath = Path.Combine(directoryPath, fileName);
-        
         if (!File.Exists(filePath))
-        {
             File.WriteAllText(filePath, "{}");
-        }
     }
 
-
-    public static T LoadConfig<T>(string filePath) where T : class
+    public static T? LoadConfig<T>(string filePath) where T : class
     {
         try
         {
             if (!File.Exists(filePath))
-            {
                 throw new FileNotFoundException("Файл конфигурации не найден", filePath);
-            }
-            
-            var json = File.ReadAllText(filePath);
-            var config = JsonConvert.DeserializeObject<T>(json);
 
-            return config;
+            var json = File.ReadAllText(filePath);
+            return JsonSerializer.Deserialize<T>(json, _jsonOptions);
         }
         catch (FileNotFoundException ex)
         {
@@ -54,6 +51,25 @@ public static class Configuration
         {
             Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             return null;
+        }
+    }
+
+    public static bool SaveConfig<T>(string filePath, T obj)
+    {
+        try
+        {
+            var dir = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            var json = JsonSerializer.Serialize(obj, _jsonOptions);
+            File.WriteAllText(filePath, json);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Save error: {ex.Message}");
+            return false;
         }
     }
 }

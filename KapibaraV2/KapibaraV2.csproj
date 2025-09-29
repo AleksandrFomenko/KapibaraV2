@@ -94,10 +94,15 @@
         <Resource Include="Resources\Icons\LedendPlacer.png" />
         <None Remove="Resources\Icons\ViewByParameter.png" />
         <Resource Include="Resources\Icons\ViewByParameter.png" />
+        <None Remove="Resources\Icons\Levels.png" />
+        <Resource Include="Resources\Icons\Levels.png" />
+        <None Remove="Resources\Icons\Axes.png" />
+        <Resource Include="Resources\Icons\Axes.png" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ActiveView\ActiveView.csproj" />
+        <ProjectReference Include="..\AxesLevels\AxesLevels.csproj" />
         <ProjectReference Include="..\ChatGPT\ChatGPT.csproj" />
         <ProjectReference Include="..\ClashHub\ClashHub.csproj" />
         <ProjectReference Include="..\ColorsByParameters\ColorsByParameters.csproj" />

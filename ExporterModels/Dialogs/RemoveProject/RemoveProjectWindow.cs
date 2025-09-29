@@ -22,10 +22,9 @@ public static class RemoveProjectWindow
 
         var view = provider.GetService<RemoveProjectView>();
         var tws = provider.GetService<IThemeWatcherService>();
-        tws?.SetConfigTheme(view);
+        tws?.SetConfigTheme();
         view.Owner = owner;
         view.Show();
-        tws?.SetConfigTheme(view);
         view.Closed += (_, _) => { onClosed?.Invoke(); };
         return view;
     }

@@ -25,10 +25,10 @@ public static class AddModelWindow
 
         var view = provider.GetService<AddModelView>();
         var tws = provider.GetService<IThemeWatcherService>();
-        tws.SetConfigTheme(view);
+        tws.SetConfigTheme();
         view.Owner = owner;
         view.Show();
-        tws?.SetConfigTheme(view);
+        tws?.SetConfigTheme();
         view.Closed += (_, _) => { onClosed?.Invoke(); };
         return view;
     }

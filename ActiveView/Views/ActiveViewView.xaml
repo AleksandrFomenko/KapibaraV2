@@ -8,7 +8,7 @@
     xmlns:converters="clr-namespace:ActiveView.Views.Converters"
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen"
-    Height="400"
+    Height="500"
     Width="300">
     <ui:FluentWindow.Resources>
         <converters:BoolVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -16,13 +16,26 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <ui:TitleBar Grid.Row="0" Title="Active View"/>
+        
         <ui:Card Grid.Row="1" Margin="10, 0">
+            <StackPanel>
+                <TextBlock Text="{Binding HeadingOptionsSelection}"/>
+                <Separator Visibility = "Hidden" Height="10"/>
+                <ComboBox
+                    ItemsSource="{Binding Options}"
+                    SelectedItem="{Binding SelectionOption}"
+                    DisplayMemberPath="Name"/>
+            </StackPanel>
+        </ui:Card>
+        
+        <ui:Card Grid.Row="2" Margin="10, 0">
             <StackPanel>
                 <TextBlock Text="{Binding HeadingParameterSelection}"/>
                 <Separator Visibility = "Hidden" Height="10"/>
@@ -32,7 +45,7 @@
             </StackPanel>
         </ui:Card>
         
-        <ui:Card Grid.Row="2" Margin="10, 0">
+        <ui:Card Grid.Row="3" Margin="10, 0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -54,7 +67,7 @@
             </Grid>
         </ui:Card>
         
-        <ui:Card Grid.Row="3" Margin="10, 0">
+        <ui:Card Grid.Row="4" Margin="10, 0">
             <StackPanel>
                 <TextBlock Text="{Binding HeadingNotEmpty}"/>
                 <Separator Visibility = "Hidden" Height="10"/>
@@ -63,7 +76,7 @@
             </StackPanel>
         </ui:Card>
         
-        <ui:Button Grid.Row="4"
+        <ui:Button Grid.Row="5"
                    Appearance="Primary"
                    Content="Execute"
                    HorizontalAlignment="Center"

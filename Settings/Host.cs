@@ -1,4 +1,3 @@
-using System.Windows;
 using KapibaraUI.Services.Appearance;
 using Microsoft.Extensions.DependencyInjection;
 using Settings.Configuration;
@@ -18,7 +17,7 @@ public static class Host
     {
         var services = new ServiceCollection();
 
-        if (Context.ActiveDocument != null) services.AddSingleton(Context.ActiveDocument);
+        //if (Context.ActiveDocument != null) services.AddSingleton(Context.ActiveDocument);
         services.AddSingleton<SettingsViewModel>();
         services.AddSingleton<SettingsView>();
         services.AddScoped<IThemeWatcherService, ThemeWatcherService>();

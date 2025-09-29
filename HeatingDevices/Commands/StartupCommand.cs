@@ -18,7 +18,7 @@ public class StartupCommand : ExternalCommand
         Host.Start();
         var view = Host.GetService<SpaceHeaterView>();
         var tws = Host.GetService<IThemeWatcherService>();
-        tws.SetConfigTheme(view);
+        tws.SetConfigTheme();
         view.ShowDialog();
         
     }

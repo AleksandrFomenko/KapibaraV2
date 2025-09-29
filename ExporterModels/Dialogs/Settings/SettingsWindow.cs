@@ -27,7 +27,7 @@ public static class SettingsWindow
         if (view != null) view.Owner = owner;
        
         view.Show();
-        tws.SetConfigTheme(view);
+        tws.SetConfigTheme();
         //view.Loaded += (_, __) => tws.SetConfigTheme(view);
 
         view.Closed += (_, _) => { onClosed?.Invoke(); };

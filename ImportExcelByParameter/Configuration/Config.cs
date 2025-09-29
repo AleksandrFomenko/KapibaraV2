@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Text.Json;
 using Autodesk.Revit.UI;
-using Newtonsoft.Json;
 using KapibaraConfig = KapibaraCore.Configuration;
 
 namespace ImportExcelByParameter.Configuration;
@@ -59,7 +59,12 @@ public class Config
     {
         try
         {
-            var json = JsonConvert.SerializeObject(this, Formatting.Indented);
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true, 
+
+            };
+            var json = JsonSerializer.Serialize(this, options);
             File.WriteAllText(_configFilePath, json);
         }
         catch (Exception ex)

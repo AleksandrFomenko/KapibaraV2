@@ -23,7 +23,6 @@ public class StartupCommand : ExternalCommand
         var vm = Host.GetService<SettingsViewModel>();
         var tws = Host.GetService<IThemeWatcherService>();
         
-        vm.SetSetting();
         view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
         view.ShowDialog();
     }

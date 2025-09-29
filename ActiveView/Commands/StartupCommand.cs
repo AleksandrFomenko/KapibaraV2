@@ -15,7 +15,7 @@ public class StartupCommand : ExternalCommand
 {
     public override void Execute()
     {
-        
+        Handler.Handlers.RegisterHandlers();
         var services = new ServiceCollection();
 
         var document = Context.ActiveDocument;
@@ -34,6 +34,6 @@ public class StartupCommand : ExternalCommand
         var view = serviceProvider.GetRequiredService<ActiveViewView>();
         themeService.SetConfigTheme();
         view.SourceInitialized += (sender, args) => themeService.SetConfigTheme();
-        view.ShowDialog();
+        view.Show(Context.UiApplication.MainWindowHandle);
     }
 }

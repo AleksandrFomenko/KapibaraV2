@@ -17,7 +17,7 @@ public class NwcExporter : RevitExporter
         {
             Console.WriteLine($"🔧 [NwcExporter] Начинаем экспорт: {filePath}");
 
-            var doc = OpenDocumentAsDetach(filePath, badNameWorkset, true, false);
+            var doc = OpenDocumentAsDetach(filePath, badNameWorkset, false, false);
             if (doc != null)
             {
                 ExportToNwc(doc, directoryPath);

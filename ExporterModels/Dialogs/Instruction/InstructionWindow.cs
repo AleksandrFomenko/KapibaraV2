@@ -25,8 +25,8 @@ public static class InstructionWindow
         var view = serviceProvider.GetService<InstructionView>();
         view.Owner = owner;
         view.Show();
-        tws.SetConfigTheme(view);
-        view.Loaded += (_, __) => tws.SetConfigTheme(view);
+        tws.SetConfigTheme();
+        view.Loaded += (_, __) => tws.SetConfigTheme();
         view.Closed += (_, _) => { onClosed?.Invoke(); };
         view.Show();
     }

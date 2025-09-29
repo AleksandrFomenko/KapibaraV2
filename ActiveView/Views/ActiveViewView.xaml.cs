@@ -8,7 +8,6 @@ public sealed partial class ActiveViewView
 {
     public ActiveViewView(ActiveViewViewModel viewModel, IThemeWatcherService themeWatcherService)
     {
-        ActiveViewViewModel.Close = Close;
         themeWatcherService.Watch(this);
         DataContext = viewModel;
         InitializeComponent();

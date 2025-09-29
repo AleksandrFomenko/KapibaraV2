@@ -36,7 +36,7 @@ public static class AddConfigurationWindow
         view.Closed += (s, e) => { tcs.SetResult(true); };
 
         view?.Show();
-        tws?.SetConfigTheme(view);
+        tws?.SetConfigTheme();
 
         await tcs.Task;
 

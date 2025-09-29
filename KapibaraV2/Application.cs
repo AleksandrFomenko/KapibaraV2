@@ -107,6 +107,12 @@ namespace KapibaraV2
                 .SetImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
             //stackPanel.AddPushButton<ColorsByParameters.Commands.StartupCommand>("Цвета")
                 //.SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+                
+            var stackPanelAxesLevels = panelGeneral.AddStackPanel();
+            stackPanelAxesLevels.AddPushButton<ProjectAxes.Commands.AxesStartupCommand>("Оси")
+                .SetImage("/KapibaraV2;component/Resources/Icons/Axes.png");;
+            stackPanelAxesLevels.AddPushButton<ProjectAxes.Commands.LevelsStartupCommand>("Уровни")
+                .SetImage("/KapibaraV2;component/Resources/Icons/Levels.png");;
             
 
             //MEP общие

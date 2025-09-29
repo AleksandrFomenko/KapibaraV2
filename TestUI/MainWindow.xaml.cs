@@ -1,6 +1,5 @@
-﻿using HostViewByParameter = ViewByParameter.Commands.Host;
-using HostLegendPlacer = LegendPlacer.Commands.Host;
-using ExporterModelsHost = ExporterModels.Host;
+﻿using HostProjectAxes = ProjectAxes.Commands.Host;
+using HostAxes = Axes.Host.Host;
 
 
 namespace TestUI;
@@ -9,8 +8,6 @@ public partial class MainWindow
 {
     public MainWindow()
     {
-        //HostLegendPlacer.StartTestUi();
-        //HostViewByParameter.StartTestUi();
-        ExporterModelsHost.Start();
+        HostAxes.StartMock();
     }
 }

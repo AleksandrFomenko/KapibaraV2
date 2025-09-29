@@ -32,9 +32,7 @@ public static class Host
         
         var tws = serviceProvider.GetService<IThemeWatcherService>();
         var view = serviceProvider.GetService<ViewByParameterView>();
-        tws?.Initialize();
         view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
-        
         view?.ShowDialog();
     }
     
@@ -51,7 +49,6 @@ public static class Host
         
         var tws = serviceProvider.GetService<IThemeWatcherService>();
         var view = serviceProvider.GetService<ViewByParameterView>();
-        tws?.SetConfigTheme(view);
         view?.ShowDialog();
     }
 }

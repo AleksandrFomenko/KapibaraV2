@@ -35,12 +35,6 @@
         <TargetFramework>net8.0-windows</TargetFramework>
     </PropertyGroup>
 
-    <PropertyGroup>
-        <StartAction>Program</StartAction>
-        <StartProgram>C:\Program Files\Autodesk\Revit $(RevitVersion)\Revit.exe</StartProgram>
-        <StartArguments>/language ENG</StartArguments>
-    </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="2.*"/>
         <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*"/>
@@ -49,6 +43,7 @@
         <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.*"/>
+        <PackageReference Include="System.Text.Json" Version="9.*" />
     </ItemGroup>
 
     <ItemGroup>

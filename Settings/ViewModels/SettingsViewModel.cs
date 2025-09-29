@@ -1,46 +1,66 @@
-﻿using KapibaraUI.Services.Appearance;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using KapibaraUI.Services.Appearance;
 using Settings.Configuration;
 using Settings.Models;
-using Settings.Views;
+using System.Collections.Generic;
 using Wpf.Ui.Appearance;
-using Setting = Settings.Models.Setting;
-using Theme = Settings.Models.Theme;
+using Wpf.Ui.Controls;
 
 namespace Settings.ViewModels;
 
 public sealed partial class SettingsViewModel : ObservableObject
 {
-    [ObservableProperty] private List<Setting> _settings;
-    [ObservableProperty] private Setting _setting;
+    [ObservableProperty] private List<ApplicationTheme> _themes;
+    [ObservableProperty] private ApplicationTheme _theme;
+
+    [ObservableProperty] private List<WindowBackdropType> _backdrops;
+    [ObservableProperty] private WindowBackdropType _backdrop;
+
     private Config Cfg { get; }
-    private IThemeWatcherService ThemeWatcherService { get; set; }
+    private IThemeWatcherService ThemeWatcherService { get; }
 
     public SettingsViewModel(Config cfg, IThemeWatcherService tws)
     {
-        var path = cfg.GetPath();
+        Cfg = cfg;                
         ThemeWatcherService = tws;
-        Cfg = KapibaraCore.Configuration.Configuration.LoadConfig<Config>(path);
-        GetSettings();
+        
+        Themes = new List<ApplicationTheme>
+        {
+            ApplicationTheme.Dark,
+            ApplicationTheme.Light,
+            ApplicationTheme.Auto,
+            ApplicationTheme.HighContrast
+        };
+
+        Backdrops = new List<WindowBackdropType>
+        {
+            WindowBackdropType.Mica,
+            WindowBackdropType.Acrylic,
+            WindowBackdropType.Tabbed,
+            WindowBackdropType.Auto,
+            WindowBackdropType.None
+        };
+        
+        var cfgTheme    = Cfg.Setting?.Theme    ?? ApplicationTheme.Light;
+        var cfgBackdrop = Cfg.Setting?.Backdrop ?? WindowBackdropType.Mica;
+
+        Theme    = Themes.Contains(cfgTheme)       ? cfgTheme    : ApplicationTheme.Light;
+        Backdrop = Backdrops.Contains(cfgBackdrop) ? cfgBackdrop : WindowBackdropType.Mica;
+        
+        ThemeWatcherService.ApplyTheme(Theme);
     }
-    
-    public void SetSetting()
+
+    partial void OnThemeChanged(ApplicationTheme value)
     {
-        Setting = (Settings.FirstOrDefault(s => s.Name == Cfg.Setting.Name)
-                   ?? Settings.FirstOrDefault()) ?? new Setting("Ошибка", Theme.Light);
-    }
-    partial void OnSettingChanged(Setting value)
-    {
-        var them = value.Theme == Theme.Dark ? ApplicationTheme.Dark : ApplicationTheme.Light;
-        ThemeWatcherService.ApplyTheme(them);
-        Cfg.Setting = value;
+        Cfg.Setting.Theme = value;
         Cfg.SaveConfig();
+        ThemeWatcherService.ApplyTheme(value);
     }
-    private void GetSettings()
+
+    partial void OnBackdropChanged(WindowBackdropType value)
     {
-        Settings =
-        [
-            new Setting("Темная", Theme.Dark),
-            new Setting("Светлая", Theme.Light)
-        ];
+        Cfg.Setting.Backdrop = value;
+        Cfg.SaveConfig();
+        ThemeWatcherService.ApplyTheme(Theme);
     }
 }

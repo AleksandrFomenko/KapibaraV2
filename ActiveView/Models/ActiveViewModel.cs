@@ -1,7 +1,7 @@
-﻿using Autodesk.Revit.Attributes;
-using Autodesk.Revit.UI;
-using Autodesk.Revit.DB;
+﻿using ActiveView.Handler;
+using ActiveView.ViewModels;
 using KapibaraCore.Parameters;
+
 
 namespace ActiveView.Models;
 
@@ -18,26 +18,47 @@ public class ActiveViewModel : IModelActiveView
         return _doc.GetProjectParameters();
     }
 
-    public void Execute(string parameterName, string value, bool skipNotEmpty)
+    public async void Execute(string parameterName, string value, bool skipNotEmpty, Option option)
     {
-        var elems = new FilteredElementCollector(_doc, _doc.ActiveView.Id)
-            .WhereElementIsNotElementType()
-            .ToElements();
-        using (var t = new Transaction(_doc,"ActiveView"))
+        await Handlers.AsyncEventHandler.RaiseAsync(async app =>
         {
-            t.Start();
-            foreach (var elem in elems) 
+            using (var tr = new Transaction(_doc, "ActiveView")) 
             { 
-                var parameter = elem.GetParameterByName(parameterName);
-                if (skipNotEmpty)
+                tr.Start();
+                
+                ICollection<Element> elems;
+
+                if (option.IsAll)
                 {
-                   if(CheckParameterValue(parameter)) continue;
+                    elems = new FilteredElementCollector(_doc, _doc.ActiveView.Id)
+                        .WhereElementIsNotElementType()
+                        .ToElements();
                 }
-                parameter.SetParameterValue(value);
+                else
+                {
+                    elems = Context.ActiveUiDocument!.Selection
+                        .GetElementIds()
+                        .Select(id => _doc.GetElement(id))
+                        .Where(e => e is not null)
+                        .ToList();
+                }
+
+                foreach (var elem in elems)
+                {
+                    var parameter = elem.GetParameterByName(parameterName);
+                    if (parameter is null) continue;
+
+                    if (skipNotEmpty && CheckParameterValue(parameter))
+                        continue;
+
+                    parameter.SetParameterValue(value);
+                }
+                
+                tr.Commit();
             }
-            t.Commit();
-        }
+        });
     }
+
 
     private static bool CheckParameterValue(Parameter parameter)
     {
