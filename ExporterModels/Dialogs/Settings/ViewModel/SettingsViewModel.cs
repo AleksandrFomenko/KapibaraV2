@@ -15,7 +15,14 @@ public partial class SettingsViewModel : ObservableObject
 {
     private readonly ConfigurationService _configService;
     private readonly SettingsModel _model;
+    private static string Canon(string p) =>
+        Path.GetFullPath(p).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
+    private static bool PathEq(string? a, string? b) =>
+        !string.IsNullOrWhiteSpace(a) &&
+        !string.IsNullOrWhiteSpace(b) &&
+        string.Equals(Canon(a), Canon(b), StringComparison.OrdinalIgnoreCase);
+    
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(DeleteConfigCommand))]
     [NotifyCanExecuteChangedFor(nameof(CopyConfigCommand))]
@@ -46,11 +53,15 @@ public partial class SettingsViewModel : ObservableObject
 
     partial void OnSelectedConfigurationChanged(Configuration? value)
     {
-     
         var path = value?.Path;
-        if (!string.IsNullOrWhiteSpace(path))
-            WeakReferenceMessenger.Default.Send(new SelectedConfigurationChangedMessage(path));
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+        {
+            Save();
+            return;
+        }
+        
         Save();
+        WeakReferenceMessenger.Default.Send(new SelectedConfigurationChangedMessage(path));
     }
 
     [RelayCommand]
@@ -114,7 +125,6 @@ public partial class SettingsViewModel : ObservableObject
         if (dlg.ShowDialog(OwnerView) == true)
         {
             _configService.ExportConfigFile(SelectedConfiguration.Path!, dlg.FileName);
-            SelectedConfiguration.Path = dlg.FileName;
         }
     }
 
@@ -129,12 +139,26 @@ public partial class SettingsViewModel : ObservableObject
 
         if (dlg.ShowDialog(OwnerView) == true)
         {
-            var file = dlg.FileName;
-            var name = Path.GetFileNameWithoutExtension(file);
+            var file = Canon(dlg.FileName);
+            var existingByPath = Configurations.FirstOrDefault(c => PathEq(c.Path, file));
+            if (existingByPath is not null)
+            {
+                SelectedConfiguration = existingByPath;
+                Save();
+                return;
+            }
 
+            var name = Path.GetFileNameWithoutExtension(file);
             var uniqueName = MakeUniqueName(name, Configurations);
+
             var cfg = _model.AddConfigurations(Configurations, uniqueName, file);
-            if (cfg != null) cfg.Path = file;
+            if (cfg is null) return;
+
+            var app = _configService.Load();
+            app.Configurations = Configurations;
+            app.SelectedConfigurationPath = cfg.Path;
+            _configService.Save(app);
+
             SelectedConfiguration = cfg;
         }
     }
@@ -159,9 +183,9 @@ public partial class SettingsViewModel : ObservableObject
     private void AddConfigurationCore(string name)
     {
         var path = _configService.EnsureInternalConfig(name);
-        var cfg = _model.AddConfigurations(Configurations, name, path);
-        if (cfg != null) cfg.Path = path;
-        SelectedConfiguration = cfg;
+           var cfg = _model.AddConfigurations(Configurations, name, path);
+           if (cfg is null) return;
+           SelectedConfiguration = cfg;
     }
 
     private void RenameConfigurationCore(string newName)

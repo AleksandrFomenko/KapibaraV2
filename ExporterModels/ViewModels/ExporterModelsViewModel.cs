@@ -126,20 +126,23 @@ public sealed partial class ExporterModelsViewModel : ObservableObject
 
     private void SwitchWorkspace(string newPath)
     {
-        SaveWorkspaceNow();
+        if (string.IsNullOrWhiteSpace(newPath) || !File.Exists(newPath))
+            return;
+
+        var oldPath = _workspacePath;
+        SaveWorkspaceTo(oldPath);
+
         UnwireAutoSave(Projects);
 
         _workspacePath = newPath;
-        _workspace = _configService.LoadWorkspace(_workspacePath);
-
+        _workspace = _configService.LoadWorkspace(_workspacePath) ?? new WorkspaceConfig();
         Projects = _workspace.Projects ?? [];
         WireAutoSave(Projects);
 
         SelectedProject = ResolveSelectedProject(_workspace.SelectedProjectName, Projects);
-
         UpdateTitleWindow();
-        ScheduleSave();
     }
+
 
     private static Project? ResolveSelectedProject(string? name, ObservableCollection<Project> list)
     {
@@ -152,6 +155,24 @@ public sealed partial class ExporterModelsViewModel : ObservableObject
     {
         projects.CollectionChanged += ProjectsOnCollectionChanged;
         foreach (var p in projects) WireProject(p);
+    }
+    
+    private void SaveWorkspaceTo(string path)
+    {
+        try
+        {
+            var snapshot = new WorkspaceConfig
+            {
+                Projects = Projects,
+                SelectedProjectName = SelectedProject?.Name
+            };
+
+            _configService.SaveWorkspace(path, snapshot);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workspace to {path}: {ex.Message}");
+        }
     }
 
     private void UnwireAutoSave(ObservableCollection<Project> projects)
@@ -285,6 +306,7 @@ public sealed partial class ExporterModelsViewModel : ObservableObject
         {
             Projects.Add(p);
             SelectedProject = p;
+            SaveWorkspaceTo(_workspacePath);
         };
     }
 
