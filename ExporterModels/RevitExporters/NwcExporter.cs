@@ -15,20 +15,17 @@ public class NwcExporter : RevitExporter
     {
         try
         {
-            Console.WriteLine($"🔧 [NwcExporter] Начинаем экспорт: {filePath}");
-
             var doc = OpenDocumentAsDetach(filePath, badNameWorkset, false, false);
             if (doc != null)
             {
                 ExportToNwc(doc, directoryPath);
                 doc.Close(false);
             }
-            
+
         }
         catch (Exception ex)
-        {
-            Console.WriteLine($"🔧 [NwcExporter] ошибкаа: {ex.Message}");
-            throw; 
+        { ;
+            throw;
         }
     }
 
@@ -37,16 +34,14 @@ public class NwcExporter : RevitExporter
         if (doc == null) return;
         if (!Directory.Exists(directoryPath)) return;
         
-        var navisworksViewCollector = new FilteredElementCollector(doc)
-            .OfCategory(BuiltInCategory.OST_Views)
-            .WhereElementIsNotElementType()
-            .OfClass(typeof(View3D))
-            .Cast<View3D>()
-            .FirstOrDefault(v => v.Name.Contains("navisworks", StringComparison.OrdinalIgnoreCase));
+        var exportView = GetAnySuitable3DView(doc);
 
-        if (navisworksViewCollector == null) return;
-
-        var elementsInView = new FilteredElementCollector(doc, navisworksViewCollector.Id)
+        if (exportView == null) 
+        {
+            return;
+        }
+        
+        var elementsInView = new FilteredElementCollector(doc, exportView.Id)
             .WhereElementIsNotElementType()
             .ToElementIds();
 
@@ -67,7 +62,7 @@ public class NwcExporter : RevitExporter
             FindMissingMaterials = true,
             DivideFileIntoLevels = true,
             ExportScope = NavisworksExportScope.View,
-            ViewId = navisworksViewCollector.Id,
+            ViewId = exportView.Id,
             ExportRoomGeometry = false
         };
 
@@ -80,6 +75,44 @@ public class NwcExporter : RevitExporter
         {
             Console.WriteLine($"Ошибка экспорта в NWC для {doc.Title}: {ex.Message}");
         }
+    }
+    
+    private static View3D? GetNavisworksView(Document doc)
+    {
+        if (doc == null) return null;
+        
+        var navisworksView = new FilteredElementCollector(doc)
+            .OfCategory(BuiltInCategory.OST_Views)
+            .WhereElementIsNotElementType()
+            .OfClass(typeof(View3D))
+            .Cast<View3D>()
+            .FirstOrDefault(v => !v.IsTemplate && 
+                                 v.Name != null && 
+                                 v.Name.IndexOf("navisworks", StringComparison.OrdinalIgnoreCase) >= 0);
+
+        return navisworksView;
+    }
+    
+    private static View3D? GetAnySuitable3DView(Document doc)
+    {
+        if (doc == null) return null;
+        
+        var navisworksView = GetNavisworksView(doc);
+        if (navisworksView != null) return navisworksView;
+        
+        var anySuitableView = new FilteredElementCollector(doc)
+            .OfCategory(BuiltInCategory.OST_Views)
+            .WhereElementIsNotElementType()
+            .OfClass(typeof(View3D))
+            .Cast<View3D>()
+            .FirstOrDefault(v => !v.IsTemplate && v.CanBePrinted);
+        
+        if (anySuitableView == null && doc.ActiveView is View3D active3DView && !active3DView.IsTemplate)
+        {
+            return active3DView;
+        }
+    
+        return anySuitableView;
     }
 
     private static string PrepareDocumentName(string title)
