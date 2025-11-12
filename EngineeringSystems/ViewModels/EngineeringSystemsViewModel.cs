@@ -5,8 +5,12 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using EngineeringSystems.Configuration;
 using EngineeringSystems.Model;
+using EngineeringSystems.Model.Abstractions;
+using EngineeringSystems.ViewModels.Entities;
 using KapibaraCore.Parameters;
+using Options = EngineeringSystems.ViewModels.Entities.Options;
 using RelayCommand = KapibaraCore.RelayCommand.RelayCommand;
+using SystemParameters = EngineeringSystems.ViewModels.Entities.SystemParameters;
 
 namespace EngineeringSystems.ViewModels;
 

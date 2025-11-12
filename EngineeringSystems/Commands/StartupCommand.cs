@@ -9,10 +9,20 @@ namespace EngineeringSystems.Commands;
 /// </summary>
 [UsedImplicitly]
 [Transaction(TransactionMode.Manual)]
-public class StartupCommand : ExternalCommand
+public class StartupCommandEngineeringSystems : ExternalCommand
 {
     public override void Execute()
     {
-        Host.Start();
+        EngineeringSystems.Start();
+    }
+}
+
+[UsedImplicitly]
+[Transaction(TransactionMode.Manual)]
+public class StartupCommandGroupSystems : ExternalCommand
+{
+    public override void Execute()
+    {
+        GroupSystems.Start();
     }
 }

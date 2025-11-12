@@ -1,4 +1,5 @@
 ﻿using EngineeringSystems.ViewModels;
+using EngineeringSystems.ViewModels.Entities;
 
 namespace EngineeringSystems.Model;
 

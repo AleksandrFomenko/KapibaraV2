@@ -2,10 +2,9 @@
 using System.Windows.Media;
 using Autodesk.Revit.UI;
 using Autodesk.Windows;
+using EngineeringSystems.Commands;
 using KapibaraUI.Services.Appearance;
 using Nice3point.Revit.Toolkit.External;
-using Wpf.Ui.Appearance;
-
 
 namespace KapibaraV2
 {
@@ -18,6 +17,7 @@ namespace KapibaraV2
         public override void OnStartup()
         {
             var theme = new ThemeWatcherService();
+            GroupSystems.StartMock();
             theme.Initialize();
             CreateRibbon();
         }
@@ -116,9 +116,12 @@ namespace KapibaraV2
             
 
             //MEP общие
-            panelMepGeneral.AddPushButton<EngineeringSystems.Commands.StartupCommand>("System\nname")
+            panelMepGeneral.AddPushButton<EngineeringSystems.Commands.StartupCommandEngineeringSystems>("System\nname")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+            panelMepGeneral.AddPushButton<EngineeringSystems.Commands.StartupCommandGroupSystems>("System\ngroup")
+                .SetImage("/KapibaraV2;component/Resources/Icons/GroupSystems32.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/GroupSystems32.png");
             panelMepGeneral.AddPushButton<HeatingDevices.Commands.StartupCommand>("Space\nHeater")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png");
@@ -128,6 +131,7 @@ namespace KapibaraV2
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
 */
             // Разное
+            
             panelInfo.AddPushButton<ChatGPT.Commands.ChatGpt>("ChatGPT")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ai.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ai.png");

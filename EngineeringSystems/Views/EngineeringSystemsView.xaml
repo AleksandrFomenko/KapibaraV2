@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://Kapibara/xaml"
+    xmlns:dd="urn:gong-wpf-dragdrop"
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen"
     Height="{Binding WindowHeight, Mode=TwoWay}"

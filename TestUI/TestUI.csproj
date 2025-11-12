@@ -31,6 +31,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Axes\Axes.csproj" />
+      <ProjectReference Include="..\EngineeringSystems\EngineeringSystems.csproj" />
       <ProjectReference Include="..\LegendPlacer\LegendPlacer.csproj" />
       <ProjectReference Include="..\AxesLevels\AxesLevels.csproj" />
       <ProjectReference Include="..\Settings\Settings.csproj" />

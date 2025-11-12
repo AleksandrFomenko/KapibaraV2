@@ -1,10 +1,12 @@
 ﻿using System.Text;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
+using EngineeringSystems.Model.Abstractions;
 using EngineeringSystems.ViewModels;
+using EngineeringSystems.ViewModels.Entities;
 using KapibaraCore.Elements;
 using KapibaraCore.Parameters;
-using Options = EngineeringSystems.ViewModels.Options;
+using Options = EngineeringSystems.ViewModels.Entities.Options;
 
 namespace EngineeringSystems.Model;
 

@@ -1,4 +1,4 @@
-﻿using HostProjectAxes = ProjectAxes.Commands.Host;
+﻿using EngineeringSystems.Commands;
 using HostAxes = Axes.Host.Host;
 
 
@@ -8,6 +8,7 @@ public partial class MainWindow
 {
     public MainWindow()
     {
-        HostAxes.StartMock();
+        GroupSystems.StartMock();
+        GroupSystems.Start();
     }
 }

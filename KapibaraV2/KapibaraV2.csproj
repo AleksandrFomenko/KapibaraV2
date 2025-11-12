@@ -98,6 +98,8 @@
         <Resource Include="Resources\Icons\Levels.png" />
         <None Remove="Resources\Icons\Axes.png" />
         <Resource Include="Resources\Icons\Axes.png" />
+        <None Remove="Resources\Icons\GroupSystems32.png" />
+        <Resource Include="Resources\Icons\GroupSystems32.png" />
     </ItemGroup>
 
     <ItemGroup>
