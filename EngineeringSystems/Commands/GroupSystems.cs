@@ -13,23 +13,23 @@ namespace EngineeringSystems.Commands;
 
 public static class GroupSystems
 {
-    private static ServiceProvider? _serviceProvider;
+    private static IServiceProvider? _serviceProvider;
     public static IServiceProvider Services => _serviceProvider 
                                                ?? throw new InvalidOperationException("Host not started");
-    public static void StartMock()
+    public static void StartHostMock()
     {
         var services = new ServiceCollection();
-        
-        services.AddSingleton<GroupSystemsView>();
         services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
-        services.AddSingleton<GroupSystemsViewModel>();
-        services.AddSingleton<IGroupSystemsModel, GroupSystemsMockModel>();
-        services.AddSingleton<WindowProvider>();
+        
+        services.AddScoped<GroupSystemsView>();
+        services.AddScoped<GroupSystemsViewModel>();
+        services.AddScoped<IGroupSystemsModel, GroupSystemsMockModel>();
+        services.AddScoped<WindowProvider>();
         
         _serviceProvider = services.BuildServiceProvider();
     }
 
-    public static void Start()
+    public static void StartMock()
     {
         var tws = Services.GetRequiredService<IThemeWatcherService>();
         var view = Services.GetRequiredService<GroupSystemsView>();
@@ -42,5 +42,17 @@ public static class GroupSystems
         
         ApplicationThemeManager.Apply(theme, backdrop);
         WindowBackgroundManager.UpdateBackground(view, theme, backdrop);
+    }
+    
+    public static void Start()
+    {
+        var scope = _serviceProvider!.CreateScope();
+        var tws = Services.GetRequiredService<IThemeWatcherService>();
+        var view = Services.GetRequiredService<GroupSystemsView>();
+        var windowProvider = Services.GetRequiredService<WindowProvider>();
+        windowProvider.SetWindowOwner(view);
+        view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
+        view.Closed += (_, __) => scope.Dispose();
+        view.Show();
     }
 }

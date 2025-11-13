@@ -4,7 +4,7 @@ namespace ExporterModels.RevitExporters;
 
 public abstract class RevitExporter
 {
-    private static readonly FailureProcessorService _failureProcessorService = new();
+    private static readonly FailureProcessorService FailureProcessorService = new();
 
     protected Document? OpenDocumentAsDetach(string filePath, string badNameWorkset, bool deleteLinksDwg,
         bool closeAllWorset)
@@ -44,8 +44,8 @@ public abstract class RevitExporter
 
         try
         {
-            controlledApp.FailuresProcessing += _failureProcessorService.ApplicationOnFailuresProcessing;
-            app.DialogBoxShowing += _failureProcessorService.UIApplicationOnDialogBoxShowing;
+            controlledApp.FailuresProcessing += FailureProcessorService.ApplicationOnFailuresProcessing;
+            app.DialogBoxShowing += FailureProcessorService.UIApplicationOnDialogBoxShowing;
 
 
             var openDoc = controlledApp.OpenDocumentFile(modelPath, openOptions);
@@ -65,10 +65,10 @@ public abstract class RevitExporter
         }
         finally
         {
-            if (_failureProcessorService != null)
+            if (FailureProcessorService != null)
             {
-                controlledApp.FailuresProcessing -= _failureProcessorService.ApplicationOnFailuresProcessing;
-                app.DialogBoxShowing -= _failureProcessorService.UIApplicationOnDialogBoxShowing;
+                controlledApp.FailuresProcessing -= FailureProcessorService.ApplicationOnFailuresProcessing;
+                app.DialogBoxShowing -= FailureProcessorService.UIApplicationOnDialogBoxShowing;
             }
         }
 

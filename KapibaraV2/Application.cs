@@ -17,7 +17,7 @@ namespace KapibaraV2
         public override void OnStartup()
         {
             var theme = new ThemeWatcherService();
-            GroupSystems.StartMock();
+            GroupSystems.StartHostMock();
             theme.Initialize();
             CreateRibbon();
         }

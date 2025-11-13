@@ -8,7 +8,7 @@ public partial class MainWindow
 {
     public MainWindow()
     {
+        GroupSystems.StartHostMock();
         GroupSystems.StartMock();
-        GroupSystems.Start();
     }
 }
