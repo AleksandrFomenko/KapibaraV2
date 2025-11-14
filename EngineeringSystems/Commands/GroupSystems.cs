@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using EngineeringSystems.Model;
 using EngineeringSystems.Model.Abstractions;
 using EngineeringSystems.Model.Mock;
 using EngineeringSystems.services;
@@ -14,45 +15,93 @@ namespace EngineeringSystems.Commands;
 public static class GroupSystems
 {
     private static IServiceProvider? _serviceProvider;
-    public static IServiceProvider Services => _serviceProvider 
-                                               ?? throw new InvalidOperationException("Host not started");
+    private static IServiceScope? _scope;
+
+    public static IServiceProvider Services =>
+        _serviceProvider ?? throw new InvalidOperationException("Host not started");
+
+    public static IServiceProvider ScopeServices =>
+        _scope?.ServiceProvider ?? throw new InvalidOperationException("Scope not created");
+
     public static void StartHostMock()
     {
         var services = new ServiceCollection();
+
         services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
-        
+        services.AddSingleton<WindowProvider>();
         services.AddScoped<GroupSystemsView>();
         services.AddScoped<GroupSystemsViewModel>();
         services.AddScoped<IGroupSystemsModel, GroupSystemsMockModel>();
-        services.AddScoped<WindowProvider>();
-        
+
+        _serviceProvider = services.BuildServiceProvider();
+    }
+    
+    public static void StartHost()
+    {
+        var services = new ServiceCollection();
+
+        services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
+        services.AddSingleton<WindowProvider>();
+        services.AddScoped<GroupSystemsView>();
+        services.AddScoped<GroupSystemsViewModel>();
+        services.AddScoped<IGroupSystemsModel, GroupSystemsModel>();
+
         _serviceProvider = services.BuildServiceProvider();
     }
 
     public static void StartMock()
     {
-        var tws = Services.GetRequiredService<IThemeWatcherService>();
-        var view = Services.GetRequiredService<GroupSystemsView>();
-        var windowProvider = Services.GetRequiredService<WindowProvider>();
+        if (_serviceProvider is null)
+            throw new InvalidOperationException("Host not started");
+
+        _scope?.Dispose();
+        _scope = _serviceProvider.CreateScope();
+
+        var sp = _scope.ServiceProvider;
+
+        var tws = sp.GetRequiredService<IThemeWatcherService>();
+        var view = sp.GetRequiredService<GroupSystemsView>();
+        var windowProvider = sp.GetRequiredService<WindowProvider>();
+
         windowProvider.SetWindowOwner(view);
-        
+
         view.Show();
+
         var theme = ApplicationTheme.Dark;
         var backdrop = WindowBackdropType.Tabbed;
-        
+
         ApplicationThemeManager.Apply(theme, backdrop);
         WindowBackgroundManager.UpdateBackground(view, theme, backdrop);
+
+        view.Closed += (_, _) =>
+        {
+            _scope?.Dispose();
+            _scope = null;
+        };
     }
     
     public static void Start()
     {
-        var scope = _serviceProvider!.CreateScope();
-        var tws = Services.GetRequiredService<IThemeWatcherService>();
-        var view = Services.GetRequiredService<GroupSystemsView>();
-        var windowProvider = Services.GetRequiredService<WindowProvider>();
+        if (_serviceProvider is null)
+            throw new InvalidOperationException("Host not started");
+
+        
+        _scope = _serviceProvider.CreateScope();
+        
+        var sp = _scope.ServiceProvider;
+
+        var tws = sp.GetRequiredService<IThemeWatcherService>();
+        var view = sp.GetRequiredService<GroupSystemsView>();
+        var windowProvider = sp.GetRequiredService<WindowProvider>();
+
         windowProvider.SetWindowOwner(view);
-        view.SourceInitialized += (sender, args) => tws.SetConfigTheme();
-        view.Closed += (_, __) => scope.Dispose();
-        view.Show();
+
+        view.SourceInitialized += (_, _) => tws.SetConfigTheme();
+        view.Closed += (_, _) =>
+        {
+            _scope?.Dispose();
+        };
+
+        view.ShowDialog();
     }
 }

@@ -17,7 +17,7 @@ namespace KapibaraV2
         public override void OnStartup()
         {
             var theme = new ThemeWatcherService();
-            GroupSystems.StartHostMock();
+            GroupSystems.StartHost();
             theme.Initialize();
             CreateRibbon();
         }
@@ -120,7 +120,7 @@ namespace KapibaraV2
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
             panelMepGeneral.AddPushButton<EngineeringSystems.Commands.StartupCommandGroupSystems>("System\ngroup")
-                .SetImage("/KapibaraV2;component/Resources/Icons/GroupSystems32.png")
+                .SetImage("/KapibaraV2;component/Resources/Icons/GroupSystems16.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/GroupSystems32.png");
             panelMepGeneral.AddPushButton<HeatingDevices.Commands.StartupCommand>("Space\nHeater")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png")

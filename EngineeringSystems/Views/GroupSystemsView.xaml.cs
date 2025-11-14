@@ -10,6 +10,7 @@ public partial class GroupSystemsView
     {
         DataContext = viewModel;
         themeWatcherService.Watch(this);
+        Closed += (_, _) => viewModel.AfterClose();
         InitializeComponent();
     }
 }

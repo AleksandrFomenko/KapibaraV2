@@ -44,4 +44,8 @@ public class GroupSystemsMockModel : IGroupSystemsModel
             new EngineeringSystem { CutSystemName = "В", NameSystem = "В2", SystemId = 20001 }
         ];
     }
+
+    public void AfterClose(ObservableCollection<Group>? groups) {}
+
+    public void AfterClose() {}
 }

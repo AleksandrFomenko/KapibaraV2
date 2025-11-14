@@ -3,9 +3,9 @@ using EngineeringSystems.ViewModels.Entities;
 
 namespace EngineeringSystems.Model;
 
-public class Data(Document doc) : IData
+public class Data : IData
 {
-    private Document _doc = doc;
+    private Document _doc = Context.ActiveDocument!;
     private const string SystemNameMissing = "Отсутствует";
     private const string SystemNameCutMissing = "Отсутствует";
 

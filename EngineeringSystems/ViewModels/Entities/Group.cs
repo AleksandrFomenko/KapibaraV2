@@ -9,16 +9,14 @@ public partial class Group : ObservableObject
 {
     [ObservableProperty] private string _name;
     [ObservableProperty] private bool _isChecked;
-    [ObservableProperty] private ObservableCollection<EngineeringSystem> _systems;
-
-    private const string PlaceholderText = "Добавьте системы в группу";
+    [ObservableProperty] private ObservableCollection<EngineeringSystem>? _systems;
+    [ObservableProperty] private bool _isExpanded;
+    [ObservableProperty] private bool _isDeleted;
 
     public Group(string name, ObservableCollection<EngineeringSystem> systems)
     {
         _name = name;
-        _systems = systems ?? new ObservableCollection<EngineeringSystem>();
-        
+        _systems = systems ?? [];
+        _isExpanded = false;
     }
-    
-    
 }

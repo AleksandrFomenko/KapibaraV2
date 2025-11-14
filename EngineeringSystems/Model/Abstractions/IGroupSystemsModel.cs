@@ -9,4 +9,5 @@ public interface IGroupSystemsModel
 {
     public ObservableCollection<Group> GetGroupSystems();
     public ObservableCollection<EngineeringSystem> GetProjectSystems();
+    public void AfterClose(ObservableCollection<Group>? groups);
 }

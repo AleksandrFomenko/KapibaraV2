@@ -13,28 +13,41 @@ public sealed partial class GroupSystemsViewModel : ObservableObject
     private readonly IGroupSystemsModel _model;
     
     [ObservableProperty]
-    private ObservableCollection<Group> _systemGroups;
+    private ObservableCollection<Group> _systemGroups = [];
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RenameGroupCommand))]
     [NotifyCanExecuteChangedFor(nameof(DeleteGroupCommand))]
     private Group? _selectedSystemGroups;
+    
+    private ObservableCollection<Group> _allSystemGroups = [];
 
     [ObservableProperty] 
-    private ObservableCollection<EngineeringSystem> _engineeringSystems;
+    private ObservableCollection<EngineeringSystem> _engineeringSystems = [];
+
     [ObservableProperty] 
-    private string? _filterGroupSystems;
+    private string _filterGroupSystems = string.Empty;
+
     [ObservableProperty] 
-    private string? _filterSystems;
+    private string? _filterSystems = string.Empty;
+
     [ObservableProperty]
-    private GroupSystemsOptions _selectedOption;
+    private GroupSystemsOptions? _selectedOption;
+
     [ObservableProperty]
-    private ObservableCollection<GroupSystemsOptions> _groupSystemsOptions;
+    private ObservableCollection<GroupSystemsOptions> _groupSystemsOptions = [];
 
     public GroupSystemsViewModel(IGroupSystemsModel model)
     { 
         _model = model; 
-        SystemGroups = _model.GetGroupSystems();
-        EngineeringSystems = _model.GetProjectSystems();
+
+        _allSystemGroups = _model.GetGroupSystems() ?? [];
+        
+        SystemGroups.Clear();
+        foreach (var g in _allSystemGroups.Where(g => !g.IsDeleted))
+            SystemGroups.Add(g);
+
+        EngineeringSystems = _model.GetProjectSystems() ?? [];
         
         GroupSystemsOptions = new ObservableCollection<GroupSystemsOptions>(
             Enum.GetValues(typeof(GroupSystemsOptions))
@@ -44,21 +57,41 @@ public sealed partial class GroupSystemsViewModel : ObservableObject
         SelectedOption = GroupSystemsOptions.First();
     }
 
-    partial void OnFilterGroupSystemsChanged(string? value)
+    partial void OnFilterGroupSystemsChanged(string value)
     {
-        if(value == null) return;
-        SystemGroups = new ObservableCollection<Group>(
-            _model.GetGroupSystems()
-                .Where(x => x.Name.Contains(value, StringComparison.OrdinalIgnoreCase))
-        );
+        IEnumerable<Group> source;
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            source = _allSystemGroups.Where(g => !g.IsDeleted);
+        }
+        else
+        {
+            source = _allSystemGroups
+                .Where(g => !g.IsDeleted &&
+                            !string.IsNullOrEmpty(g.Name) &&
+                            g.Name.Contains(value, StringComparison.OrdinalIgnoreCase));
+        }
+        
+        SystemGroups.Clear();
+        foreach (var g in source)
+            SystemGroups.Add(g);
     }
     
     partial void OnFilterSystemsChanged(string? value)
     {
-        if(value == null) return;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            EngineeringSystems = _model.GetProjectSystems() ?? [];
+            return;
+        }
+
+        var allSystems = _model.GetProjectSystems() ?? [];
+
         EngineeringSystems = new ObservableCollection<EngineeringSystem>(
-            _model.GetProjectSystems()
-                .Where(x => x.NameSystem.Contains(value, StringComparison.OrdinalIgnoreCase))
+            allSystems.Where(x =>
+                !string.IsNullOrEmpty(x.NameSystem) &&
+                x.NameSystem.Contains(value!, StringComparison.OrdinalIgnoreCase))
         );
     }
     
@@ -79,7 +112,10 @@ public sealed partial class GroupSystemsViewModel : ObservableObject
             return;
         }
 
-        SystemGroups.Add(new Group(e.Name, []));
+        var newGroup = new Group(e.Name, new ObservableCollection<EngineeringSystem>());
+
+        _allSystemGroups.Add(newGroup);
+        SystemGroups.Add(newGroup);
         
         if (e.Name.Length <= 3)
             e.Result = GroupNameDialogResult.TooShort; 
@@ -108,28 +144,80 @@ public sealed partial class GroupSystemsViewModel : ObservableObject
         
         var selected = SelectedSystemGroups;
 
-        if (selected != null) selected.Name = name;
+        if (selected != null)
+            selected.Name = name;
 
         if (name.Length <= 3)
             e.Result = GroupNameDialogResult.TooShort;
         else
             e.Result = GroupNameDialogResult.Success;
     }
+
+    public void AfterClose()
+    {
+        var toSave = new ObservableCollection<Group>(
+            _allSystemGroups.Where(g => !g.IsDeleted));
+
+        _model.AfterClose(toSave);
+    }
     
-    [RelayCommand] private void CheckAll() => SystemGroups.ToList().ForEach(s => s.IsChecked = true);
-    [RelayCommand] private void UnCheckAll() => SystemGroups.ToList().ForEach(s => s.IsChecked = false);
-    [RelayCommand] private void AddGroup() => AddAndRenameGroup.Start(Variant.Add, this);
+    [RelayCommand]
+    private void CheckAll()
+    {
+        foreach (var g in SystemGroups)
+            g.IsChecked = true;
+    }
+
+    [RelayCommand]
+    private void UnCheckAll()
+    {
+        foreach (var g in SystemGroups)
+            g.IsChecked = false;
+    }
+
+    [RelayCommand]
+    private void AddGroup() => AddAndRenameGroup.Start(Variant.Add, this);
 
     [RelayCommand(CanExecute = nameof(CanAddRenameGroup))]
     private void RenameGroup() => AddAndRenameGroup.Start(Variant.Rename, this);
-
+    
     [RelayCommand(CanExecute = nameof(CanAddRenameGroup))]
     private void DeleteGroup()
     {
-        if (SelectedSystemGroups != null) SystemGroups.Remove(SelectedSystemGroups);
-    }
-    private bool CanAddRenameGroup() => SelectedSystemGroups != null;
+        if (SelectedSystemGroups is null)
+            return;
 
+        var groupToRemove = SelectedSystemGroups;
+        
+        if (groupToRemove.Systems is { Count: > 0 })
+        {
+            var existingIds = new HashSet<int>(EngineeringSystems.Select(s => s.SystemId));
+
+            foreach (var system in groupToRemove.Systems)
+            {
+                if (system.SystemId == 0)
+                    continue;
+
+                if (existingIds.Add(system.SystemId))
+                {
+                    EngineeringSystems.Add(system);
+                }
+            }
+        }
+        
+        groupToRemove.IsDeleted = true;
+        
+        SelectedSystemGroups = null;
+        
+        var source = _allSystemGroups.Where(g => !g.IsDeleted);
+
+        SystemGroups.Clear();
+        foreach (var g in source)
+            SystemGroups.Add(g);
+    }
+
+
+    private bool CanAddRenameGroup() => SelectedSystemGroups != null;
 }
 
 

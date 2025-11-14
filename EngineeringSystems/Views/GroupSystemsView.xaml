@@ -137,16 +137,16 @@
                              Margin="10, 5" 
                              VerticalAlignment="Top" 
                              VerticalContentAlignment="Top">
-                        <ui:ListView 
+                        <ui:ListView
                             ItemsSource="{Binding SystemGroups}"
                             SelectedItem="{Binding SelectedSystemGroups}">
                             
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    
                                     <!-- кард группы -->
                                     <ui:CardExpander
-                                        Icon="{ui:SymbolIcon Group24}">
+                                        Icon="{ui:SymbolIcon Group24}"
+                                        IsExpanded="{Binding IsExpanded, Mode=TwoWay}">
                                         
                                         <ui:CardExpander.Header>
                                             <StackPanel Orientation="Horizontal">
