@@ -34,7 +34,7 @@ internal class Filter
         */
 
         var parameterId = SearchParameter(nameParameter);
-        List<FilterRule> filterRule = filterOption.RevitApiMethodName switch
+        List<FilterRule>? filterRule = filterOption.RevitApiMethodName switch
         {
             "CreateNotContainsRule" => [ParameterFilterRuleFactory.CreateNotContainsRule(parameterId, value, true)],
             "CreateNotEqualsRule" => [ParameterFilterRuleFactory.CreateNotEqualsRule(parameterId, value, true)],

@@ -86,6 +86,48 @@
                         </Grid>
                     </ui:CardExpander>
                     
+                    <!-- это кард с настройками, выбор параметра, свич баттон -->
+                   <ui:CardExpander
+                        DockPanel.Dock="Top"
+                        Margin="10, 5"
+                        CornerRadius="5"
+                        Icon="{ui:SymbolIcon Settings20}">
+
+                        <ui:CardExpander.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <ui:TextBlock
+                                    FontSize="14"
+                                    VerticalAlignment="Center"
+                                    FontTypography="BodyStrong"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    Text="Настройки"
+                                    TextWrapping="WrapWithOverflow" 
+                                    />
+                            </StackPanel>
+                        </ui:CardExpander.Header>
+                       <DockPanel>
+                           <ui:TextBlock DockPanel.Dock="Top"
+                               FontSize="12"
+                               VerticalAlignment="Center"
+                               FontTypography="BodyStrong"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                               Text="Выбор параметра"
+                               TextWrapping="WrapWithOverflow" />
+                           <ComboBox DockPanel.Dock="Top"
+                               ItemsSource="{Binding UserParameters}"
+                               SelectedItem="{Binding SelectedUserParameter}"/>
+                           <ui:TextBlock DockPanel.Dock="Top"
+                                         FontSize="12"
+                                         VerticalAlignment="Center"
+                                         FontTypography="BodyStrong"
+                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                         Text="Создать виды и 3D фильтры"
+                                         TextWrapping="WrapWithOverflow" />
+                           <ui:ToggleSwitch 
+                               IsChecked="{Binding CreateView, Mode=TwoWay}" />
+                       </DockPanel>
+                    </ui:CardExpander>
+                    
                     <!-- это кард с поискком -->
                     <ui:CardExpander
                         DockPanel.Dock="Top"
@@ -102,7 +144,7 @@
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="Поиск"
                                     TextWrapping="WrapWithOverflow" 
-                                    />
+                                />
                             </StackPanel>
                         </ui:CardExpander.Header>
                         <ui:TextBox
@@ -125,11 +167,11 @@
                             Icon="{ui:SymbolIcon CheckboxCheckedSync20}"
                             Command="{Binding CheckAllCommand}"/>
                         <ui:Button Grid.Column="1" 
-                            Content="Отменить выбор"
-                            Appearance="Primary"
-                            HorizontalAlignment="Center"
-                            Icon="{ui:SymbolIcon CheckboxIndeterminate20}"
-                            Command="{Binding UnCheckAllCommand}"/>
+                                   Content="Отменить выбор"
+                                   Appearance="Primary"
+                                   HorizontalAlignment="Center"
+                                   Icon="{ui:SymbolIcon CheckboxIndeterminate20}"
+                                   Command="{Binding UnCheckAllCommand}"/>
                     </Grid>
                     
                     <!-- все группы -->
@@ -346,6 +388,7 @@
                 HorizontalAlignment="Center"
                 Content="Запустить"
                 Icon="{ui:SymbolIcon GroupReturn24}"
+                Command="{Binding ExecuteCommand}"
                 />
             <ui:Button
                 Grid.Column="2"
@@ -354,6 +397,7 @@
                 HorizontalAlignment="Center"
                 Content="Запустить и закрыть"
                 Icon="{ui:SymbolIcon GroupReturn24}"
+                Command="{Binding ExecuteAndCloseCommand}"
             />
         </Grid>
     </Grid>

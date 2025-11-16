@@ -45,7 +45,18 @@ public class GroupSystemsMockModel : IGroupSystemsModel
         ];
     }
 
-    public void AfterClose(ObservableCollection<Group>? groups) {}
+    public void AfterClose(ObservableCollection<Group>? groups,  string userParameter) {}
+    public List<string> GetUserParameters()
+    {
+        return ["Параметр 1", "Параметр 2", "пАРАМЕТР 3"];
+    }
 
+    public string GetSelectedParameter()
+    {
+        return "Параметр 1";
+    }
+
+    public void Execute(List<Group> systemGroups, string? userParameter, bool createView) => Console.WriteLine("Нажал на Execute");
+    
     public void AfterClose() {}
 }

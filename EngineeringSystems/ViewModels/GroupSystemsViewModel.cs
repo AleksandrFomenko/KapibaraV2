@@ -32,10 +32,21 @@ public sealed partial class GroupSystemsViewModel : ObservableObject
     private string? _filterSystems = string.Empty;
 
     [ObservableProperty]
-    private GroupSystemsOptions? _selectedOption;
-
+    private GroupSystemsOptions _selectedOption;
+    
     [ObservableProperty]
     private ObservableCollection<GroupSystemsOptions> _groupSystemsOptions = [];
+    
+    [ObservableProperty] 
+    private List<string> _userParameters = [];
+    
+    [ObservableProperty]
+    private string _selectedUserParameter;
+    
+    [ObservableProperty]
+    private bool _createView;
+
+    public static Action? CloseWindow;
 
     public GroupSystemsViewModel(IGroupSystemsModel model)
     { 
@@ -55,6 +66,8 @@ public sealed partial class GroupSystemsViewModel : ObservableObject
         );
 
         SelectedOption = GroupSystemsOptions.First();
+        UserParameters = _model.GetUserParameters();
+        SelectedUserParameter = _model.GetSelectedParameter();
     }
 
     partial void OnFilterGroupSystemsChanged(string value)
@@ -158,7 +171,7 @@ public sealed partial class GroupSystemsViewModel : ObservableObject
         var toSave = new ObservableCollection<Group>(
             _allSystemGroups.Where(g => !g.IsDeleted));
 
-        _model.AfterClose(toSave);
+        _model.AfterClose(toSave, SelectedUserParameter);
     }
     
     [RelayCommand]
@@ -215,11 +228,29 @@ public sealed partial class GroupSystemsViewModel : ObservableObject
         foreach (var g in source)
             SystemGroups.Add(g);
     }
-
-
+    
     private bool CanAddRenameGroup() => SelectedSystemGroups != null;
-}
 
+    private void Start()
+    {
+        var result = SelectedOption == ViewModels.GroupSystemsOptions.All
+            ? SystemGroups
+            : SystemGroups.Where(g => g.IsChecked);
+        _model.Execute(result.ToList(), SelectedUserParameter, CreateView);
+    }
+    
+    [RelayCommand]
+    private void Execute()
+    {
+       Start();
+    }
+    [RelayCommand]
+    private void ExecuteAndClose()
+    {
+        Start();
+        CloseWindow?.Invoke();
+    }
+}
 
 public enum GroupSystemsOptions
 {

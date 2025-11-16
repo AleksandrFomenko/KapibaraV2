@@ -163,7 +163,7 @@ public class EngineeringSystemsModel(Document document) : IEngineeringSystemsMod
 
         return elements;
     }
-    private List<Element> GetElementsInSystem(Element mepSystem)
+    private static List<Element>? GetElementsInSystem(Element mepSystem)
     {
         return mepSystem switch
         {
@@ -172,7 +172,7 @@ public class EngineeringSystemsModel(Document document) : IEngineeringSystemsMod
             _ => null
         };
     }
-    private List<Element> GetElementsInSystems(List<Element> mepSystem)
+    public static List<Element> GetElementsInSystems(List<Element> mepSystem)
     {
         var result = new List<Element>(400); 
 
@@ -191,7 +191,7 @@ public class EngineeringSystemsModel(Document document) : IEngineeringSystemsMod
         }
         return result;
     }
-    private List<Element> GetElementsInSystem(List<string> systemsName, bool sysName)
+    public List<Element> GetElementsInSystem(List<string> systemsName, bool sysName)
     {
         if (sysName)
         {
@@ -200,7 +200,6 @@ public class EngineeringSystemsModel(Document document) : IEngineeringSystemsMod
                 .Where(system => system != null)
                 .SelectMany(system => GetElementsInSystem(system) ?? Enumerable.Empty<Element>())
                 .ToList();
-   
         }
         return systemsName
             .Select(name => GetSystemByCutName(name))
@@ -296,6 +295,10 @@ public class EngineeringSystemsModel(Document document) : IEngineeringSystemsMod
 
     public List<string> GetUserParameters()
     {
-        return _doc.GetProjectParameters(SpecTypeId.String.Text).ToList();
+#if REVIT2022_OR_GREATER
+    return _doc.GetProjectParameters(SpecTypeId.String.Text).ToList();
+#else
+        return _doc.GetProjectParameters(ParameterType.Text).ToList();
+#endif
     }
 }

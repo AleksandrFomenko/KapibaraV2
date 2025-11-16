@@ -2,26 +2,25 @@
 using EngineeringSystems.GroupDataStorage;
 using EngineeringSystems.Model.Abstractions;
 using EngineeringSystems.ViewModels.Entities;
+using KapibaraCore.Parameters;
 using Group = EngineeringSystems.ViewModels.Entities.Group;
 
 namespace EngineeringSystems.Model;
 
 public class GroupSystemsModel : IGroupSystemsModel
 {
-    private Document _doc = Context.ActiveDocument!;
     private const string SystemNameMissing = "Отсутствует";
     private const string SystemNameCutMissing = "Отсутствует";
+    private readonly Document _doc = Context.ActiveDocument!;
+
     public ObservableCollection<Group> GetGroupSystems()
     {
         var dto = GroupDataStorageService.Load(_doc);
-        
+
         if (dto?.Data == null || dto.Data.Count == 0)
             return [];
-        
-        foreach (var group in dto.Data.Where(group => group.Systems == null))
-        {
-            group.Systems = [];
-        }
+
+        foreach (var group in dto.Data.Where(group => group.Systems == null)) group.Systems = [];
 
         return new ObservableCollection<Group>(dto.Data);
     }
@@ -36,27 +35,27 @@ public class GroupSystemsModel : IGroupSystemsModel
                 .Select(s => s.SystemId)
                 .Where(id => id != 0)
         );
-        
+
         var cats = new List<BuiltInCategory>
         {
             BuiltInCategory.OST_PipingSystem,
             BuiltInCategory.OST_DuctSystem
         };
-        
+
         var catFilter = new ElementMulticategoryFilter(cats);
-        
+
         var systems = new FilteredElementCollector(_doc)
             .WherePasses(catFilter)
             .WhereElementIsNotElementType()
             .ToElements();
-        
+
         var result = systems
             .Select(f => new EngineeringSystem
             {
-                NameSystem   = f?.Name ?? SystemNameMissing,
-                IsChecked    = false,
+                NameSystem = f?.Name ?? SystemNameMissing,
+                IsChecked = false,
                 CutSystemName = GetCutSystemName(f) ?? SystemNameCutMissing,
-                SystemId     = f?.Id?.IntegerValue ?? 0
+                SystemId = f?.Id?.IntegerValue ?? 0
             })
             .Where(s => s.SystemId != 0 && !usedSystemIds.Contains(s.SystemId))
             .ToList();
@@ -65,27 +64,28 @@ public class GroupSystemsModel : IGroupSystemsModel
             .OrderBy(s => s.NameSystem)
             .ToList();
 
-        return filteredResult.Any() 
-            ? new ObservableCollection<EngineeringSystem>(filteredResult) 
+        return filteredResult.Any()
+            ? new ObservableCollection<EngineeringSystem>(filteredResult)
             :
             [
                 new EngineeringSystem
                 {
-                    NameSystem   = "Не найдено подходящих систем",
-                    IsChecked    = false,
+                    NameSystem = "Не найдено подходящих систем",
+                    IsChecked = false,
                     CutSystemName = string.Empty,
-                    SystemId     = 0
+                    SystemId = 0
                 }
             ];
     }
-    
-    public void AfterClose(ObservableCollection<Group>? groups)
+
+    public void AfterClose(ObservableCollection<Group>? groups, string userParameter)
     {
         if (groups is null) return;
-            
+
         var dto = new GroupStorageDto
         {
-            Data = groups.ToList()
+            Data = groups.ToList(),
+            SelectedUserParameter = userParameter
         };
 
         using var t = new Transaction(_doc, "Сохранение групп инженерных систем");
@@ -94,13 +94,109 @@ public class GroupSystemsModel : IGroupSystemsModel
         t.Commit();
     }
 
+    public List<string> GetUserParameters()
+    {
+        return _doc.GetProjectParameters();
+    }
+
+    public string GetSelectedParameter()
+    {
+        var dto = GroupDataStorageService.Load(_doc);
+        return dto?.SelectedUserParameter ?? string.Empty;
+    }
+
+    public void Execute(List<Group> systemGroups, string userParameter, bool createView)
+    {
+        using var t = new Transaction(_doc, "System Groups");
+        t.Start();
+        foreach (var group in systemGroups)
+        {
+            if (group.Systems == null || group.Systems.Count == 0) continue;
+            var systemNames = group.Systems
+                .Select(s => s.NameSystem)
+                .Where(n => !string.IsNullOrWhiteSpace(n))
+                .ToList();
+            if (systemNames.Count == 0) continue;
+            var elements = EngineeringSystemCore.GetElementsInSystem(systemNames, true);
+
+            foreach (var element in elements)
+            {
+                var parameter = element.LookupParameter(userParameter);
+                if (parameter != null && !parameter.IsReadOnly) parameter.Set(group.Name);
+            }
+
+            if (createView)
+            {
+                var cats = GetCategoriesByParameter(userParameter);
+                var view3D = new View3D(_doc);
+                var filter = new Filter(_doc);
+                var view = view3D.CreateView3D(group.Name);
+                var filt = filter.CreateFilter(cats, userParameter, group.Name,
+                    new FilterOption(string.Empty, "CreateNotEqualsRule"));
+                view.AddFilter(filt.Id);
+                view.SetFilterVisibility(filt.Id, false);
+            }
+        }
+
+        t.Commit();
+    }
+
+
+    private List<BuiltInCategory> GetCategoriesByParameter(string parameterName)
+    {
+        var bindingMap = _doc.ParameterBindings;
+        var iterator = bindingMap.ForwardIterator();
+        iterator.Reset();
+
+        while (iterator.MoveNext())
+        {
+            var definition = iterator.Key;
+            var binding = iterator.Current;
+
+            if (definition != null && definition.Name == parameterName)
+            {
+                CategorySet categories = null;
+
+                if (binding is InstanceBinding instanceBinding)
+                    categories = instanceBinding.Categories;
+                else if (binding is TypeBinding typeBinding)
+                    categories = typeBinding.Categories;
+
+                if (categories != null)
+                {
+                    var builtInCategories = new List<BuiltInCategory>();
+                    var catIterator = categories.ForwardIterator();
+                    catIterator.Reset();
+
+                    while (catIterator.MoveNext())
+                    {
+                        var category = catIterator.Current as Category;
+                        if (category == null)
+                            continue;
+
+                        var id = category.Id.IntegerValue;
+
+                        if (Enum.IsDefined(typeof(BuiltInCategory), id))
+                        {
+                            var bic = (BuiltInCategory)id;
+                            builtInCategories.Add(bic);
+                        }
+                    }
+
+                    return builtInCategories;
+                }
+            }
+        }
+
+        return null;
+    }
 
     private string? GetCutSystemName(Element mepSystem)
     {
         var typeSystemId = mepSystem.GetTypeId();
 
         if (typeSystemId == ElementId.InvalidElementId) return "";
-        
+
         var typeSystem = _doc.GetElement(typeSystemId);
         var par = typeSystem?.get_Parameter(BuiltInParameter.RBS_SYSTEM_ABBREVIATION_PARAM);
         return par?.AsString();

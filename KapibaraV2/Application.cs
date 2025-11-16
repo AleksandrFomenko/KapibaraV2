@@ -4,6 +4,7 @@ using Autodesk.Revit.UI;
 using Autodesk.Windows;
 using EngineeringSystems.Commands;
 using KapibaraUI.Services.Appearance;
+using KapibaraV2.CustomPanel;
 using Nice3point.Revit.Toolkit.External;
 
 namespace KapibaraV2
@@ -20,37 +21,19 @@ namespace KapibaraV2
             GroupSystems.StartHost();
             theme.Initialize();
             CreateRibbon();
+            
+            //RibbonFullGradient.Apply("Kapibara");
         }
 
         private void CreateRibbon()
         {
             
             var panelSettings = Application.CreatePanel("Settings", "Kapibara");
-            var panelBackgroundSettings =
-                new SolidColorBrush(System.Windows.Media.Color.FromRgb(80, 200, 120));
-            
-            panelSettings.SetTitleBarBackground(panelBackgroundSettings);
             var panelBim = Application.CreatePanel("BIM", "Kapibara");
-            var panelBackgroundBrushLightCoral =
-                new SolidColorBrush(System.Windows.Media.Color.FromRgb(240, 128, 128));
-            panelBim.SetTitleBarBackground(panelBackgroundBrushLightCoral);
-            
-            
             var panelGeneral = Application.CreatePanel("Общие", "Kapibara");
-            var panelBackgroundBrushTurquoise =
-                new SolidColorBrush(System.Windows.Media.Color.FromRgb(100, 149, 237));
-            panelGeneral.SetTitleBarBackground(panelBackgroundBrushTurquoise);
-            
-            var panelBackgroundBrushPurple =
-                new SolidColorBrush(System.Windows.Media.Color.FromRgb(204, 204, 255));
             var panelMepGeneral = Application.CreatePanel("MEP", "Kapibara");
-            panelMepGeneral.SetTitleBarBackground(panelBackgroundBrushPurple);
-            
-            var panelBackgroundBrushPaleTurquoise =
-                new SolidColorBrush(System.Windows.Media.Color.FromRgb(175, 238, 238));
             var panelInfo = Application.CreatePanel("Разное", "Kapibara");
-            panelInfo.SetTitleBarBackground(panelBackgroundBrushPaleTurquoise);
-            
+   
             //Settings
             panelSettings.AddPushButton<Settings.Commands.StartupCommand>("Settings")
                 .SetImage("/KapibaraV2;component/Resources/Icons/Settings32.png")
@@ -137,11 +120,6 @@ namespace KapibaraV2
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ai.png");
         }
         
-        private PushButtonData CreatePushButtonData<TCommand>(string buttonText) where TCommand : IExternalCommand, new()
-        {
-            var command = typeof(TCommand);
-            return new PushButtonData(command.FullName, buttonText, Assembly.GetAssembly(command)!.Location, command.FullName);
-        }
         
         private static void UpdateRibbonButton(string tabId, string panelName, string commandId)
         {

@@ -19,7 +19,11 @@ public class LevelByFloorModel(Document doc)
 
     internal List<string> LoadParameters()
     {
-        return doc.GetProjectParameters(SpecTypeId.String.Text).ToList();
+#if REVIT2022_OR_GREATER
+    return doc.GetProjectParameters(SpecTypeId.String.Text).ToList();
+#else
+        return doc.GetProjectParameters(ParameterType.Text).ToList();
+#endif
     }
     private Solid CreateSolidFromBoundingBox(BoundingBoxXYZ bb)
     {

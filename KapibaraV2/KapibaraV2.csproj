@@ -48,6 +48,10 @@
 
 
     <ItemGroup>
+        <PackageReference Include="ILRepack" Version="2.0.44">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="MaterialDesignColors" Version="5.*" />
         <PackageReference Include="MaterialDesignExtensions" Version="3.*" />
         <PackageReference Include="MaterialDesignThemes" Version="5.2.*" />
@@ -63,7 +67,6 @@
         <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
         <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.*" />
-        <PackageReference Include="Revit.IFC.IFCExportUIOverride" Version="$(RevitVersion).*" />
     </ItemGroup>
 
     <ItemGroup>
@@ -113,7 +116,6 @@
         <ProjectReference Include="..\EngineeringSystems\EngineeringSystems.csproj" />
         <ProjectReference Include="..\ExporterModels\ExporterModels.csproj" />
         <ProjectReference Include="..\FamilyCleaner\FamilyCleaner.csproj" />
-        <ProjectReference Include="..\FsmModules\FsmModules.csproj" />
         <ProjectReference Include="..\HeatingDevices\HeatingDevices.csproj" />
         <ProjectReference Include="..\ImportExcelByParameter\ImportExcelByParameter.csproj" />
         <ProjectReference Include="..\Insolation\Insolation.csproj" />

@@ -1,28 +1,35 @@
-﻿using Autodesk.Revit.DB;
-
-namespace KapibaraCore.Parameters;
+﻿namespace KapibaraCore.Parameters;
 
 /// <summary>
 /// Статический класс для получения параметров.
 /// </summary>
+///
+
+
+#if REVIT2022_OR_GREATER
+using ParamTypeT = Autodesk.Revit.DB.ForgeTypeId;
+#else
+using ParamTypeT = ParameterType;
+#endif
+
 public static class Parameters
-{ 
+{
     /// <summary>
-    /// Записывает значение в параметр.
+    ///     Записывает значение в параметр.
     /// </summary>
-    public static void SetParameterValue(this Parameter parameter, object value) 
+    public static void SetParameterValue(this Parameter parameter, object value)
     {
-        if (parameter == null || parameter.IsReadOnly) return; 
-        StorageType storageType = parameter.StorageType; 
-        switch (storageType) 
-        { 
-            case StorageType.Integer: 
-            { 
-                if (value is int intValue) 
-                { 
+        if (parameter == null || parameter.IsReadOnly) return;
+        var storageType = parameter.StorageType;
+        switch (storageType)
+        {
+            case StorageType.Integer:
+            {
+                if (value is int intValue)
+                {
                     parameter.Set(intValue);
                 }
-                else 
+                else
                 {
                     if (value is string valueStr)
                     {
@@ -32,19 +39,19 @@ public static class Parameters
                             parameter.Set(1);
                             break;
                         }
+
                         if (valueStr is "нет" or "no")
                         {
                             parameter.Set(0);
                             break;
                         }
                     }
-                    if (int.TryParse(value?.ToString(), out int result))
-                    {
-                        parameter.Set(result);
-                    }
+
+                    if (int.TryParse(value?.ToString(), out var result)) parameter.Set(result);
                 }
-                break; 
-            } 
+
+                break;
+            }
             case StorageType.Double:
             {
                 if (value is double dValue)
@@ -54,63 +61,60 @@ public static class Parameters
                 }
                 else
                 {
-                    if (double.TryParse(value?.ToString(), out double result))
+                    if (double.TryParse(value?.ToString(), out var result))
                     {
                         result = InternalUnits.Convert(parameter, result);
                         parameter.Set(result);
                     }
                 }
+
                 break;
-            } 
+            }
             case StorageType.String:
             {
                 parameter.Set(value?.ToString() ?? string.Empty);
                 break;
-            } 
+            }
             case StorageType.ElementId:
             {
                 if (value is ElementId eid)
-                {
                     parameter.Set(eid);
-                }
                 else
-                {
                     parameter.Set(ElementId.InvalidElementId);
-                }
                 break;
             }
-        } 
+        }
     }
 
     /// <summary>
-    /// Получает параметр из элемента.
+    ///     Получает параметр из элемента.
     /// </summary>
     /// <param name="doc">Документ.</param>
     /// <param name="element">Element.</param>
     /// <param name="parameterName">Наименование параметра.</param>
     /// <returns>Параметр.</returns>
     public static Parameter GetParameterByName(this Element element, string parameterName)
-    { 
-        var par = element.LookupParameter(parameterName); 
+    {
+        var par = element.LookupParameter(parameterName);
         if (par != null) return par;
-        var doc = element.Document; 
-        var type = doc.GetElement(element.GetTypeId()); 
-        par = type?.LookupParameter(parameterName); 
+        var doc = element.Document;
+        var type = doc.GetElement(element.GetTypeId());
+        par = type?.LookupParameter(parameterName);
         return par ?? element.LookupParameter(parameterName);
     }
+
     /// <summary>
-    /// Получает лист параметров из элемента.
+    ///     Получает лист параметров из элемента.
     /// </summary>
     /// <param name="elem">Element.</param>
     /// <returns>Параметры элемента</returns>
-
     public static List<Parameter> GetParameters(this Element elem)
     {
         return elem.Parameters.Cast<Parameter>().ToList();
     }
 
     /// <summary>
-    /// Получает лист параметров из элемента.
+    ///     Получает лист параметров из элемента.
     /// </summary>
     /// <param name="doc"></param>
     /// <param name="elem">Element.</param>
@@ -118,25 +122,26 @@ public static class Parameters
     public static List<string> GetParameterFromFamily(this Document doc, Element elem)
     {
         var famParameters = new List<FamilyParameter>();
-        Family family = elem switch
+        var family = elem switch
         {
             FamilySymbol symbol => symbol.Family,
-            
+
             FamilyInstance instance => (doc.GetElement(instance.GetTypeId()) as FamilySymbol)?.Family,
-            
+
             _ => null
         };
-        
+
         if (family != null)
         {
-            Document familyDoc = doc.EditFamily(family);
+            var familyDoc = doc.EditFamily(family);
             famParameters = familyDoc.FamilyManager.GetParameters().ToList();
         }
-        return famParameters.Select(x=> x.Definition.Name).ToList();
+
+        return famParameters.Select(x => x.Definition.Name).ToList();
     }
-    
+
     /// <summary>
-    /// Получает лист параметров из проекта, присвоенных определенной категории.
+    ///     Получает лист параметров из проекта, присвоенных определенной категории.
     /// </summary>
     /// <param name="doc">Документ.</param>
     /// <param name="cat">BuiltInCategory.</param>
@@ -144,13 +149,13 @@ public static class Parameters
     public static List<string> GetProjectParameters(this Document doc, BuiltInCategory cat)
     {
         var result = new List<string>();
-        
+
         var bindingMap = doc.ParameterBindings;
         var iterator = bindingMap.ForwardIterator();
 
         while (iterator.MoveNext())
         {
-            var definition = iterator.Key as Definition;
+            var definition = iterator.Key;
             var binding = bindingMap.get_Item(definition);
 
             var categories = binding switch
@@ -168,18 +173,20 @@ public static class Parameters
                 break;
             }
         }
+
         result.Sort();
         return result;
     }
+
     /// <summary>
-    /// Получает лист параметров из проекта
+    ///     Получает лист параметров из проекта
     /// </summary>
     /// <param name="doc">Документ.</param>
     /// <returns>Параметры категории</returns>
     public static List<string> GetProjectParameters(this Document doc)
     {
         if (doc == null) return [];
-        
+
         var bindingMap = doc.ParameterBindings;
         if (bindingMap == null)
             return [];
@@ -188,65 +195,53 @@ public static class Parameters
         var iterator = bindingMap.ForwardIterator();
 
         while (iterator.MoveNext())
-        {
             if (iterator.Key is Definition definition)
-            {
                 parameterNames.Add(definition.Name);
-            }
-        }
-        
+
         parameterNames.Sort();
 
         return parameterNames;
     }
 
-    public static IEnumerable<string> GetProjectParameters(this Document doc, ForgeTypeId type)
+    public static IEnumerable<string> GetProjectParameters(this Document doc, ParamTypeT type)
     {
         var bindingMap = doc.ParameterBindings;
         if (bindingMap == null)
             yield break;
 
-        var iterator = bindingMap.ForwardIterator();
-        var uniqueParameters = new HashSet<string>();
+        var it = bindingMap.ForwardIterator();
+        var unique = new HashSet<string>();
 
-        while (iterator.MoveNext())
+        while (it.MoveNext())
         {
-            var definition = iterator.Key;
-            if (definition == null)
-                continue;
+            var def = it.Key;
+            if (def == null) continue;
 
-
-            var paramType = definition.GetDataType();
-
+#if REVIT2022_OR_GREATER
+            var paramType = def.GetDataType();
             if (paramType != type) continue;
-            if (uniqueParameters.Add(definition.Name))
-            {
-                yield return definition.Name;
-            }
+#else
+            var paramType = def.ParameterType;
+            if (paramType != type) continue;
+#endif
+            if (unique.Add(def.Name))
+                yield return def.Name;
         }
     }
-
     
     public static Definition GetProjectParameterDefinition(this Document doc, string parameterName)
     {
         if (doc == null) throw new ArgumentNullException(nameof(doc));
-    
-        BindingMap bindingMap = doc.ParameterBindings;
+
+        var bindingMap = doc.ParameterBindings;
         if (bindingMap == null) return null;
-    
+
         var iterator = bindingMap.ForwardIterator();
         while (iterator.MoveNext())
-        {
             if (iterator.Key is Definition definition)
-            {
                 if (definition.Name.Equals(parameterName, StringComparison.OrdinalIgnoreCase))
-                {
                     return definition;
-                }
-            }
-        }
 
         return null;
     }
 }
-

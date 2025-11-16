@@ -48,16 +48,29 @@ public sealed partial class ActiveViewViewModel : ObservableObject
     partial void OnParameterChanged(string value)
     {
         var definition = Document.GetProjectParameterDefinition(value);
-        if (definition.GetDataType().Equals(SpecTypeId.Boolean.YesNo))
+        if (definition == null)
+        {
+            IsTextBoxVisible = true;
+            IsToggleVisible = false;
+            return;
+        }
+
+#if REVIT2022_OR_GREATER
+        var isYesNo = definition.GetDataType().Equals(SpecTypeId.Boolean.YesNo);
+#else
+        var isYesNo = definition.ParameterType == ParameterType.YesNo;
+#endif
+
+        if (isYesNo)
         {
             IsTextBoxVisible = false;
-            IsToggleVisible = !IsTextBoxVisible;
-            Value = IsToggleVisible ?  "1" : "0";
+            IsToggleVisible = true;
+            Value = "1"; 
         }
         else
         {
             IsTextBoxVisible = true;
-            IsToggleVisible = !IsTextBoxVisible;
+            IsToggleVisible = false;
         }
     }
 

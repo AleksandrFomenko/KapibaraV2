@@ -82,8 +82,20 @@ public partial class SolidIntersectionViewModel : ObservableObject
     private void CheckParameter()
     {
         var definition = _doc.GetProjectParameterDefinition(Parameter);
+        if (definition == null)
+        {
+            TextBoxVisibility = Visibility.Visible;
+            ToggleButtonVisibility = Visibility.Hidden;
+            return;
+        }
 
-        if (definition.GetDataType().Equals(SpecTypeId.Boolean.YesNo))
+#if REVIT2022_OR_GREATER
+    bool isYesNo = definition.GetDataType().Equals(SpecTypeId.Boolean.YesNo);
+#else
+        bool isYesNo = definition.ParameterType == ParameterType.YesNo;
+#endif
+
+        if (isYesNo)
         {
             TextBoxVisibility = Visibility.Hidden;
             ToggleButtonVisibility = Visibility.Visible;

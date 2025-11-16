@@ -1,18 +1,17 @@
-﻿using System.Diagnostics;
-using Autodesk.Revit.UI.Events;
-
-namespace ViewManager.Sheets.Tabs.Print.Model;
+﻿namespace ViewManager.Sheets.Tabs.Print.Model;
 
 internal class PrintModel
 {
-    private Document _doc;
+    private readonly Document _doc;
+
     internal PrintModel(Document doc)
     {
         _doc = doc;
     }
 
-    internal void Execute(string path,List<ElementId> sheets,bool combine, string fileName)
+    internal void Execute(string path, List<ElementId> sheets, bool combine, string fileName)
     {
+#if REVIT2022_OR_GREATER
         var settings = new PDFExportOptions();
         if (combine)
         {
@@ -32,5 +31,8 @@ internal class PrintModel
                 _doc.Export(path, sheet1, settings);
             }
         }
+
+#else
+#endif
     }
 }
