@@ -1,4 +1,8 @@
 ﻿using EngineeringSystems.Commands;
+using Nice3point.Revit.Extensions;
+using RiserMate;
+using RiserMate.Views;
+using Wpf.Ui;
 using HostAxes = Axes.Host.Host;
 
 
@@ -8,7 +12,8 @@ public partial class MainWindow
 {
     public MainWindow()
     {
-        GroupSystems.StartHostMock();
-        GroupSystems.StartMock();
+        RiserMateHost.StartMockServices();
+        var view = RiserMateHost.GetService<RiserMateView>();
+        view.Show();
     }
 }

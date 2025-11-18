@@ -23,14 +23,19 @@ public static class SettingsWindow
         var vm = provider.GetService<SettingsViewModel>();
         var view = provider.GetService<SettingView>();
         var tws = provider.GetService<IThemeWatcherService>();
-        if (vm != null) vm.OwnerView = view;
-        if (view != null) view.Owner = owner;
-       
-        view.Show();
-        tws.SetConfigTheme();
-        //view.Loaded += (_, __) => tws.SetConfigTheme(view);
 
-        view.Closed += (_, _) => { onClosed?.Invoke(); };
-        return view;
+        if (vm != null) vm.OwnerView = view;
+        if (view != null)
+        {
+            view.Owner = owner;
+            
+            view.Closed += (_, _) => onClosed?.Invoke();
+
+            view.ShowDialog();
+        }
+
+        tws?.SetConfigTheme();
+
+        return view!;
     }
 }

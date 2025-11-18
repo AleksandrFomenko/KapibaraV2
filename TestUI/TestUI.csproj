@@ -34,6 +34,7 @@
       <ProjectReference Include="..\EngineeringSystems\EngineeringSystems.csproj" />
       <ProjectReference Include="..\LegendPlacer\LegendPlacer.csproj" />
       <ProjectReference Include="..\AxesLevels\AxesLevels.csproj" />
+      <ProjectReference Include="..\RiserMate\RiserMate.csproj" />
       <ProjectReference Include="..\Settings\Settings.csproj" />
       <ProjectReference Include="..\ViewByParameter\ViewByParameter.csproj" />
     </ItemGroup>

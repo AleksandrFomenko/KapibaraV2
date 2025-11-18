@@ -2,6 +2,7 @@
 using EngineeringSystems.GroupDataStorage;
 using EngineeringSystems.Model.Abstractions;
 using EngineeringSystems.ViewModels.Entities;
+using KapibaraCore.Elements;
 using KapibaraCore.Parameters;
 using Group = EngineeringSystems.ViewModels.Entities.Group;
 
@@ -123,6 +124,14 @@ public class GroupSystemsModel : IGroupSystemsModel
             {
                 var parameter = element.LookupParameter(userParameter);
                 if (parameter != null && !parameter.IsReadOnly) parameter.Set(group.Name);
+                if (element is FamilyInstance fi)
+                {
+                    foreach (var subelem in fi.GetAllSubComponents())
+                    {
+                        var parameterSubElement = subelem.GetParameterByName(userParameter);
+                        parameterSubElement.SetParameterValue(group.Name);
+                    }
+                }
             }
 
             if (createView)
