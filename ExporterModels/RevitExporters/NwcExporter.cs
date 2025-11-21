@@ -117,19 +117,16 @@ public class NwcExporter : RevitExporter
 
     private static string PrepareDocumentName(string title)
     {
-        if (string.IsNullOrWhiteSpace(title)) return "unknown";
+        if (string.IsNullOrEmpty(title))
+            return "unknown";
 
-        if (title.Contains("_detached", StringComparison.OrdinalIgnoreCase))
-        {
-            var index = title.IndexOf("_detached", StringComparison.OrdinalIgnoreCase);
-            return title.Substring(0, index).Trim();
-        }
+        var idxDetached = title.IndexOf("_detached", StringComparison.OrdinalIgnoreCase);
+        if (idxDetached >= 0)
+            return title.Substring(0, idxDetached).Trim();
 
-        if (title.Contains("_отсоединено", StringComparison.OrdinalIgnoreCase))
-        {
-            var index = title.IndexOf("_отсоединено", StringComparison.OrdinalIgnoreCase);
-            return title.Substring(0, index).Trim();
-        }
+        var idxRuDetached = title.IndexOf("_отсоединено", StringComparison.OrdinalIgnoreCase);
+        if (idxRuDetached >= 0)
+            return title.Substring(0, idxRuDetached).Trim();
 
         return title;
     }

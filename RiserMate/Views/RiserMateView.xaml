@@ -4,16 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:viewModel="clr-namespace:RiserMate.ViewModels"
     xmlns:ui="http://Kapibara/xaml"
     xmlns:views="clr-namespace:RiserMate.Views"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance viewModel:RiserMateViewModel}"
-    ResizeMode="NoResize"
     WindowStartupLocation="CenterScreen"
     ScrollViewer.CanContentScroll="False"
-    Height="450"
-    Width="800">
+    Height="600"
+    Width="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>

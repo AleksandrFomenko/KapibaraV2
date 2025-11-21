@@ -104,7 +104,7 @@ public sealed partial class GroupSystemsViewModel : ObservableObject
         EngineeringSystems = new ObservableCollection<EngineeringSystem>(
             allSystems.Where(x =>
                 !string.IsNullOrEmpty(x.NameSystem) &&
-                x.NameSystem.Contains(value!, StringComparison.OrdinalIgnoreCase))
+                x.NameSystem.Contains(value!))
         );
     }
     

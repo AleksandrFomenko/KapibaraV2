@@ -1,6 +1,8 @@
 using KapibaraUI.Services.Appearance;
 using KapibaraUI.Services.Navigation;
 using Microsoft.Extensions.DependencyInjection;
+using RiserMate.Abstractions;
+using RiserMate.Models.Design;
 using RiserMate.Views;
 using RiserMate.ViewModels;
 using Wpf.Ui;
@@ -20,12 +22,17 @@ public static class RiserMateHost
         services.AddSingleton<RiserMateView>();
         
         services.AddSingleton<RiserCreator>();
+        services.AddSingleton<RizerCreatorViewModel>();
+        services.AddSingleton<IModelRiserCreator, ModelRiserCreatorMock>();
         
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
         services.AddSingleton<INavigationViewPageProvider, PageService>();
 
         _serviceProvider = services.BuildServiceProvider();
+        
+        var theme = _serviceProvider.GetService<IThemeWatcherService>();
+        theme.Initialize();
     }
     public static T GetService<T>() where T : class
     {
