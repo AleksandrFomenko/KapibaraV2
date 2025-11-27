@@ -1,10 +1,7 @@
-﻿using System.Reflection;
-using System.Windows.Media;
-using Autodesk.Revit.UI;
+﻿using Autodesk.Revit.UI;
 using Autodesk.Windows;
 using EngineeringSystems.Commands;
 using KapibaraUI.Services.Appearance;
-using KapibaraV2.CustomPanel;
 using Nice3point.Revit.Toolkit.External;
 
 namespace KapibaraV2
@@ -99,12 +96,15 @@ namespace KapibaraV2
             
 
             //MEP общие
-            panelMepGeneral.AddPushButton<EngineeringSystems.Commands.StartupCommandEngineeringSystems>("System\nname")
+            panelMepGeneral.AddPushButton<StartupCommandEngineeringSystems>("System\nname")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
-            panelMepGeneral.AddPushButton<EngineeringSystems.Commands.StartupCommandGroupSystems>("System\ngroup")
+            panelMepGeneral.AddPushButton<StartupCommandGroupSystems>("System\ngroup")
                 .SetImage("/KapibaraV2;component/Resources/Icons/GroupSystems16.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/GroupSystems32.png");
+            panelMepGeneral.AddPushButton<RiserMate.Commands.StartupCommand>("RiserMate")
+                .SetImage("/KapibaraV2;component/Resources/Icons/RizerMate16.png")
+                .SetLargeImage("/KapibaraV2;component/Resources/Icons/RizerMate32.png");
             panelMepGeneral.AddPushButton<HeatingDevices.Commands.StartupCommand>("Space\nHeater")
                 .SetImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png");

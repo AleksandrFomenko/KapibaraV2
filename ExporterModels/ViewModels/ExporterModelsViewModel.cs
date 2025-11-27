@@ -247,10 +247,7 @@ public sealed partial class ExporterModelsViewModel : ObservableObject
         m.IsSelectedChanged -= _modelSelectedChangedHandler;
     }
 
-    private void ModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        ScheduleSave();
-    }
+    private void ModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e) => ScheduleSave();
 
     private void ScheduleSave()
     {

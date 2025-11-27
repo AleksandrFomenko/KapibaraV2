@@ -34,7 +34,8 @@
                     HorizontalAlignment="Center"
                     Appearance="Primary"
                     Icon="{ui:SymbolIcon FlipHorizontal32}"
-                    Content="Execute"/>
+                    Content="Execute"
+                    Command="{Binding ExecuteCommand}"/>
             </Grid>
            
             <Grid>
@@ -53,13 +54,59 @@
                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                 Text="Выбор параметра со значением стояка"
                                 TextWrapping="WrapWithOverflow" />
+                            
                             <ComboBox 
                                 ItemsSource="{Binding UserParameters}"
-                                SelectedItem="{Binding SelectedUserParameter}"
-                                />
+                                SelectedItem="{Binding SelectedUserParameter}" />
+                            
+                            
+ 
+                                <ui:CardExpander DockPanel.Dock="Top"
+                                                 Margin="0,10"
+                                                 CornerRadius="5"
+                                                 Icon="{ui:SymbolIcon Settings20}">
+                                    <ui:CardExpander.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ui:TextBlock
+                                                        FontSize="14"
+                                                        VerticalAlignment="Center"
+                                                        FontTypography="BodyStrong"
+                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                        Text="Настройки"
+                                                        TextWrapping="WrapWithOverflow" 
+                                                    />
+                                        </StackPanel>
+                                    </ui:CardExpander.Header>
+                                    <DockPanel>
+                                        <ui:TextBlock DockPanel.Dock="Top"
+                                                              FontSize="12"
+                                                              VerticalAlignment="Center"
+                                                              FontTypography="BodyStrong"
+                                                              Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                              Text="Выбор параметра"
+                                                              TextWrapping="WrapWithOverflow" />
+                                        <ComboBox DockPanel.Dock="Top"
+                                                  ItemsSource="{Binding UserParameters}"
+                                                  SelectedItem="{Binding SelectedUserParameter}"/>
+                                        <ui:TextBlock DockPanel.Dock="Top"
+                                                      FontSize="12"
+                                                      VerticalAlignment="Center"
+                                                      FontTypography="BodyStrong"
+                                                      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                      Text="Создать виды и 3D фильтры"
+                                                      TextWrapping="WrapWithOverflow" />
+                                        <ui:ToggleSwitch 
+                               IsChecked="{Binding CreateView, Mode=TwoWay}" />
+                       </DockPanel>
+                    </ui:CardExpander>
+
+                            
+                            
+                            
                         </StackPanel>
                     </ui:Card>
                 </DockPanel>
+                
                 
                 <DockPanel Grid.Column="1" LastChildFill="True">
                     <ui:CardControl
@@ -87,7 +134,9 @@
                             Text="{Binding FilterByName, UpdateSourceTrigger=PropertyChanged}" />
                     </ui:CardControl>
                     
-                    <ui:Card Margin="10">
+                    <ui:Card Margin="10,5" 
+                             VerticalAlignment="Top" 
+                             VerticalContentAlignment="Top">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="40"/> 
@@ -129,7 +178,11 @@
                             
                             <ui:ListView Grid.Row="1"
                                 ItemsSource="{Binding HeatingRisers}"
-                                SelectedItem="{Binding SelectedRise}">
+                                SelectedItem="{Binding SelectedRise}"
+                                VerticalAlignment="Top"
+                                VerticalContentAlignment="Top"
+                                Padding="0"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto" >
                                 <ui:ListView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid Margin="2,0,0,0">

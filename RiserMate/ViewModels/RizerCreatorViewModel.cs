@@ -5,7 +5,9 @@ namespace RiserMate.ViewModels;
 
 public partial class RizerCreatorViewModel : ObservableObject
 {
-    private IModelRiserCreator _model;
+    private readonly IModelRiserCreator _model;
+    private List<HeatingRiser> HeatingRisersUi { get; set; }
+    private IConfigRiserMate _config;
     
     [ObservableProperty] 
     private List<Choice> _choices = null!;
@@ -24,20 +26,49 @@ public partial class RizerCreatorViewModel : ObservableObject
 
     [ObservableProperty] 
     private bool _checkAllRisers;
+    
+    [ObservableProperty]
+    private string? _filterByName;
+    
 
     
-    public RizerCreatorViewModel(IModelRiserCreator model)
+    public RizerCreatorViewModel(IModelRiserCreator model, IConfigRiserMate config)
     { 
         _model = model;
+        _config = config;
         Choices = Enum.GetValues(typeof(Choice)).Cast<Choice>().ToList();
 
         UserParameters = _model.GetUserParameters();
-        HeatingRisers  = _model.GetHeatingRisers();
+        SelectedUserParameter = UserParameters.Contains(config.GetSelectedUserParameter()) ? config.GetSelectedUserParameter() : string.Empty;
+        HeatingRisersUi  = _model.GetHeatingRisers(SelectedUserParameter);
+        HeatingRisers = HeatingRisersUi;
+        
         HeatingRisers.ForEach(r => r.ClickSelect += SelectHeatingRiser);
         HeatingRisers.ForEach(r => r.ClickShow3D += ShowHeatingRiser);
     }
-    private void SelectHeatingRiser(object sender, HeatingRiser e) => _model.SelectHeatingRiser(e);
+
+    partial void OnSelectedUserParameterChanged(string value)
+    {
+        HeatingRisersUi  = _model.GetHeatingRisers(SelectedUserParameter);
+        HeatingRisers = HeatingRisersUi;
+        _config.SetSelectedUserParameter(value);
+    }
+
+    partial void OnFilterByNameChanged(string? value) 
+        => HeatingRisers = HeatingRisersUi.Where(h => h.Name.Contains(value ?? string.Empty)).ToList();
+    private void SelectHeatingRiser(object sender, HeatingRiser e) => _model.SelectHeatingRiser(e, SelectedUserParameter);
     private void ShowHeatingRiser(object sender, HeatingRiser e) => _model.Show3D(e);
     partial void OnCheckAllRisersChanged(bool value) => HeatingRisers.ForEach(r => r.IsChecked = value);
 
+    [RelayCommand]
+    private void Execute()
+    {
+        if (SelectedChoice == Choice.All)
+        {
+            _model.Execute(HeatingRisers, SelectedUserParameter);
+            return;
+        }
+        
+        _model.Execute(HeatingRisers.Where(p=> p.IsChecked).ToList(), SelectedUserParameter);
+    }
 }

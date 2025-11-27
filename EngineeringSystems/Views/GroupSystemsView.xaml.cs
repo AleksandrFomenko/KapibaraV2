@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using EngineeringSystems.ViewModels;
+﻿using EngineeringSystems.ViewModels;
 using KapibaraUI.Services.Appearance;
 
 namespace EngineeringSystems.Views;
