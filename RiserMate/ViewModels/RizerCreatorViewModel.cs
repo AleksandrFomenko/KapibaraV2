@@ -1,4 +1,5 @@
-﻿using RiserMate.Abstractions;
+﻿using System.Collections.ObjectModel;
+using RiserMate.Abstractions;
 using RiserMate.Entities;
 
 namespace RiserMate.ViewModels;
@@ -9,28 +10,30 @@ public partial class RizerCreatorViewModel : ObservableObject
     private List<HeatingRiser> HeatingRisersUi { get; set; }
     private IConfigRiserMate _config;
     
-    [ObservableProperty] 
-    private List<Choice> _choices = null!;
+    [ObservableProperty] private List<Choice> _choices = null!;
     
-    [ObservableProperty] 
-    private Choice _selectedChoice;
+    [ObservableProperty] private Choice _selectedChoice;
 
-    [ObservableProperty] 
-    private List<string> _userParameters = null!;
+    [ObservableProperty] private List<string> _userParameters = null!;
     
-    [ObservableProperty] 
-    private string _selectedUserParameter = null!;
+    [ObservableProperty] private string _selectedUserParameter = null!;
     
-    [ObservableProperty]
-    private List<HeatingRiser> _heatingRisers = [];
+    [ObservableProperty] private List<HeatingRiser> _heatingRisers = [];
 
-    [ObservableProperty] 
-    private bool _checkAllRisers;
+    [ObservableProperty] private bool _checkAllRisers;
     
-    [ObservableProperty]
-    private string? _filterByName;
+    [ObservableProperty] private string? _filterByName;
     
+    [ObservableProperty] private bool _createView;
 
+    [ObservableProperty] private List<string> _viewTypes3D;
+    
+    [ObservableProperty] private string _selectedViewType3D;
+    
+    [ObservableProperty] private bool _isMarking;
+
+    [ObservableProperty] private List<string> _marksHeatDevice;
+    
     
     public RizerCreatorViewModel(IModelRiserCreator model, IConfigRiserMate config)
     { 
@@ -42,6 +45,7 @@ public partial class RizerCreatorViewModel : ObservableObject
         SelectedUserParameter = UserParameters.Contains(config.GetSelectedUserParameter()) ? config.GetSelectedUserParameter() : string.Empty;
         HeatingRisersUi  = _model.GetHeatingRisers(SelectedUserParameter);
         HeatingRisers = HeatingRisersUi;
+        MarksHeatDevice = _model.GetMarksHeatDevice();
         
         HeatingRisers.ForEach(r => r.ClickSelect += SelectHeatingRiser);
         HeatingRisers.ForEach(r => r.ClickShow3D += ShowHeatingRiser);

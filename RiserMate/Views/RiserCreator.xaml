@@ -9,41 +9,42 @@
       ScrollViewer.CanContentScroll="False">
     <Page.Resources>
         <converters:EnumConverter x:Key="EnumConverter" />
+        <converters:BooleanCollapsedVisibilityConverter x:Key="BooleanCollapsedVisibilityConverter" />
     </Page.Resources>
     <Grid>
-        <DockPanel LastChildFill="True" >
+        <DockPanel LastChildFill="True">
             <Grid DockPanel.Dock="Bottom" Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                
-                <ComboBox 
+
+                <ComboBox
                     Width="Auto"
                     ItemsSource="{Binding Choices}"
                     SelectedItem="{Binding SelectedChoice}">
                     <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Path=., Converter={StaticResource EnumConverter}}" />
-                    </DataTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=., Converter={StaticResource EnumConverter}}" />
+                        </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <ui:Button 
-                    Grid.Column="1" 
+                <ui:Button
+                    Grid.Column="1"
                     HorizontalAlignment="Center"
                     Appearance="Primary"
                     Icon="{ui:SymbolIcon FlipHorizontal32}"
                     Content="Execute"
-                    Command="{Binding ExecuteCommand}"/>
+                    Command="{Binding ExecuteCommand}" />
             </Grid>
-           
+
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-        
+
                 <DockPanel LastChildFill="True" VerticalAlignment="Top">
                     <ui:Card DockPanel.Dock="Top" Margin="10">
                         <StackPanel>
@@ -54,60 +55,130 @@
                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                 Text="Выбор параметра со значением стояка"
                                 TextWrapping="WrapWithOverflow" />
-                            
-                            <ComboBox 
+
+                            <ComboBox
                                 ItemsSource="{Binding UserParameters}"
                                 SelectedItem="{Binding SelectedUserParameter}" />
-                            
-                            
- 
-                                <ui:CardExpander DockPanel.Dock="Top"
-                                                 Margin="0,10"
-                                                 CornerRadius="5"
-                                                 Icon="{ui:SymbolIcon Settings20}">
-                                    <ui:CardExpander.Header>
-                                        <StackPanel Orientation="Horizontal">
-                                            <ui:TextBlock
-                                                        FontSize="14"
-                                                        VerticalAlignment="Center"
-                                                        FontTypography="BodyStrong"
-                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                        Text="Настройки"
-                                                        TextWrapping="WrapWithOverflow" 
-                                                    />
-                                        </StackPanel>
-                                    </ui:CardExpander.Header>
-                                    <DockPanel>
-                                        <ui:TextBlock DockPanel.Dock="Top"
-                                                              FontSize="12"
-                                                              VerticalAlignment="Center"
-                                                              FontTypography="BodyStrong"
-                                                              Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                              Text="Выбор параметра"
-                                                              TextWrapping="WrapWithOverflow" />
-                                        <ComboBox DockPanel.Dock="Top"
-                                                  ItemsSource="{Binding UserParameters}"
-                                                  SelectedItem="{Binding SelectedUserParameter}"/>
-                                        <ui:TextBlock DockPanel.Dock="Top"
-                                                      FontSize="12"
-                                                      VerticalAlignment="Center"
-                                                      FontTypography="BodyStrong"
-                                                      Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                      Text="Создать виды и 3D фильтры"
-                                                      TextWrapping="WrapWithOverflow" />
-                                        <ui:ToggleSwitch 
-                               IsChecked="{Binding CreateView, Mode=TwoWay}" />
-                       </DockPanel>
-                    </ui:CardExpander>
 
-                            
-                            
-                            
+
+                            <ui:CardExpander DockPanel.Dock="Top"
+                                             Margin="0,10"
+                                             CornerRadius="5"
+                                             Icon="{ui:SymbolIcon FlipHorizontal20}">
+                                <ui:CardExpander.Header>
+                                    <StackPanel Orientation="Horizontal" CanVerticallyScroll="True">
+                                        <ui:TextBlock
+                                            FontSize="14"
+                                            VerticalAlignment="Center"
+                                            FontTypography="BodyStrong"
+                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                            Text="Аксонометрия"
+                                            TextWrapping="WrapWithOverflow" />
+                                    </StackPanel>
+                                </ui:CardExpander.Header>
+                                <DockPanel>
+                                    <ui:TextBlock DockPanel.Dock="Top"
+                                                  FontSize="12"
+                                                  VerticalAlignment="Center"
+                                                  FontTypography="BodyStrong"
+                                                  Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                  Text="Создать виды и 3D фильтры"
+                                                  TextWrapping="WrapWithOverflow" />
+
+                                    <ui:ToggleSwitch DockPanel.Dock="Top"
+                                                     IsChecked="{Binding CreateView, Mode=TwoWay}" />
+                                    
+                                    <ui:TextBlock DockPanel.Dock="Top"
+                                                  FontSize="12"
+                                                  VerticalAlignment="Center"
+                                                  FontTypography="BodyStrong"
+                                                  Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                  Text="Выбор типа вида"
+                                                  TextWrapping="WrapWithOverflow" />
+                                    
+                                    <ComboBox DockPanel.Dock="Top"
+                                              Visibility="{Binding IsMarking,
+                                              Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
+                                              ItemsSource="{Binding ViewTypes3D}"
+                                              SelectedItem="{Binding SelectedViewType3D}"/>
+
+                                    <ui:TextBlock DockPanel.Dock="Top"
+                                                  Margin="0,10,0,0"
+                                                  FontSize="12"
+                                                  VerticalAlignment="Center"
+                                                  FontTypography="BodyStrong"
+                                                  Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                  Text="Маркировать"
+                                                  Visibility="{Binding CreateView,
+                                                      Converter={StaticResource BooleanCollapsedVisibilityConverter}}"
+                                                  TextWrapping="WrapWithOverflow" />
+
+                                    <ui:ToggleSwitch DockPanel.Dock="Top"
+                                                     Visibility="{Binding CreateView,
+                                                         Converter={StaticResource BooleanCollapsedVisibilityConverter}}"
+                                                     IsChecked="{Binding IsMarking, Mode=TwoWay}" />
+                                    
+                                    <ui:TextBlock DockPanel.Dock="Top"
+                                                  Margin="0,10,0,0"
+                                                  FontSize="12"
+                                                  VerticalAlignment="Center"
+                                                  FontTypography="BodyStrong"
+                                                  Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                  Text="Выбор марки отопительных приборов"
+                                                  Visibility="{Binding IsMarking,
+                                                  Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
+                                                  TextWrapping="WrapWithOverflow" />
+                                    
+                                    <ComboBox DockPanel.Dock="Top"
+                                              Visibility="{Binding IsMarking,
+                                              Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
+                                              ItemsSource="{Binding MarksHeatDevice}"
+                                              SelectedItem="{Binding SelectedMarkHeatDevice}"/>
+                                    
+                                    <ui:TextBlock DockPanel.Dock="Top"
+                                                  Margin="0,10,0,0"
+                                                  FontSize="12"
+                                                  VerticalAlignment="Center"
+                                                  FontTypography="BodyStrong"
+                                                  Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                  Text="Выбор марки трубопроводов"
+                                                  Visibility="{Binding IsMarking,
+                                                  Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
+                                                  TextWrapping="WrapWithOverflow" />
+                                    
+                                    <ComboBox DockPanel.Dock="Top"
+                                              Visibility="{Binding IsMarking,
+                                              Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
+                                              ItemsSource="{Binding MarksPipe}"
+                                              SelectedItem="{Binding SelectedMarkPipe}"/>
+                                    
+                                    <ui:TextBlock DockPanel.Dock="Top"
+                                                  Margin="0,10,0,0"
+                                                  FontSize="12"
+                                                  VerticalAlignment="Center"
+                                                  FontTypography="BodyStrong"
+                                                  Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                  Text="Выбор марки арматуры"
+                                                  Visibility="{Binding IsMarking,
+                                                  Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
+                                                  TextWrapping="WrapWithOverflow" />
+                                    
+                                    <ComboBox DockPanel.Dock="Top"
+                                              Visibility="{Binding IsMarking,
+                                              Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
+                                              ItemsSource="{Binding MarksPipeAccessory}"
+                                              SelectedItem="{Binding SelectedMarkPipeAccessory}"/>
+
+
+                                </DockPanel>
+                            </ui:CardExpander>
+
+
                         </StackPanel>
                     </ui:Card>
                 </DockPanel>
-                
-                
+
+
                 <DockPanel Grid.Column="1" LastChildFill="True">
                     <ui:CardControl
                         DockPanel.Dock="Top"
@@ -133,22 +204,22 @@
                             PlaceholderText="Введите наименование стояка отопления..."
                             Text="{Binding FilterByName, UpdateSourceTrigger=PropertyChanged}" />
                     </ui:CardControl>
-                    
-                    <ui:Card Margin="10,5" 
-                             VerticalAlignment="Top" 
+
+                    <ui:Card Margin="10,5"
+                             VerticalAlignment="Top"
                              VerticalContentAlignment="Top">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="40"/> 
-                                <RowDefinition Height="*"/> 
+                                <RowDefinition Height="40" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            
+
                             <Grid Grid.Row="0" Margin="7,0,0,0">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30"/> 
-                                    <ColumnDefinition Width="100"/> 
-                                    <ColumnDefinition Width="*"/> 
-                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="30" />
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <CheckBox Grid.Column="0"
                                           IsChecked="{Binding CheckAllRisers}" />
@@ -166,7 +237,7 @@
                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                               Text="Выбрать трубу"
                                               TextWrapping="WrapWithOverflow" />
-                                
+
                                 <ui:TextBlock Grid.Column="3"
                                               HorizontalAlignment="Center"
                                               VerticalAlignment="Center"
@@ -174,47 +245,47 @@
                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                               Text="Создать 3D Box"
                                               TextWrapping="WrapWithOverflow" />
-                             </Grid>
-                            
+                            </Grid>
+
                             <ui:ListView Grid.Row="1"
-                                ItemsSource="{Binding HeatingRisers}"
-                                SelectedItem="{Binding SelectedRise}"
-                                VerticalAlignment="Top"
-                                VerticalContentAlignment="Top"
-                                Padding="0"
-                                ScrollViewer.VerticalScrollBarVisibility="Auto" >
+                                         ItemsSource="{Binding HeatingRisers}"
+                                         SelectedItem="{Binding SelectedRise}"
+                                         VerticalAlignment="Top"
+                                         VerticalContentAlignment="Top"
+                                         Padding="0"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto">
                                 <ui:ListView.ItemTemplate>
                                     <DataTemplate>
                                         <Grid Margin="2,0,0,0">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="30"/> 
-                                                <ColumnDefinition Width="100"/> 
-                                                <ColumnDefinition Width="*"/> 
-                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="30" />
+                                                <ColumnDefinition Width="100" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
-                                            <CheckBox 
+                                            <CheckBox
                                                 IsChecked="{Binding IsChecked}" />
-                                            
-                                            <TextBlock  Grid.Column="1" 
-                                                        Text="{Binding Name}" 
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"/>
-                                            
-                                            <ui:Button  Grid.Column="2"  
-                                                        Appearance="Info"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        Command="{Binding SelectCommand}"
-                                                        Content="Выбрать" />
-                                            
-                                            <ui:Button  Grid.Column="3" 
-                                                        Appearance="Info" 
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        Command="{Binding Show3DCommand}"
-                                                        Content="3D box" />
+
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding Name}"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center" />
+
+                                            <ui:Button Grid.Column="2"
+                                                       Appearance="Info"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Command="{Binding SelectCommand}"
+                                                       Content="Выбрать" />
+
+                                            <ui:Button Grid.Column="3"
+                                                       Appearance="Info"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Command="{Binding Show3DCommand}"
+                                                       Content="3D box" />
                                         </Grid>
-                                        
+
                                     </DataTemplate>
                                 </ui:ListView.ItemTemplate>
                             </ui:ListView>

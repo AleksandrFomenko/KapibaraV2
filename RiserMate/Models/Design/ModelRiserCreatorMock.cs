@@ -21,6 +21,7 @@ public class ModelRiserCreatorMock: IModelRiserCreator
         return result;
     }
 
+    public List<string> GetMarksHeatDevice() => ["Марка 1", "Марка 2", "Марка 3"];
     public void SelectHeatingRiser(HeatingRiser e, string parameter) => Console.WriteLine($"Выделить трубу у {e.Name}");
     public void Show3D(HeatingRiser e) => Console.WriteLine($"Показал {e.Name}");
     public void Execute(List<HeatingRiser> heatingRisers, string parameter) => Console.WriteLine("Execute");

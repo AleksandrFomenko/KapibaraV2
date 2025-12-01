@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using KapibaraUI.Services.Appearance;
+﻿using KapibaraUI.Services.Appearance;
 using RiserMate.ViewModels;
 using Wpf.Ui.Abstractions.Controls;
 
@@ -7,7 +6,6 @@ namespace RiserMate.Views;
 
 public partial class RiserCreator : INavigableView<RizerCreatorViewModel>
 {
-    public RizerCreatorViewModel ViewModel { get; }
     public RiserCreator(RizerCreatorViewModel viewModel, IThemeWatcherService themeService)
     {
         themeService.Watch(this);
@@ -15,4 +13,6 @@ public partial class RiserCreator : INavigableView<RizerCreatorViewModel>
         DataContext = ViewModel;
         InitializeComponent();
     }
+
+    public RizerCreatorViewModel ViewModel { get; }
 }

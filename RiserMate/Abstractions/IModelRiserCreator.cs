@@ -7,7 +7,10 @@ public interface IModelRiserCreator
     
     public List<string> GetUserParameters();
     public List<HeatingRiser> GetHeatingRisers(string parameter);
+    public List<string> GetMarksHeatDevice();
     public void SelectHeatingRiser(HeatingRiser e, string parameter);
     public void Show3D(HeatingRiser e);
     public void Execute(List<HeatingRiser> heatingRisers, string parameter);
+    
+    
 }

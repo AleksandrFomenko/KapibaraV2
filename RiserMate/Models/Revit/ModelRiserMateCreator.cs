@@ -30,6 +30,11 @@ public class ModelRiserMateCreator : IModelRiserCreator
         return hashSet.Select(p => new HeatingRiser(p)).ToList();
     }
 
+    public List<string> GetMarksHeatDevice()
+    {
+        throw new NotImplementedException();
+    }
+
     private static string GetParameterValue(Element elem, string parameterName) => 
         elem.LookupParameter(parameterName)?.AsString() ?? string.Empty;
     
