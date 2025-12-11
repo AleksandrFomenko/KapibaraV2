@@ -102,7 +102,7 @@ namespace KapibaraV2
             panelMepGeneral.AddPushButton<StartupCommandGroupSystems>("System\ngroup")
                 .SetImage("/KapibaraV2;component/Resources/Icons/GroupSystems16.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/GroupSystems32.png");
-            panelMepGeneral.AddPushButton<RiserMate.Commands.StartupCommand>("RiserMate")
+            panelMepGeneral.AddPushButton<RiserMate.Commands.StartupCommand>("Riser\nMate")
                 .SetImage("/KapibaraV2;component/Resources/Icons/RizerMate16.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/RizerMate32.png");
             panelMepGeneral.AddPushButton<HeatingDevices.Commands.StartupCommand>("Space\nHeater")

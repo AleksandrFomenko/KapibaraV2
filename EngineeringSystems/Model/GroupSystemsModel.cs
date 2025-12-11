@@ -79,7 +79,8 @@ public class GroupSystemsModel : IGroupSystemsModel
             ];
     }
 
-    public void AfterClose(ObservableCollection<Group>? groups, string userParameter)
+    public void 
+        AfterClose(ObservableCollection<Group>? groups, string userParameter)
     {
         if (groups is null) return;
 

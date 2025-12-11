@@ -56,7 +56,12 @@ public static class RiserMateHost
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
         services.AddSingleton<INavigationViewPageProvider, PageService>();
+        
+        services.AddSingleton<IViewCreationService, ViewCreationService>();
+        services.AddSingleton<IFilterCreationService, FilterCreationService>();
+        
         services.AddSingleton<IConfigRiserMate, ConfigRiserMateService>();
+        
 
         _serviceProvider = services.BuildServiceProvider();
         

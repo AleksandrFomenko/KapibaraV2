@@ -37,6 +37,15 @@
                     Icon="{ui:SymbolIcon FlipHorizontal32}"
                     Content="Execute"
                     Command="{Binding ExecuteCommand}" />
+                
+                <ui:Button
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    Appearance="Info"
+                    Icon="{ui:SymbolIcon ArrowSync24}"
+                    Content="Обновить"
+                    Command="{Binding UpdateCommand}" />
+                
             </Grid>
 
             <Grid>
@@ -94,10 +103,12 @@
                                                   FontTypography="BodyStrong"
                                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                   Text="Выбор типа вида"
+                                                  Visibility="{Binding CreateView,
+                                                  Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
                                                   TextWrapping="WrapWithOverflow" />
                                     
                                     <ComboBox DockPanel.Dock="Top"
-                                              Visibility="{Binding IsMarking,
+                                              Visibility="{Binding CreateView,
                                               Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
                                               ItemsSource="{Binding ViewTypes3D}"
                                               SelectedItem="{Binding SelectedViewType3D}"/>
@@ -125,12 +136,12 @@
                                                   FontTypography="BodyStrong"
                                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                   Text="Выбор марки отопительных приборов"
-                                                  Visibility="{Binding IsMarking,
+                                                  Visibility="{Binding VisibleMark,
                                                   Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
                                                   TextWrapping="WrapWithOverflow" />
                                     
                                     <ComboBox DockPanel.Dock="Top"
-                                              Visibility="{Binding IsMarking,
+                                              Visibility="{Binding VisibleMark,
                                               Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
                                               ItemsSource="{Binding MarksHeatDevice}"
                                               SelectedItem="{Binding SelectedMarkHeatDevice}"/>
@@ -142,12 +153,12 @@
                                                   FontTypography="BodyStrong"
                                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                   Text="Выбор марки трубопроводов"
-                                                  Visibility="{Binding IsMarking,
+                                                  Visibility="{Binding VisibleMark,
                                                   Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
                                                   TextWrapping="WrapWithOverflow" />
                                     
                                     <ComboBox DockPanel.Dock="Top"
-                                              Visibility="{Binding IsMarking,
+                                              Visibility="{Binding VisibleMark,
                                               Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
                                               ItemsSource="{Binding MarksPipe}"
                                               SelectedItem="{Binding SelectedMarkPipe}"/>
@@ -159,12 +170,12 @@
                                                   FontTypography="BodyStrong"
                                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                   Text="Выбор марки арматуры"
-                                                  Visibility="{Binding IsMarking,
+                                                  Visibility="{Binding VisibleMark,
                                                   Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
                                                   TextWrapping="WrapWithOverflow" />
                                     
                                     <ComboBox DockPanel.Dock="Top"
-                                              Visibility="{Binding IsMarking,
+                                              Visibility="{Binding VisibleMark,
                                               Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
                                               ItemsSource="{Binding MarksPipeAccessory}"
                                               SelectedItem="{Binding SelectedMarkPipeAccessory}"/>

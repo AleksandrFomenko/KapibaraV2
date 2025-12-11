@@ -5,12 +5,11 @@ using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
-
 namespace KapibaraUI.Services.Appearance;
 
-public sealed class ThemeWatcherService : IThemeWatcherService
+public class ThemeWatcherServiceNonStatic: IThemeWatcherService
 {
-    private static readonly List<FrameworkElement> ObservedElements = [];
+    private readonly List<FrameworkElement> _observedElements = [];
 
     private static readonly string DllPath = Assembly.GetExecutingAssembly().Location;
     private static readonly string DllDirectory = Path.GetDirectoryName(DllPath);
@@ -31,7 +30,7 @@ public sealed class ThemeWatcherService : IThemeWatcherService
 
     private void OnApplicationThemeManagerChanged(ApplicationTheme currentApplicationTheme, System.Windows.Media.Color systemAccent)
     {
-        foreach (var frameworkElement in ObservedElements)
+        foreach (var frameworkElement in _observedElements)
         {
             ApplicationThemeManager.Apply(frameworkElement);
             UpdateBackground(currentApplicationTheme);
@@ -62,7 +61,7 @@ public sealed class ThemeWatcherService : IThemeWatcherService
     private void OnWatchedElementLoaded(object sender, RoutedEventArgs e)
     {
         var element = (FrameworkElement)sender;
-        ObservedElements.Add(element);
+        _observedElements.Add(element);
 
         if (element.Resources.MergedDictionaries[0].Source.OriginalString != UiApplication.Current.Resources.MergedDictionaries[0].Source.OriginalString)
         {
@@ -75,13 +74,13 @@ public sealed class ThemeWatcherService : IThemeWatcherService
     private void OnWatchedElementUnloaded(object sender, RoutedEventArgs e)
     {
         var element = (FrameworkElement)sender;
-        ObservedElements.Remove(element);
+        _observedElements.Remove(element);
     }
     
     private void UpdateBackground(ApplicationTheme theme)
     {
         var backdrop = ReadBackdropFromConfig();
-        foreach (var window in ObservedElements.Select(Window.GetWindow).Distinct())
+        foreach (var window in _observedElements.Select(Window.GetWindow).Distinct())
         {
             WindowBackgroundManager.UpdateBackground(window, theme, backdrop);
         }
@@ -118,12 +117,4 @@ public sealed class ThemeWatcherService : IThemeWatcherService
         ApplyTheme(cfg.Theme);
     }
     
-}
-
-public interface IThemeWatcherService
-{
-    void ApplyTheme(ApplicationTheme theme);
-    void Initialize();
-    void Watch(FrameworkElement frameworkElement);
-    void SetConfigTheme();
 }

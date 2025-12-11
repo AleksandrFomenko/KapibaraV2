@@ -131,7 +131,6 @@ public class ViewByParameterModel(
                     view.AddFilter(filterProject?.Id);
                     view.SetFilterVisibility(filterProject?.Id, filterFromProject.IsVisible);
                     view.SetIsFilterEnabled(filterProject?.Id, filterFromProject.IsEnabled);
-                    
                 }
             }
             t.Commit();

@@ -10,7 +10,7 @@ public class AddFilterModel(Document document) : IAddFilterModel
             .OfClass(typeof(ParameterFilterElement))
             .Cast<ParameterFilterElement>()
             .Where(f => string.IsNullOrEmpty(filterByName) || 
-                        f.Name.Contains(filterByName, StringComparison.OrdinalIgnoreCase))
+                        (f.Name != null && f.Name.ToLower().Contains(filterByName.ToLower())))
             .Select(f => new FilterFromProject(f.Name))
             .ToList();
     }

@@ -1,5 +1,4 @@
-﻿using ViewByParameter.AddFilter.Models;
-using ViewByParameter.AddFilter.View;
+﻿using ViewByParameter.AddFilter.View;
 using ViewByParameter.AddFilter.ViewModels;
 using ViewByParameter.Models;
 
@@ -124,7 +123,6 @@ public sealed partial class ViewByParameterViewModel : ObservableObject
     }
 
     
-
     [RelayCommand(CanExecute = nameof(CanExecute))]
     private void Execute()
     {

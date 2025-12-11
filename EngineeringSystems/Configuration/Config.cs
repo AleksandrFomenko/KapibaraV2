@@ -12,7 +12,6 @@ public class Config
     private static readonly string DllDirectory = Path.GetDirectoryName(DllPath);
     private string _configFilePath = Path.Combine(DllDirectory, "EngineeringSystemsConfig", "config.json");
     
-
     public string UserParameter { get; set; }
 
     public Config()
