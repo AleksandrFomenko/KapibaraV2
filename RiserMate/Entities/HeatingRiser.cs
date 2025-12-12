@@ -1,16 +1,12 @@
 ﻿namespace RiserMate.Entities;
 
-public partial class HeatingRiser : ObservableObject
+public partial class HeatingRiser(string name) : ObservableObject
 {
     [ObservableProperty] private bool _isChecked;
-    [ObservableProperty] private string _name;
+    [ObservableProperty] private string _name = name;
 
-    public event EventHandler<HeatingRiser> ClickSelect;
-    public event EventHandler<HeatingRiser> ClickShow3D;
-    public HeatingRiser(string name)
-    {
-        _name = name;
-    }
+    public event EventHandler<HeatingRiser>? ClickSelect;
+    public event EventHandler<HeatingRiser>? ClickShow3D;
 
     [RelayCommand]
     private void Select() => OnClickSelect(this);

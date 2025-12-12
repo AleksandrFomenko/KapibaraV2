@@ -36,8 +36,6 @@ public static class RiserMateHost
 
         _serviceProvider = services.BuildServiceProvider();
         
-        var theme = _serviceProvider.GetService<IThemeWatcherService>();
-        theme?.Initialize();
     }
     
     public static void StartServices()
@@ -62,7 +60,6 @@ public static class RiserMateHost
         
         services.AddSingleton<IConfigRiserMate, ConfigRiserMateService>();
         
-
         _serviceProvider = services.BuildServiceProvider();
         
         var theme = _serviceProvider.GetService<IThemeWatcherService>();

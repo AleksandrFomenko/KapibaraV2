@@ -41,7 +41,7 @@ public static class Host
         services.AddSingleton<IThemeWatcherService, ThemeWatcherService>();
         
         var serviceProvider = services.BuildServiceProvider();
-        var tws = serviceProvider.GetService<ThemeWatcherService>();
+        var tws = serviceProvider.GetService<IThemeWatcherService>();
         var view = serviceProvider.GetService<AddFilterView>();
         return view;
     }

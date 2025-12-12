@@ -16,7 +16,6 @@ public static class Host
 
         var sp = services.BuildServiceProvider();
         var tws = sp.GetRequiredService<IThemeWatcherService>();
-        tws.Initialize();
         var view = sp.GetRequiredService<AxesView>();
 
         view.SourceInitialized += (s, e) => tws.SetConfigTheme();

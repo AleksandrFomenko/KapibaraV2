@@ -90,6 +90,7 @@ public sealed class ThemeWatcherService : IThemeWatcherService
     public void ApplyTheme(ApplicationTheme theme)
     {
         var backdrop = ReadBackdropFromConfig();
+        Console.WriteLine(theme);
         ApplicationThemeManager.Apply(theme, backdrop);
         UpdateBackground(theme);
     }
@@ -99,13 +100,18 @@ public sealed class ThemeWatcherService : IThemeWatcherService
         try
         {
             if (!File.Exists(_configFilePath))
+            {
+                Console.WriteLine("Файл конфига не найден");
                 return new UiConfig();
+            }
+               
 
             var cfg = KapibaraCore.Configuration.Configuration.LoadConfig<UiConfig>(_configFilePath);
             return cfg ?? new UiConfig();
         }
         catch
         {
+            Console.WriteLine("Ошибка с файлом для настроек");
             return new UiConfig();
         }
     }
@@ -114,6 +120,7 @@ public sealed class ThemeWatcherService : IThemeWatcherService
 
     public void SetConfigTheme()
     {
+       
         var cfg = LoadUiConfigOrDefault();
         ApplyTheme(cfg.Theme);
     }

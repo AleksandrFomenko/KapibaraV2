@@ -91,7 +91,6 @@ public class ModelRiserMateCreator(
 
     public void SelectHeatingRiser(HeatingRiser e, string parameter)
     {
-        Console.WriteLine("ава");
         var elements = new FilteredElementCollector(_document)
             .WhereElementIsNotElementType()
             .Where(pipe => pipe.LookupParameter(parameter)?.AsString() == e.Name)

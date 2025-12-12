@@ -1,8 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using KapibaraUI.Services.Appearance;
+﻿using KapibaraUI.Services.Appearance;
 using Settings.Configuration;
-using Settings.Models;
-using System.Collections.Generic;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
@@ -24,22 +21,19 @@ public sealed partial class SettingsViewModel : ObservableObject
         Cfg = cfg;                
         ThemeWatcherService = tws;
         
-        Themes = new List<ApplicationTheme>
-        {
+        Themes =
+        [
             ApplicationTheme.Dark,
             ApplicationTheme.Light,
-            ApplicationTheme.Auto,
             ApplicationTheme.HighContrast
-        };
+        ];
 
-        Backdrops = new List<WindowBackdropType>
-        {
+        Backdrops =
+        [
             WindowBackdropType.Mica,
             WindowBackdropType.Acrylic,
-            WindowBackdropType.Tabbed,
-            WindowBackdropType.Auto,
-            WindowBackdropType.None
-        };
+            WindowBackdropType.Tabbed
+        ];
         
         var cfgTheme    = Cfg.Setting?.Theme    ?? ApplicationTheme.Light;
         var cfgBackdrop = Cfg.Setting?.Backdrop ?? WindowBackdropType.Mica;

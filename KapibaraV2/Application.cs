@@ -14,17 +14,15 @@ namespace KapibaraV2
     {
         public override void OnStartup()
         {
-            var theme = new ThemeWatcherService();
-            GroupSystems.StartHost();
-            theme.Initialize();
-            CreateRibbon();
+            InitializeTheme();
             
-            //RibbonFullGradient.Apply("Kapibara");
+            CreateRibbon(); 
+            GroupSystems.StartHost();
+            
         }
 
         private void CreateRibbon()
         {
-            
             var panelSettings = Application.CreatePanel("Settings", "Kapibara");
             var panelBim = Application.CreatePanel("BIM", "Kapibara");
             var panelGeneral = Application.CreatePanel("Общие", "Kapibara");
@@ -37,93 +35,101 @@ namespace KapibaraV2
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/Settings32.png");
             
             
-            //BIM
-            panelBim.AddPushButton<ExporterModels.Commands.StartupCommand>("Export\nmodels")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ExportModels.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ExportModels.png");
+           //BIM
+           panelBim.AddPushButton<ExporterModels.Commands.StartupCommand>("Export\nmodels")
+               .SetImage("/KapibaraV2;component/Resources/Icons/ExportModels.png")
+               .SetLargeImage("/KapibaraV2;component/Resources/Icons/ExportModels.png");
 
-            panelBim.AddPushButton<FamilyCleaner.Commands.StartupCommand>("Cleaning\nFamily")
-                .SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png");
-            panelBim.AddPushButton<ClashHub.Commands.StartupCommand>("Clash\nNavigator")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png");
-            
-            //panelBim.AddPushButton<FsmModules.Command.StartupCommand>("Prefab")
-                //.SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
-                //.SetLargeImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png");
-                var stackPanelBim = panelBim.AddStackPanel();
-                    stackPanelBim.AddPushButton<WorkSetLinkFiles.Commands.StartupCommand>("Worksets")
-                        .SetImage("/KapibaraV2;component/Resources/Icons/WorksetLinkFiles.png");
-            
-            //General
-            panelGeneral.AddPushButton<ImportExcelByParameter.Commands.StartupCommand>("Import\nExcel")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ImportExcel.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ImportExcel.png");
-            panelGeneral.AddPushButton<ViewManager.Commands.StartupCommand>("View\nManager")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ViewManager.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ViewManager.png");
-            panelGeneral.AddPushButton<LevelByFloor.Commands.StartupCommand>("Level\nby floor")
-                .SetImage("/KapibaraV2;component/Resources/Icons/LevelByFloor.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/LevelByFloor.png");
-            
-            var stackPanel1 = panelGeneral.AddStackPanel();
-            stackPanel1.AddPushButton<ViewByParameter.Commands.StartupCommand>("Filter view")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ViewByParameter.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/ViewByParameter.png");
-            stackPanel1.AddPushButton<LegendPlacer.Commands.StartupCommand>("Legend placer")
-                .SetImage("/KapibaraV2;component/Resources/Icons/LedendPlacer.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/LedendPlacer.png");
-            UpdateRibbonButton<ViewByParameter.Commands.StartupCommand>("Kapibara", "Общие");
-            UpdateRibbonButton<LegendPlacer.Commands.StartupCommand>("Kapibara", "Общие");
-            
-            
-            var stackPanel = panelGeneral.AddStackPanel();
-            stackPanel.AddPushButton<SortingCategories.Commands.StartupCommand>("Sorting")
-                .SetImage("/KapibaraV2;component/Resources/Icons/Sort.png");
-            stackPanel.AddPushButton<SolidIntersection.Commands.SolidIntersection>("Intersection")
-                .SetImage("/KapibaraV2;component/Resources/Icons/intersector.png");
-            stackPanel.AddPushButton<ActiveView.Commands.StartupCommand>("Active view")
-                .SetImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
-            //stackPanel.AddPushButton<ColorsByParameters.Commands.StartupCommand>("Цвета")
-                //.SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
-                
-            var stackPanelAxesLevels = panelGeneral.AddStackPanel();
-            stackPanelAxesLevels.AddPushButton<ProjectAxes.Commands.AxesStartupCommand>("Оси")
-                .SetImage("/KapibaraV2;component/Resources/Icons/Axes.png");;
-            stackPanelAxesLevels.AddPushButton<ProjectAxes.Commands.LevelsStartupCommand>("Уровни")
-                .SetImage("/KapibaraV2;component/Resources/Icons/Levels.png");;
-            
+           panelBim.AddPushButton<FamilyCleaner.Commands.StartupCommand>("Cleaning\nFamily")
+               .SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
+               .SetLargeImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png");
+           panelBim.AddPushButton<ClashHub.Commands.StartupCommand>("Clash\nNavigator")
+               .SetImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png")
+               .SetLargeImage("/KapibaraV2;component/Resources/Icons/ClashDetective.png");
 
-            //MEP общие
-            panelMepGeneral.AddPushButton<StartupCommandEngineeringSystems>("System\nname")
-                .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
-            panelMepGeneral.AddPushButton<StartupCommandGroupSystems>("System\ngroup")
-                .SetImage("/KapibaraV2;component/Resources/Icons/GroupSystems16.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/GroupSystems32.png");
-            panelMepGeneral.AddPushButton<RiserMate.Commands.StartupCommand>("Riser\nMate")
-                .SetImage("/KapibaraV2;component/Resources/Icons/RizerMate16.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/RizerMate32.png");
-            panelMepGeneral.AddPushButton<HeatingDevices.Commands.StartupCommand>("Space\nHeater")
-                .SetImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png");
-            /*
-            panelMepGeneral.AddPushButton<Insolation.Commands.StartupCommand>("ываываыва")
-                .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
-                .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
-*/
+           //panelBim.AddPushButton<FsmModules.Command.StartupCommand>("Prefab")
+               //.SetImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png")
+               //.SetLargeImage("/KapibaraV2;component/Resources/Icons/FamilyManager.png");
+               var stackPanelBim = panelBim.AddStackPanel();
+                   stackPanelBim.AddPushButton<WorkSetLinkFiles.Commands.StartupCommand>("Worksets")
+                       .SetImage("/KapibaraV2;component/Resources/Icons/WorksetLinkFiles.png");
+
+           //General
+           panelGeneral.AddPushButton<ImportExcelByParameter.Commands.StartupCommand>("Import\nExcel")
+               .SetImage("/KapibaraV2;component/Resources/Icons/ImportExcel.png")
+               .SetLargeImage("/KapibaraV2;component/Resources/Icons/ImportExcel.png");
+           panelGeneral.AddPushButton<ViewManager.Commands.StartupCommand>("View\nManager")
+               .SetImage("/KapibaraV2;component/Resources/Icons/ViewManager.png")
+               .SetLargeImage("/KapibaraV2;component/Resources/Icons/ViewManager.png");
+           panelGeneral.AddPushButton<LevelByFloor.Commands.StartupCommand>("Level\nby floor")
+               .SetImage("/KapibaraV2;component/Resources/Icons/LevelByFloor.png")
+               .SetLargeImage("/KapibaraV2;component/Resources/Icons/LevelByFloor.png");
+
+           var stackPanel1 = panelGeneral.AddStackPanel();
+           stackPanel1.AddPushButton<ViewByParameter.Commands.StartupCommand>("Filter view")
+               .SetImage("/KapibaraV2;component/Resources/Icons/ViewByParameter.png")
+               .SetLargeImage("/KapibaraV2;component/Resources/Icons/ViewByParameter.png");
+           stackPanel1.AddPushButton<LegendPlacer.Commands.StartupCommand>("Legend placer")
+               .SetImage("/KapibaraV2;component/Resources/Icons/LedendPlacer.png")
+               .SetLargeImage("/KapibaraV2;component/Resources/Icons/LedendPlacer.png");
+           UpdateRibbonButton<ViewByParameter.Commands.StartupCommand>("Kapibara", "Общие");
+           UpdateRibbonButton<LegendPlacer.Commands.StartupCommand>("Kapibara", "Общие");
+
+
+           var stackPanel = panelGeneral.AddStackPanel();
+           stackPanel.AddPushButton<SortingCategories.Commands.StartupCommand>("Sorting")
+               .SetImage("/KapibaraV2;component/Resources/Icons/Sort.png");
+           stackPanel.AddPushButton<SolidIntersection.Commands.SolidIntersection>("Intersection")
+               .SetImage("/KapibaraV2;component/Resources/Icons/intersector.png");
+           stackPanel.AddPushButton<ActiveView.Commands.StartupCommand>("Active view")
+               .SetImage("/KapibaraV2;component/Resources/Icons/ActiveView.png");
+           //stackPanel.AddPushButton<ColorsByParameters.Commands.StartupCommand>("Цвета")
+               //.SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+
+           var stackPanelAxesLevels = panelGeneral.AddStackPanel();
+           stackPanelAxesLevels.AddPushButton<ProjectAxes.Commands.AxesStartupCommand>("Оси")
+               .SetImage("/KapibaraV2;component/Resources/Icons/Axes.png");;
+           stackPanelAxesLevels.AddPushButton<ProjectAxes.Commands.LevelsStartupCommand>("Уровни")
+               .SetImage("/KapibaraV2;component/Resources/Icons/Levels.png");;
+
+
+           //MEP общие
+           panelMepGeneral.AddPushButton<StartupCommandEngineeringSystems>("System\nname")
+               .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
+               .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+           panelMepGeneral.AddPushButton<StartupCommandGroupSystems>("System\ngroup")
+               .SetImage("/KapibaraV2;component/Resources/Icons/GroupSystems16.png")
+               .SetLargeImage("/KapibaraV2;component/Resources/Icons/GroupSystems32.png");
+
+
+         panelMepGeneral.AddPushButton<RiserMate.Commands.StartupCommand>("Riser\nMate")
+             .SetImage("/KapibaraV2;component/Resources/Icons/RizerMate16.png")
+             .SetLargeImage("/KapibaraV2;component/Resources/Icons/RizerMate32.png");
+         /*
+        panelMepGeneral.AddPushButton<HeatingDevices.Commands.StartupCommand>("Space\nHeater")
+            .SetImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png")
+            .SetLargeImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png");
+
+        panelMepGeneral.AddPushButton<Insolation.Commands.StartupCommand>("ываываыва")
+            .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
+            .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+
             // Разное
-            
+        */
             panelInfo.AddPushButton<ChatGPT.Commands.ChatGpt>("ChatGPT")
                 .SetImage("/KapibaraV2;component/Resources/Icons/ai.png")
                 .SetLargeImage("/KapibaraV2;component/Resources/Icons/ai.png");
+            
         }
-        
+        private static void InitializeTheme()
+        {
+            var themeManager = new ThemeWatcherService();
+            themeManager.Initialize();
+        }
         
         private static void UpdateRibbonButton(string tabId, string panelName, string commandId)
         {
-            foreach (RibbonTab tab in Autodesk.Windows.ComponentManager.Ribbon.Tabs)
+            foreach (RibbonTab tab in ComponentManager.Ribbon.Tabs)
             {
                 if (tab.KeyTip != null)
                     continue;
