@@ -49,10 +49,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Models"/>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\KapibaraUI\KapibaraUI.csproj" />
     </ItemGroup>
 

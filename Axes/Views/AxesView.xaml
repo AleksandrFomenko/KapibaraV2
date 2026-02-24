@@ -5,19 +5,21 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://Kapibara/xaml"
+    xmlns:converters="clr-namespace:Axes.Views.Converters"
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen"
     SizeToContent="WidthAndHeight"
     ResizeMode="NoResize"
     Height="{Binding SelectedChoice.WindowHeight, Mode=OneWay}"
     Width="{Binding  SelectedChoice.WindowWidth,  Mode=OneWay}"
-    MinWidth="{Binding SelectedChoice.WindowWidth}"
-    MaxWidth="{Binding SelectedChoice.WindowWidth}"
-    MinHeight="{Binding SelectedChoice.WindowHeight}"
-    MaxHeight="{Binding SelectedChoice.WindowHeight}">
+    MinWidth="{Binding SelectedChoice.WindowWidth, Mode=OneWay}"
+    MaxWidth="{Binding SelectedChoice.WindowWidth, Mode=OneWay}"
+    MinHeight="{Binding SelectedChoice.WindowHeight, Mode=OneWay}"
+    MaxHeight="{Binding SelectedChoice.WindowHeight, Mode=OneWay}">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolConverter" />
+        <converters:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -42,16 +44,89 @@
         <ui:Card
             Grid.Row="2"
             Margin="10,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
             Visibility="{Binding SelectedChoice.VisibleAxes, 
             Converter={StaticResource BoolConverter}}">
-            <Grid Width="150" Height="150"
-                  RenderOptions.BitmapScalingMode="NearestNeighbor"
-                  SnapsToDevicePixels="True">
-                <Grid.Background>
-                    <ImageBrush ImageSource="/Axes;component/Resources/BackgroundAxes.png"
-                                Stretch="Uniform" />
-                </Grid.Background>
+            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition />
+                    <RowDefinition Height="150"/>
+                    <RowDefinition />
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                
+                <Grid >
+                    <ComboBox DockPanel.Dock="Top"
+                              ItemsSource="{Binding Options}"
+                              SelectedItem="{Binding SelectedOption}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </Grid>
+                
+                <CheckBox Grid.Row="1" 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    IsChecked="{Binding Top}"/>
+                
+                <Grid Grid.Row="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        
+                        <CheckBox 
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            IsChecked="{Binding Left}"/>
+                        
+                        <Grid Grid.Column="1">
+                            <Grid.Background>
+                                <ImageBrush ImageSource="/Axes;component/Resources/BackgroundAxes.png"
+                                            Stretch="Uniform" />
+                            </Grid.Background>
+                        </Grid>
+                        
+                        <CheckBox Grid.Column="2" 
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            IsChecked="{Binding Right}"/>
+                    </Grid>
+                </Grid>
+                
+                <CheckBox Grid.Row="3" 
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Top"
+                          IsChecked="{Binding Bottom}"/>
+                
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <ui:Button
+                        Appearance="Primary"
+                        Content="2D"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{Binding To2DCommand}" />
+                    <ui:Button Grid.Column="1"
+                        Appearance="Primary"
+                        Content="3D"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{Binding To3DCommand}" />
+                </Grid>
             </Grid>
+            
         </ui:Card>
 
         <ui:Card

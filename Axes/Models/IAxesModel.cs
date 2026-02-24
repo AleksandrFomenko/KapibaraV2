@@ -1,0 +1,8 @@
+﻿namespace Axes.Models;
+
+public interface IAxesModel
+{
+    public void HideTopOrBottom(bool isAll, bool isTop, bool show);
+    public void HideRightOrLeft(bool isAll, bool isLeft, bool show);
+    public void ChangeDatumExtent(bool isAll, bool is3D);
+}

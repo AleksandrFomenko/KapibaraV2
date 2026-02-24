@@ -21,7 +21,39 @@ public class GroupSystemsModel : IGroupSystemsModel
         if (dto?.Data == null || dto.Data.Count == 0)
             return [];
 
-        foreach (var group in dto.Data.Where(group => group.Systems == null)) group.Systems = [];
+        foreach (var group in dto.Data.Where(group => group.Systems == null)) 
+            group.Systems = [];
+
+        var cats = new List<BuiltInCategory>
+        {
+            BuiltInCategory.OST_PipingSystem,
+            BuiltInCategory.OST_DuctSystem
+        };
+
+        var existingIds = new FilteredElementCollector(_doc)
+            .WherePasses(new ElementMulticategoryFilter(cats))
+            .WhereElementIsNotElementType()
+            .ToElementIds()
+            .Select(id => id.IntegerValue)
+            .ToHashSet();
+
+        var hasChanges = false;
+
+        foreach (var group in dto.Data.Where(g => g.Systems != null))
+        {
+            var toRemove = group?.Systems?.Where(s => s.SystemId != 0 && !existingIds.Contains(s.SystemId))
+                .ToList();
+
+            if (toRemove == null) continue;
+            foreach (var system in toRemove)
+            {
+                group?.Systems?.Remove(system);
+                hasChanges = true;
+            }
+        }
+
+        if (hasChanges)
+            AfterClose(new ObservableCollection<Group>(dto.Data), GetSelectedParameter());
 
         return new ObservableCollection<Group>(dto.Data);
     }
@@ -77,10 +109,8 @@ public class GroupSystemsModel : IGroupSystemsModel
                     SystemId = 0
                 }
             ];
-    }
-
-    public void 
-        AfterClose(ObservableCollection<Group>? groups, string userParameter)
+    } 
+    public void AfterClose(ObservableCollection<Group>? groups, string userParameter)
     {
         if (groups is null) return;
 
@@ -96,10 +126,8 @@ public class GroupSystemsModel : IGroupSystemsModel
         t.Commit();
     }
 
-    public List<string> GetUserParameters()
-    {
-        return _doc.GetProjectParameters();
-    }
+    public List<string> GetUserParameters() => _doc.GetProjectParameters();
+
 
     public string GetSelectedParameter()
     {
@@ -126,13 +154,11 @@ public class GroupSystemsModel : IGroupSystemsModel
                 var parameter = element.LookupParameter(userParameter);
                 if (parameter != null && !parameter.IsReadOnly) parameter.Set(group.Name);
                 if (element is FamilyInstance fi)
-                {
                     foreach (var subelem in fi.GetAllSubComponents())
                     {
                         var parameterSubElement = subelem.GetParameterByName(userParameter);
                         parameterSubElement.SetParameterValue(group.Name);
                     }
-                }
             }
 
             if (createView)
@@ -165,7 +191,7 @@ public class GroupSystemsModel : IGroupSystemsModel
 
             if (definition != null && definition.Name == parameterName)
             {
-                CategorySet categories = null;
+                CategorySet? categories = null;
 
                 if (binding is InstanceBinding instanceBinding)
                     categories = instanceBinding.Categories;

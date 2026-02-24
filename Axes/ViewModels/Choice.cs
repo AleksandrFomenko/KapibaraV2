@@ -8,15 +8,15 @@ public partial class Choice : ObservableObject
     [ObservableProperty] private double _windowHeight;
     [ObservableProperty] private double _windowWidth;
 
-    public static List<Choice> GetChoices()
+    public static List<Choice?> GetChoices()
     {
-        List<Choice> choices = [
+        List<Choice?> choices = [
             new Choice()
             {
                 DisplayName = "По осям",
                 VisibleAxes = true,
-                WindowHeight = 350,
-                WindowWidth = 250
+                WindowHeight = 500,
+                WindowWidth = 300
             }, 
             new Choice()
             {

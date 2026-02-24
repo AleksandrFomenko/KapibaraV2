@@ -10,5 +10,6 @@ public class StartupCommand: ExternalCommand
     public override void Execute()
     {
         Handler.Handler.RegisterHandlers();
+        Host.Host.Start();
     }
 }

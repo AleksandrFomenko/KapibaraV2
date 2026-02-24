@@ -17,18 +17,9 @@ internal class ExcelByParameterModel
         _doc = doc;
     }
 
-    internal void SetParameterName(string parameterName)
-    {
-        Excel.ParameterName = parameterName;
-    }
-    internal void SetSheetName(string sheetName)
-    {
-        Excel.SheetName = sheetName;
-    }
-    internal void SetRowNumber(int rowNumber)
-    {
-        Excel.RowNumber = rowNumber;
-    }
+    internal void SetParameterName(string parameterName) =>  Excel.ParameterName = parameterName;
+    internal void SetSheetName(string sheetName) =>  Excel.SheetName = sheetName;
+    internal void SetRowNumber(int rowNumber)  =>  Excel.RowNumber = rowNumber;
 
     internal void Execute(string path, string cat)
     {
@@ -70,7 +61,7 @@ internal class ExcelByParameterModel
         {
             return null;
         }
-        Dictionary<string, List<Element>> elementsDictionary = new Dictionary<string, List<Element>>(StringComparer.OrdinalIgnoreCase);
+        var elementsDictionary = new Dictionary<string, List<Element>>(StringComparer.OrdinalIgnoreCase);
         
         var elems = new FilteredElementCollector(_doc)
             .OfCategory(builtInCat)
@@ -87,7 +78,7 @@ internal class ExcelByParameterModel
 
             if (!elementsDictionary.TryGetValue(paramValue, out var list))
             {
-                list = new List<Element>();
+                list = [];
                 elementsDictionary[paramValue] = list;
             }
             list.Add(elem);

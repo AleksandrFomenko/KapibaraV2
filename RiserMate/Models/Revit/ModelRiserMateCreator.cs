@@ -169,7 +169,7 @@ public class ModelRiserMateCreator(
                     progress?.Report((i + 1, $"Создание вида: {heatingRiser.Name}"));
 
 
-                    var view = viewCreationService.CreateView3D(parameterName, heatingRiser.Name, viewOption);
+                    var view = viewCreationService.CreateView3D(heatingRiser.Name, viewOption);
                     if (view == null) continue;
 
 
@@ -181,7 +181,7 @@ public class ModelRiserMateCreator(
                     }
 
                     _document?.Regenerate();
-
+                    
                     
                     if (isMarking)
                     {
@@ -226,7 +226,7 @@ public class ModelRiserMateCreator(
             t.Start();
             foreach (var heatingRiser in heatingRisers)
             {
-                var view = viewCreationService.CreateView3D(parameterName, heatingRiser.Name, viewOption);
+                var view = viewCreationService.CreateView3D(heatingRiser.Name, viewOption);
                 var filter = filterCreationService.CreateFilter(parameterName, heatingRiser.Name);
                 view.AddFilter(filter.Id);
                 view.SetFilterVisibility(filter.Id, false);

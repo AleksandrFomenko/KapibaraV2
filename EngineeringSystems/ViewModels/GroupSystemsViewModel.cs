@@ -240,10 +240,8 @@ public sealed partial class GroupSystemsViewModel : ObservableObject
     }
     
     [RelayCommand]
-    private void Execute()
-    {
-       Start();
-    }
+    private void Execute() => Start();
+
     [RelayCommand]
     private void ExecuteAndClose()
     {

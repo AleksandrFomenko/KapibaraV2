@@ -90,7 +90,6 @@ public sealed class ThemeWatcherService : IThemeWatcherService
     public void ApplyTheme(ApplicationTheme theme)
     {
         var backdrop = ReadBackdropFromConfig();
-        Console.WriteLine(theme);
         ApplicationThemeManager.Apply(theme, backdrop);
         UpdateBackground(theme);
     }
@@ -101,7 +100,6 @@ public sealed class ThemeWatcherService : IThemeWatcherService
         {
             if (!File.Exists(_configFilePath))
             {
-                Console.WriteLine("Файл конфига не найден");
                 return new UiConfig();
             }
                
@@ -111,7 +109,6 @@ public sealed class ThemeWatcherService : IThemeWatcherService
         }
         catch
         {
-            Console.WriteLine("Ошибка с файлом для настроек");
             return new UiConfig();
         }
     }

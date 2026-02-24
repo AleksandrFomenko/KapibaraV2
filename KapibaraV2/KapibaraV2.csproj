@@ -103,11 +103,16 @@
         <Resource Include="Resources\Icons\RizerMate16.png" />
         <None Remove="Resources\Icons\GroupSystems32.png" />
         <Resource Include="Resources\Icons\GroupSystems32.png" />
+        <None Remove="Resources\Icons\Mark16.png" />
+        <Resource Include="Resources\Icons\Mark16.png" />
+        <None Remove="Resources\Icons\Mark32.png" />
+        <Resource Include="Resources\Icons\Mark32.png" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ActiveView\ActiveView.csproj" />
         <ProjectReference Include="..\AxesLevels\AxesLevels.csproj" />
+        <ProjectReference Include="..\Axes\Axes.csproj" />
         <ProjectReference Include="..\ChatGPT\ChatGPT.csproj" />
         <ProjectReference Include="..\ClashHub\ClashHub.csproj" />
         <ProjectReference Include="..\ColorsByParameters\ColorsByParameters.csproj" />
@@ -119,6 +124,7 @@
         <ProjectReference Include="..\Insolation\Insolation.csproj" />
         <ProjectReference Include="..\LegendPlacer\LegendPlacer.csproj" />
         <ProjectReference Include="..\LevelByFloor\LevelByFloor.csproj" />
+        <ProjectReference Include="..\Marking\Marking.csproj" />
         <ProjectReference Include="..\RiserMate\RiserMate.csproj" />
         <ProjectReference Include="..\Settings\Settings.csproj" />
         <ProjectReference Include="..\SolidIntersection\SolidIntersection.csproj" />

@@ -87,6 +87,9 @@ namespace KapibaraV2
                //.SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
 
            var stackPanelAxesLevels = panelGeneral.AddStackPanel();
+           stackPanelAxesLevels.AddPushButton<Axes.Commands.StartupCommand>("Оси Ахмата")
+               .SetImage("/KapibaraV2;component/Resources/Icons/Axes.png");;
+           
            stackPanelAxesLevels.AddPushButton<ProjectAxes.Commands.AxesStartupCommand>("Оси")
                .SetImage("/KapibaraV2;component/Resources/Icons/Axes.png");;
            stackPanelAxesLevels.AddPushButton<ProjectAxes.Commands.LevelsStartupCommand>("Уровни")
@@ -97,14 +100,17 @@ namespace KapibaraV2
            panelMepGeneral.AddPushButton<StartupCommandEngineeringSystems>("System\nname")
                .SetImage("/KapibaraV2;component/Resources/Icons/SystemName.png")
                .SetLargeImage("/KapibaraV2;component/Resources/Icons/SystemName.png");
+           
            panelMepGeneral.AddPushButton<StartupCommandGroupSystems>("System\ngroup")
                .SetImage("/KapibaraV2;component/Resources/Icons/GroupSystems16.png")
                .SetLargeImage("/KapibaraV2;component/Resources/Icons/GroupSystems32.png");
-
-
+           
          panelMepGeneral.AddPushButton<RiserMate.Commands.StartupCommand>("Riser\nMate")
              .SetImage("/KapibaraV2;component/Resources/Icons/RizerMate16.png")
              .SetLargeImage("/KapibaraV2;component/Resources/Icons/RizerMate32.png");
+         panelMepGeneral.AddPushButton<Marking.Commands.StartupCommand>("Marking")
+             .SetImage("/KapibaraV2;component/Resources/Icons/Mark16.png")
+             .SetLargeImage("/KapibaraV2;component/Resources/Icons/Mark32.png");
          /*
         panelMepGeneral.AddPushButton<HeatingDevices.Commands.StartupCommand>("Space\nHeater")
             .SetImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png")

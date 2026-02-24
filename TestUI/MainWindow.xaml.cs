@@ -1,4 +1,6 @@
 ﻿using EngineeringSystems.Commands;
+
+using Marking.Views;
 using Nice3point.Revit.Extensions;
 using RiserMate;
 using RiserMate.Views;
@@ -12,8 +14,6 @@ public partial class MainWindow
 {
     public MainWindow()
     {
-        RiserMateHost.StartMockServices();
-        var view = RiserMateHost.GetService<RiserMateView>();
-        view.Show();
+        HostAxes.StartMock();
     }
 }
