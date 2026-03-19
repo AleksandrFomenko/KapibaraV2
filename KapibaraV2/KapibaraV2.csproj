@@ -6,6 +6,7 @@
         <PlatformTarget>x64</PlatformTarget>
         <ImplicitUsings>true</ImplicitUsings>
         <DeployRevitAddin>true</DeployRevitAddin>
+        <DeployAddin>true</DeployAddin>
         <EnableDynamicLoading>true</EnableDynamicLoading>
         <Configurations>Debug R20;Debug R21;Debug R22;Debug R23;Debug R24;Debug R25</Configurations>
         <Configurations>$(Configurations);Release R20;Release R21;Release R22;Release R23;Release R24;Release R25</Configurations>
@@ -62,7 +63,9 @@
         <PackageReference Include="Nice3point.Revit.Api.AdWindows" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="3.*" />
         <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*" />
-        <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*-*" />
+        <PackageReference Include="Nice3point.Revit.Api.UIFramework" Version="$(RevitVersion).*"/>
+        <PackageReference Include="Nice3point.Revit.Api.UIFrameworkServices" Version="$(RevitVersion).*"/>
+        <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
@@ -76,37 +79,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Resource Include="Resources\Icons\SystemName.png" />
-        <Resource Include="Resources\Icons\ActiveView.png" />
-        <Resource Include="Resources\Icons\FamilyManager.png" />
-        <Resource Include="Resources\Icons\ai.png" />
-        <Resource Include="Resources\Icons\ImportExcel.png" />
-        <Resource Include="Resources\Icons\ExportModels.png" />
-        <Resource Include="Resources\Icons\intersector.png" />
-        <Resource Include="Resources\Icons\ViewManager.png" />
-        <Resource Include="Resources\Icons\LevelByFloor.png" />
-        <Resource Include="Resources\Icons\WorksetLinkFiles.png" />
-        <Resource Include="Resources\Icons\Sort.png" />
-        <None Remove="Resources\Icons\ClashDetective.png" />
-        <Resource Include="Resources\Icons\ClashDetective.png" />
-        <None Remove="Resources\Icons\SpaceHeater32.png" />
-        <Resource Include="Resources\Icons\SpaceHeater32.png" />
-        <None Remove="Resources\Icons\Settings32.png" />
-        <Resource Include="Resources\Icons\Settings32.png" />
-        <None Remove="Resources\Icons\LedendPlacer.png" />
-        <Resource Include="Resources\Icons\LedendPlacer.png" />
-        <Resource Include="Resources\Icons\ViewByParameter.png" />
-        <Resource Include="Resources\Icons\Levels.png" />
-        <Resource Include="Resources\Icons\Axes.png" />
-        <Resource Include="Resources\Icons\GroupSystems16.png" />
-        <Resource Include="Resources\Icons\RizerMate32.png" />
-        <Resource Include="Resources\Icons\RizerMate16.png" />
-        <None Remove="Resources\Icons\GroupSystems32.png" />
-        <Resource Include="Resources\Icons\GroupSystems32.png" />
-        <None Remove="Resources\Icons\Mark16.png" />
-        <Resource Include="Resources\Icons\Mark16.png" />
-        <None Remove="Resources\Icons\Mark32.png" />
-        <Resource Include="Resources\Icons\Mark32.png" />
+        <Resource Include="Resources\**\*" />
     </ItemGroup>
 
     <ItemGroup>
@@ -132,6 +105,12 @@
         <ProjectReference Include="..\ViewByParameter\ViewByParameter.csproj" />
         <ProjectReference Include="..\ViewManager\ViewManager.csproj" />
         <ProjectReference Include="..\WorkSetLinkFiles\WorkSetLinkFiles.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="UIFramework">
+        <HintPath>..\..\..\..\..\Program Files\Autodesk\Revit 2022\UIFramework.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">

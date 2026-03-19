@@ -104,7 +104,7 @@ public class MarkingModel : IMarkingModel
 
     }
 
-    private (double x, double y, double z) ProjectToView(XYZ worldPoint, XYZ viewOrigin, 
+    private static (double x, double y, double z) ProjectToView(XYZ worldPoint, XYZ viewOrigin, 
         XYZ viewRightDir, XYZ viewUpDir, XYZ viewDir, int viewScale)
     {
         var delta = worldPoint - viewOrigin;
@@ -115,7 +115,7 @@ public class MarkingModel : IMarkingModel
         );
     }
 
-    private XYZ ProjectToWorld(double viewX, double viewY, double viewZ, XYZ viewOrigin,
+    private static XYZ ProjectToWorld(double viewX, double viewY, double viewZ, XYZ viewOrigin,
         XYZ viewRightDir, XYZ viewUpDir, XYZ viewDir, int viewScale)
     {
         return viewOrigin 
@@ -254,6 +254,7 @@ public class MarkingModel : IMarkingModel
         }
     }
 }
+
 
 
 public class ElementTypesSelectionFilter : ISelectionFilter

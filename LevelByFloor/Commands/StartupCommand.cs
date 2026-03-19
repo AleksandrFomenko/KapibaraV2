@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.Attributes;
+using JetBrains.Annotations;
 using KapibaraUI.Services.Appearance;
 using LevelByFloor.Models;
 using Nice3point.Revit.Toolkit.External;
@@ -11,7 +12,6 @@ namespace LevelByFloor.Commands;
 /// <summary>
 ///     External command entry point invoked from the Revit interface
 /// </summary>
-[UsedImplicitly]
 [Transaction(TransactionMode.Manual)]
 public class StartupCommand : ExternalCommand
 {

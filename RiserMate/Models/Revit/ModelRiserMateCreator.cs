@@ -193,6 +193,9 @@ public class ModelRiserMateCreator(
 
                             if (!string.IsNullOrEmpty(marksPipe))
                                 service.MarkPipe(marksPipe);
+                            
+                            if (!string.IsNullOrEmpty(markPipeAccessory))
+                                service.MarkPipeAccessory(markPipeAccessory);
                         }
                         catch (Exception e)
                         {
@@ -208,47 +211,6 @@ public class ModelRiserMateCreator(
                 if (t.GetStatus() == TransactionStatus.Started) t.RollBack();
                 throw;
             }
-        });
-    }
-
-    public async void СreateViews(
-        List<HeatingRiser> heatingRisers,
-        string parameterName,
-        string viewOption,
-        bool isMarking,
-        string marksHeatDevice,
-        string marksPipe,
-        string markPipeAccessory)
-    {
-        await Handlers.Handlers.AsyncEventHandler.RaiseAsync(async app =>
-        {
-            using var t = new Transaction(_document, "RiserMateCreateViews");
-            t.Start();
-            foreach (var heatingRiser in heatingRisers)
-            {
-                var view = viewCreationService.CreateView3D(heatingRiser.Name, viewOption);
-                var filter = filterCreationService.CreateFilter(parameterName, heatingRiser.Name);
-                view.AddFilter(filter.Id);
-                view.SetFilterVisibility(filter.Id, false);
-                
-                _document?.Regenerate();
-                
-                if (!isMarking) continue;
-                var service = new LabelingService(view);
-                try
-                {
-                    if (marksHeatDevice != null) service.MarkHeatDevice(marksHeatDevice);
-
-                    if (marksPipe != null) service.MarkPipe(marksPipe);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-            }
-
-            t.Commit();
         });
     }
 }

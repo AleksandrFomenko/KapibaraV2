@@ -7,7 +7,7 @@ namespace KapibaraCore.Configuration;
 
 public static class Configuration
 {
-    private static readonly JsonSerializerOptions _jsonOptions = new()
+    private static readonly JsonSerializerOptions JsonOptions = new()
     {
         WriteIndented = true,
         Converters = { new JsonStringEnumConverter() }
@@ -36,7 +36,7 @@ public static class Configuration
                 throw new FileNotFoundException("Файл конфигурации не найден", filePath);
 
             var json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<T>(json, _jsonOptions);
+            return JsonSerializer.Deserialize<T>(json, JsonOptions);
         }
         catch (FileNotFoundException ex)
         {
@@ -63,7 +63,7 @@ public static class Configuration
             if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
-            var json = JsonSerializer.Serialize(obj, _jsonOptions);
+            var json = JsonSerializer.Serialize(obj, JsonOptions);
             File.WriteAllText(filePath, json);
             return true;
         }

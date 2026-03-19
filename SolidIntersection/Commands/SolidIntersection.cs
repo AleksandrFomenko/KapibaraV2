@@ -3,7 +3,6 @@ using Nice3point.Revit.Toolkit.External;
 
 namespace SolidIntersection.Commands;
 
-[UsedImplicitly]
 [Transaction(TransactionMode.Manual)]
 public class SolidIntersection : ExternalCommand
 { 

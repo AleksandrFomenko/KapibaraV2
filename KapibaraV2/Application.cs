@@ -4,11 +4,9 @@ using EngineeringSystems.Commands;
 using KapibaraUI.Services.Appearance;
 using Nice3point.Revit.Toolkit.External;
 
+
 namespace KapibaraV2
 {
-    /// <summary>
-    ///     Application entry point
-    /// </summary>
     [UsedImplicitly]
     public class Application : ExternalApplication
     {

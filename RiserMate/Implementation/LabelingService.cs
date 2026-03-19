@@ -66,6 +66,111 @@ public class LabelingService(View3D view) : ILabelingService
             }
         }
     }
+    
+    
+    public void MarkPipeAccessory(string markPipeAccessory)
+{
+    if (_document == null) return;
+
+    var pipeAccessories = new FilteredElementCollector(_document, _view.Id)
+        .OfCategory(BuiltInCategory.OST_PipeAccessory)
+        .WhereElementIsNotElementType()
+        .Cast<FamilyInstance>()
+        .Where(p => p.SuperComponent == null)
+        .ToList();
+
+    var mark = new FilteredElementCollector(_document)
+        .OfCategory(BuiltInCategory.OST_PipeAccessoryTags)
+        .WhereElementIsElementType()
+        .FirstOrDefault(m => m.Name == markPipeAccessory);
+
+    if (mark == null) return;
+    
+    var viewOrigin   = _view.Origin;
+    var viewScale    = _view.Scale;
+    var viewRight    = _view.RightDirection;
+    var viewUp       = _view.UpDirection;
+    var viewDir      = _view.ViewDirection;
+    
+    const double offsetX = 6;
+    const double offsetY = 2;
+
+
+    var createdTags = new List<IndependentTag>();
+
+    foreach (var pipeAccessory in pipeAccessories)
+    {
+        if (pipeAccessory.Location is not LocationPoint location) continue;
+
+        var reference  = new Reference(pipeAccessory);
+        var hostPoint  = location.Point;
+        
+        var (hx, hy, hz) = ProjectToView(hostPoint, viewOrigin, viewRight, viewUp, viewDir, viewScale);
+        
+        var tagHeadWorld = hostPoint
+                           - offsetX * viewRight
+                           - offsetY * viewUp;
+        
+        var leaderEnd = hostPoint;
+
+        try
+        {
+            var tag = IndependentTag.Create(
+                _document, mark.Id, _view.Id,
+                reference, true, TagOrientation.Horizontal,
+                tagHeadWorld);
+
+            tag.LeaderEndCondition = LeaderEndCondition.Free;
+            tag.TagHeadPosition   = tagHeadWorld;
+            tag.SetLeaderEnd(reference, leaderEnd);
+
+            createdTags.Add(tag);
+            _document.Regenerate();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    //RemoveIntersectingTags(createdTags);
+
+    Console.WriteLine(createdTags.Count);
+}
+    
+    
+    private void RemoveIntersectingTags(List<IndependentTag> tags)
+    {
+        var tagsToDelete = new HashSet<ElementId>();
+
+        for (int i = 0; i < tags.Count; i++)
+        {
+            if (tagsToDelete.Contains(tags[i].Id)) continue;
+
+            var bbI = tags[i].get_BoundingBox(_view);
+            if (bbI == null) continue;
+
+            for (int j = i + 1; j < tags.Count; j++)
+            {
+                if (tagsToDelete.Contains(tags[j].Id)) continue;
+
+                var bbJ = tags[j].get_BoundingBox(_view);
+                if (bbJ == null) continue;
+
+                if (BoundingBoxesIntersectXy(bbI, bbJ))
+                    tagsToDelete.Add(tags[j].Id);
+            }
+        }
+
+        foreach (var id in tagsToDelete)
+            _document?.Delete(id);
+    }
+    
+    private static bool BoundingBoxesIntersectXy(BoundingBoxXYZ a, BoundingBoxXYZ b)
+    {
+        return a.Min.X <= b.Max.X && a.Max.X >= b.Min.X &&
+               a.Min.Y <= b.Max.Y && a.Max.Y >= b.Min.Y;
+    }
 
     public void MarkPipe(string markPipe)
     {
@@ -387,6 +492,27 @@ public class LabelingService(View3D view) : ILabelingService
             point.Y + direction.Y * offset,
             point.Z + direction.Z * offset
         );
+    }
+    
+    private static (double x, double y, double z) ProjectToView(
+        XYZ worldPoint, XYZ viewOrigin, XYZ viewRight, XYZ viewUp, XYZ viewDir, int viewScale)
+    {
+        var delta = worldPoint - viewOrigin;
+        return (
+            delta.DotProduct(viewRight) / viewScale,
+            delta.DotProduct(viewUp)    / viewScale,
+            delta.DotProduct(viewDir)   / viewScale
+        );
+    }
+
+    private static XYZ ProjectToWorld(
+        double vx, double vy, double vz,
+        XYZ viewOrigin, XYZ viewRight, XYZ viewUp, XYZ viewDir, int viewScale)
+    {
+        return viewOrigin
+               + vx * viewScale * viewRight
+               + vy * viewScale * viewUp
+               + vz * viewScale * viewDir;
     }
 
     private XYZ? CalculateBendPoint(Element element)
