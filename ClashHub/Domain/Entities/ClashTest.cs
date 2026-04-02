@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ClashHub.Domain.Entities;
 
@@ -105,8 +106,14 @@ public sealed partial class ClashResult : ObservableObject
             Status = value;
         }
     }
-    public ClashResult(Guid id, string name, string status, double distance, 
-        DateTime created, Point3D clashPoint, string href)
+    public ClashResult(
+        Guid id, 
+        string name,
+        string status, 
+        double distance, 
+        DateTime created, 
+        Point3D clashPoint, 
+        string href)
     {
         Id = id; 
         Name = name;
@@ -129,8 +136,15 @@ public sealed partial class ClashResult : ObservableObject
         {
             StatusFromList = null!;
         }
-
     }
+
+    public event Action ShowEvent;
+    
+    [RelayCommand]
+    private void ClickShow() => ShowEvent?.Invoke();
+
+    [RelayCommand]
+    private void ClickShowIsolated() => ShowEvent?.Invoke();
 }
 
 public class ClashObject

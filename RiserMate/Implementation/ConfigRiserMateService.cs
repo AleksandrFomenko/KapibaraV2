@@ -14,11 +14,11 @@ public class ConfigRiserMateService : IConfigRiserMate
 
     private const string DirectoryName = "RiserMateConfig";
     private const string ConfigName = "config.json";
-    
-    public string ConfigDirectory => Path.Combine(DllDirectory, DirectoryName);
-    public string ConfigFilePath  = Path.Combine(DllDirectory, DirectoryName, ConfigName);
 
-    public RiserMateConfig Cfg { get; set; }
+    private string ConfigDirectory => Path.Combine(DllDirectory, DirectoryName);
+    private string ConfigFilePath  = Path.Combine(DllDirectory, DirectoryName, ConfigName);
+
+    private RiserMateConfig Cfg { get; }
 
     public ConfigRiserMateService()
     {
