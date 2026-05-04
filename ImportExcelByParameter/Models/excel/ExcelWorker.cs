@@ -34,6 +34,7 @@ internal class ExcelWorker
     }
     internal List<string> GetWorksheetNames(string path)
     {
+        if (string.IsNullOrEmpty(path)) return [];
         try
         {
             _workbook = new XLWorkbook(path);
@@ -42,7 +43,7 @@ internal class ExcelWorker
         catch (Exception ex) when (ex.HResult == -2147024864)
         {
             TaskDialog.Show("Err", "ексель закрой");
-            return new List<string>();
+            return [];
         }
         finally
         {

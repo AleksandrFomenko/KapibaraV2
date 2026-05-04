@@ -1,4 +1,6 @@
-﻿namespace ImportExcelByParameter.Models;
+﻿using KapibaraCore.Parameters;
+
+namespace ImportExcelByParameter.Models;
 
 internal class Data
 {
@@ -17,6 +19,12 @@ internal class Data
             .Where(i => i.AllowsBoundParameters)
             .Where(i => i.CategoryType == CategoryType.Model)
             .Select(c => c.Name)
+            .ToList();
+    }
+    
+    internal List<string> LoadAllParameters(Document doc)
+    {
+        return doc.GetProjectParameters()
             .ToList();
     }
 

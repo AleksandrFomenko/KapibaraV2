@@ -36,11 +36,11 @@ public partial class LevelByFloorViewModel : ObservableObject
         _doc = doc;
         _model = model;
         Parameters = _model.LoadParameters();
-        Options = new List<Options>()
-        {
+        Options =
+        [
             new Options("Элементы на активном виде", new FilteredElementCollector(_doc, _doc.ActiveView.Id)),
             new Options("Все элементы в проекте", new FilteredElementCollector(_doc))
-        };
+        ];
         Option = Options.FirstOrDefault();
     }
     partial void OnParameterChanged(string value)

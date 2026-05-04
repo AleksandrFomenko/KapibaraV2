@@ -23,6 +23,7 @@ public sealed partial class ActiveViewViewModel : ObservableObject
     [ObservableProperty] private bool _skipNotEmpty = false;
     [ObservableProperty] private bool _isTextBoxVisible = true;
     [ObservableProperty] private bool _isToggleVisible = false;
+    [ObservableProperty] private string _filter = string.Empty;
     private Document Document { get; set; }
 
     private readonly IModelActiveView _model;
@@ -31,7 +32,7 @@ public sealed partial class ActiveViewViewModel : ObservableObject
     {
         Document = document;
         _model = model;
-        _parameters = _model.GetParameters();
+        GetParameters();
         Options =
         [
             new Option("Все на виде", true),
@@ -44,6 +45,12 @@ public sealed partial class ActiveViewViewModel : ObservableObject
     {
         Value = value ? "1" : "0";
     }
+
+    partial void OnFilterChanged(string value) => GetParameters();
+    private void GetParameters () => Parameters = _model.GetParameters().
+        Where(x => x.Contains(Filter, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    
     
     partial void OnParameterChanged(string value)
     {

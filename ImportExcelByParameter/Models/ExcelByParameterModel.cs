@@ -1,4 +1,5 @@
-﻿using ImportExcelByParameter.Models.excel;
+﻿using ImportExcelByParameter.Enums;
+using ImportExcelByParameter.Models.excel;
 using ImportExcelByParameter.ViewModels;
 using KapibaraCore.Parameters;
 
@@ -21,60 +22,50 @@ internal class ExcelByParameterModel
     internal void SetSheetName(string sheetName) =>  Excel.SheetName = sheetName;
     internal void SetRowNumber(int rowNumber)  =>  Excel.RowNumber = rowNumber;
 
-    internal void Execute(string path, string cat)
+    internal void Execute(string path, string cat, SelectionMode selectionMode)
     {
-        Excel.OpenExcel(path); 
-        var elementsDict = GetElements(cat);
+        Excel.OpenExcel(path);
+        var elementsDict = GetElements(cat, selectionMode);
         if (elementsDict == null || elementsDict.Count == 0) return;
-        using (var t = new Transaction(_doc, "Import from excel by parameter"))
+        using var t = new Transaction(_doc, "Import from excel by parameter");
+        t.Start();
+        foreach (var key in elementsDict.Keys)
         {
-            t.Start();
-            foreach (var key in elementsDict.Keys)
+            var resultDict = Excel.Execute(key);
+            foreach (var kvp in resultDict)
             {
-                var resultDict = Excel.Execute(key);
-                foreach (var kvp in resultDict)
+                foreach (var elem in elementsDict[key])
                 {
-                    var parameterName = kvp.Key;
-                    var parameterValue = kvp.Value;
-                    foreach (var elem in elementsDict[key])
-                    {
-                        var par = elem.GetParameterByName(parameterName);
-                        if (par != null && par.StorageType == StorageType.ElementId) continue;
-                        Parameters.SetParameterValue(par, parameterValue);
-                    }
+                    var par = elem.GetParameterByName(kvp.Key);
+                    if (par == null || par.StorageType == StorageType.ElementId) continue;
+                    Parameters.SetParameterValue(par, kvp.Value);
                 }
             }
-            t.Commit();
         }
+        t.Commit();
     }
-    private Dictionary<string, List<Element>> GetElements(string cat)
+    private Dictionary<string, List<Element>> GetElements(string cat, SelectionMode selectionMode)
     {
-        var category = _doc.Settings.Categories
-            .Cast<Category>()
-            .FirstOrDefault(c => c.Name.Equals(cat, StringComparison.OrdinalIgnoreCase));
-        if (category == null)
+        var elems = selectionMode switch
         {
-            return null;
-        }
-        var builtInCat = Data.GetBuiltInCategory(category);
-        if (builtInCat == BuiltInCategory.INVALID)
-        {
-            return null;
-        }
+            SelectionMode.ByCategory => GetByCategory(cat),
+            SelectionMode.AllOnActiveView => new FilteredElementCollector(_doc, _doc.ActiveView.Id)
+                .WhereElementIsNotElementType()
+                .ToElements(),
+            SelectionMode.AllInProject => new FilteredElementCollector(_doc)
+                .WhereElementIsNotElementType()
+                .ToElements(),
+            _ => []
+        };
+
         var elementsDictionary = new Dictionary<string, List<Element>>(StringComparer.OrdinalIgnoreCase);
-        
-        var elems = new FilteredElementCollector(_doc)
-            .OfCategory(builtInCat)
-            .WhereElementIsNotElementType()
-            .ToElements();
         foreach (var elem in elems)
         {
             var par = elem.GetParameterByName(Excel.ParameterName);
             if (par == null) continue;
 
             var paramValue = par.AsString() ?? par.AsValueString() ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(paramValue))
-                continue;
+            if (string.IsNullOrWhiteSpace(paramValue)) continue;
 
             if (!elementsDictionary.TryGetValue(paramValue, out var list))
             {
@@ -84,5 +75,21 @@ internal class ExcelByParameterModel
             list.Add(elem);
         }
         return elementsDictionary;
+    }
+
+    private IEnumerable<Element> GetByCategory(string cat)
+    {
+        var category = _doc.Settings.Categories
+            .Cast<Category>()
+            .FirstOrDefault(c => c.Name.Equals(cat, StringComparison.OrdinalIgnoreCase));
+        if (category == null) return [];
+
+        var builtInCat = Data.GetBuiltInCategory(category);
+        if (builtInCat == BuiltInCategory.INVALID) return [];
+
+        return new FilteredElementCollector(_doc)
+            .OfCategory(builtInCat)
+            .WhereElementIsNotElementType()
+            .ToElements();
     }
 }

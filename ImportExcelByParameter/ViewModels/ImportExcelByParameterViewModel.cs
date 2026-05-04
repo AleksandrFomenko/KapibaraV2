@@ -1,200 +1,146 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.CompilerServices;
-using Autodesk.Revit.UI;
+﻿using System.IO;
 using ImportExcelByParameter.Configuration;
+using ImportExcelByParameter.Enums;
 using ImportExcelByParameter.Models;
 using Microsoft.Win32;
 
 namespace ImportExcelByParameter.ViewModels;
 
-public sealed class ImportExcelByParameterViewModel : INotifyPropertyChanged
+public sealed partial class ImportExcelByParameterViewModel : ObservableObject
 {
-    private Document _doc;
     private readonly ExcelByParameterModel _model;
-
     private Config Cfg { get; set; }
-    public RelayCommand StartCommand { get; }
-    public RelayCommand SelectPathCommand { get; }
+    private readonly Document _doc;
+
     internal static Action CloseWindow { get; set; }
+
+    [ObservableProperty] private List<string> _categories;
+    [ObservableProperty] private List<string> _parameters;
+    [ObservableProperty] private List<string> _sheets;
+    [ObservableProperty] private string _parameterFilter = string.Empty;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(StartCommand))]
+    private string _pathExcel;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(StartCommand))]
+    private string _selectedCategory;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(StartCommand))]
+    private string _parameter;
+    
+    [ObservableProperty] private SelectionMode _selectionMode = SelectionMode.AllOnActiveView;
+    public IEnumerable<SelectionMode> SelectionModes =>
+        Enum.GetValues(typeof(SelectionMode)).Cast<SelectionMode>();
+
+    [ObservableProperty] private string _sheet;
+    [ObservableProperty] private int _rowNumber;
+    
+    public bool IsCategoryVisible => SelectionMode == SelectionMode.ByCategory;
+
     public ImportExcelByParameterViewModel(Document doc, Config config)
     {
-        var path = config.GetPath();
-        Cfg = KapibaraCore.Configuration.Configuration.LoadConfig<Config>(path);
-        
         _doc = doc;
+        Cfg = KapibaraCore.Configuration.Configuration.LoadConfig<Config>(config.GetPath());
         _model = new ExcelByParameterModel(doc);
         _categories = _model.Data.LoadCategory();
-        
-        
-        StartCommand = new RelayCommand(
-            execute: _ => Execute(),
-            canExecute: _ => CanExecute()
-        );
-        SelectPathCommand = new RelayCommand(
-            execute: _ => SelectPath(),
-            canExecute: _ => true
-        );
-        
-        if (!File.Exists(Cfg.PathStr))
-        {
-            PathExcel = "File not found";
-        }
+
+        if (Cfg == null) return;
+
+        _pathExcel = File.Exists(Cfg.PathStr) ? Cfg.PathStr : "File not found";
+        _selectedCategory = Cfg.Category;
+        _parameter = Cfg.Parameter;
+        _sheet = Cfg.ListStr;
+        _rowNumber = Cfg.Number;
 
         if (!string.IsNullOrEmpty(Cfg.PathStr))
         {
-            try
-            {
-                LoadSheets(Cfg.PathStr);
-            }
-            catch (Exception)
-            {
-                Sheets = [];
-            }
+            try { _sheets = _model.Excel.GetWorksheetNames(Cfg.PathStr); }
+            catch { _sheets = []; }
         }
-        
-        if (!string.IsNullOrEmpty(Cfg.Category))
-        {
-            try
-            {
-                LoadParameters();
-            }
-            catch (Exception)
-            {
-                Parameters = [];
-            }
-        }
+
+        if (string.IsNullOrEmpty(Cfg.Category)) return;
+        try { _parameters = _model.Data.LoadAllParameters(_doc);; }
+        catch { _parameters = []; }
     }
     
-    public string PathExcel
+    partial void OnSelectionModeChanged(SelectionMode value)
     {
-        get => Cfg.PathStr;
-        set
-        {
-            Cfg.PathStr = value;
-            OnPropertyChanged();
-            StartCommand.RaiseCanExecuteChanged();
-        }
+        OnPropertyChanged(nameof(IsCategoryVisible));
+        LoadParameters();
     }
 
-    public string SelectedCategory
-    {
-        get => Cfg.Category;
-        set
-        {
-            Cfg.Category = value;
-            Cfg.SaveConfig();
-            OnPropertyChanged();
-            StartCommand.RaiseCanExecuteChanged();
-            LoadParameters();
-        }
-    }
-    private List<string> _categories;
-    public List<string> Categories
-    {
-        get => _categories;
-        set {
-            if (_categories != null && _categories != value) _categories = value;
-            OnPropertyChanged();
-            LoadParameters();
-        }
-    }
+    partial void OnPathExcelChanged(string value) =>
+        Cfg.PathStr = value;
 
-    public string Parameter
+    partial void OnSelectedCategoryChanged(string value)
     {
-        get => Cfg.Parameter;
-        set
-        {
-            Cfg.Parameter = value;
-            Cfg.SaveConfig();
-            OnPropertyChanged();
-            StartCommand.RaiseCanExecuteChanged();
-        } 
-    }
-    private List<string> _parameters;
-    public List<string> Parameters
-    {
-        get => _parameters;
-        set { 
-            if (_parameters == value) return;
-            _parameters = value;
-            OnPropertyChanged();
-        }
-    }
-    private void LoadParameters()
-    { 
-        Parameters = _model.Data.LoadParameters(Cfg.Category);
-    }
-    private List<string> _sheets;
-    public List<string> Sheets
-    {
-        get => _sheets;
-        set { 
-            if (_sheets == value) return;
-            _sheets = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public string Sheet
-    {
-        get => Cfg.ListStr;
-        set
-        {
-            Cfg.ListStr = value;
-            Cfg.SaveConfig();
-            OnPropertyChanged();
-        } 
-    }
-
-    private int _rowNumber;
-    public int RowNumber
-    {
-        get => Cfg.Number;
-        set
-        {
-            if (_rowNumber == value) return;
-            Cfg.Number = value;
-            Cfg.SaveConfig();
-            _rowNumber = value;
-            OnPropertyChanged();
-        }
-    }
-    private void LoadSheets(string path)
-    {
-        Sheets = _model.Excel.GetWorksheetNames(path);
-        OnPropertyChanged(nameof(Sheets));
-    }
-    private bool CanExecute()
-    {
-        return SelectedCategory != null && Parameter != null && PathExcel != null;
-    }
-    private void SelectPath()
-    {
-        var openFileDialog = new OpenFileDialog
-        {
-            Filter = "Excel files (*.xls;*.xlsx)|*.xls;*.xlsx|All files (*.*)|*.*"
-        };
-        if (openFileDialog.ShowDialog() != true) return;
-        Cfg.PathStr = openFileDialog.FileName;
+        Cfg.Category = value;
         Cfg.SaveConfig();
-        LoadSheets(Cfg.PathStr);
-        OnPropertyChanged(nameof(PathExcel));
-        StartCommand.RaiseCanExecuteChanged();
+        LoadParameters();
+    }
+    
+    partial void OnParameterFilterChanged(string value) => LoadParameters();
+
+    partial void OnParameterChanged(string value)
+    {
+        Cfg.Parameter = value;
+        Cfg.SaveConfig();
     }
 
-    private void Execute()
+    partial void OnSheetChanged(string value)
+    {
+        Cfg.ListStr = value;
+        Cfg.SaveConfig();
+    }
+
+    partial void OnRowNumberChanged(int value)
+    {
+        Cfg.Number = value;
+        Cfg.SaveConfig();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanExecute))]
+    private void Start()
     {
         _model.SetParameterName(Parameter);
         _model.SetSheetName(Sheet);
         _model.SetRowNumber(RowNumber);
-        _model.Execute(PathExcel,  SelectedCategory);
+        _model.Execute(PathExcel, SelectedCategory, SelectionMode);
         CloseWindow.Invoke();
     }
-    public event PropertyChangedEventHandler PropertyChanged;
-    private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+
+    [RelayCommand]
+    private void SelectPath()
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        var dialog = new OpenFileDialog
+        {
+            Filter = "Excel files (*.xls;*.xlsx)|*.xls;*.xlsx|All files (*.*)|*.*"
+        };
+        if (dialog.ShowDialog() != true) return;
+
+        PathExcel = dialog.FileName;
+        Cfg.SaveConfig();
+        
+        try { Sheets = _model.Excel.GetWorksheetNames(PathExcel); }
+        catch { Sheets = []; }
+    }
+
+    private bool CanExecute() =>
+        !string.IsNullOrEmpty(Parameter) &&
+        !string.IsNullOrEmpty(PathExcel) &&
+        (SelectionMode != SelectionMode.ByCategory || !string.IsNullOrEmpty(SelectedCategory));
+
+    private void LoadParameters()
+    {
+        var all = SelectionMode == SelectionMode.ByCategory
+            ? _model.Data.LoadParameters(SelectedCategory)
+            : _model.Data.LoadAllParameters(_doc);
+
+        Parameters = string.IsNullOrEmpty(ParameterFilter)
+            ? all
+            : all.Where(p => p.Contains(ParameterFilter, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 }

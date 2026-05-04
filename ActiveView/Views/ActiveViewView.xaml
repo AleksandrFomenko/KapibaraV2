@@ -8,80 +8,74 @@
     xmlns:converters="clr-namespace:ActiveView.Views.Converters"
     mc:Ignorable="d"
     WindowStartupLocation="CenterScreen"
-    Height="500"
+    Height="600"
     Width="300">
     <ui:FluentWindow.Resources>
         <converters:BoolVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </ui:FluentWindow.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition Height="40" />
-        </Grid.RowDefinitions>
-        <ui:TitleBar Grid.Row="0" Title="Active View"/>
-        
-        <ui:Card Grid.Row="1" Margin="10, 0">
-            <StackPanel>
-                <TextBlock Text="{Binding HeadingOptionsSelection}"/>
-                <Separator Visibility = "Hidden" Height="10"/>
-                <ComboBox
-                    ItemsSource="{Binding Options}"
-                    SelectedItem="{Binding SelectionOption}"
-                    DisplayMemberPath="Name"/>
-            </StackPanel>
-        </ui:Card>
-        
-        <ui:Card Grid.Row="2" Margin="10, 0">
-            <StackPanel>
-                <TextBlock Text="{Binding HeadingParameterSelection}"/>
-                <Separator Visibility = "Hidden" Height="10"/>
-                <ComboBox
-                    ItemsSource="{Binding Parameters}"
-                    SelectedItem="{Binding Parameter}"/>
-            </StackPanel>
-        </ui:Card>
-        
-        <ui:Card Grid.Row="3" Margin="10, 0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    Text="{Binding HeadingValue}"/>
-                <TextBox 
-                    Grid.Row="1"
-                    Text="{Binding Value}"
-                    Visibility="{Binding IsTextBoxVisible,
-                    Converter={StaticResource BoolToVisibilityConverter}}" />
-                <ui:ToggleSwitch 
-                    Grid.Row="1"
-                    IsChecked="{Binding BoolValue}"
-                    Visibility="{Binding IsToggleVisible,
-                    Converter={StaticResource BoolToVisibilityConverter}}" />
-            </Grid>
-        </ui:Card>
-        
-        <ui:Card Grid.Row="4" Margin="10, 0">
-            <StackPanel>
-                <TextBlock Text="{Binding HeadingNotEmpty}"/>
-                <Separator Visibility = "Hidden" Height="10"/>
-                <ui:ToggleSwitch
-                    IsChecked="{Binding SkipNotEmpty}" />
-            </StackPanel>
-        </ui:Card>
-        
-        <ui:Button Grid.Row="5"
-                   Appearance="Primary"
-                   Content="Execute"
-                   HorizontalAlignment="Center"
-                   Command="{Binding ExecuteCommand}"
-                   Icon="{ui:SymbolIcon EyeTracking24}"/>
-    </Grid>
-    
+
+    <DockPanel>
+        <ui:TitleBar DockPanel.Dock="Top" Title="Active View" />
+
+        <ui:Button
+            DockPanel.Dock="Bottom"
+            Appearance="Primary"
+            Content="Execute"
+            HorizontalAlignment="Center"
+            Margin="0,10"
+            Command="{Binding ExecuteCommand}"
+            Icon="{ui:SymbolIcon EyeTracking24}" />
+
+        <StackPanel Margin="10,8" VerticalAlignment="Top">
+
+            <ui:Card Margin="0,0,0,8">
+                <StackPanel>
+                    <TextBlock Text="{Binding HeadingOptionsSelection}" />
+                    <ComboBox
+                        Margin="0,6,0,0"
+                        ItemsSource="{Binding Options}"
+                        SelectedItem="{Binding SelectionOption}"
+                        DisplayMemberPath="Name" />
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,0,0,8">
+                <StackPanel>
+                    <TextBlock Text="{Binding HeadingParameterSelection}" />
+                    <ui:TextBox
+                        Margin="0,6,0,6"
+                        PlaceholderText="Поиск..."
+                        Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" />
+                    <ComboBox
+                        ItemsSource="{Binding Parameters}"
+                        SelectedItem="{Binding Parameter}" />
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card Margin="0,0,0,8">
+                <StackPanel>
+                    <TextBlock Text="{Binding HeadingValue}" />
+                    <TextBox
+                        Margin="0,6,0,0"
+                        Text="{Binding Value}"
+                        Visibility="{Binding IsTextBoxVisible, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    <ui:ToggleSwitch
+                        Margin="0,6,0,0"
+                        IsChecked="{Binding BoolValue}"
+                        Visibility="{Binding IsToggleVisible, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </StackPanel>
+            </ui:Card>
+
+            <ui:Card>
+                <StackPanel>
+                    <TextBlock Text="{Binding HeadingNotEmpty}" />
+                    <ui:ToggleSwitch
+                        Margin="0,6,0,0"
+                        IsChecked="{Binding SkipNotEmpty}" />
+                </StackPanel>
+            </ui:Card>
+
+        </StackPanel>
+    </DockPanel>
+
 </ui:FluentWindow>
