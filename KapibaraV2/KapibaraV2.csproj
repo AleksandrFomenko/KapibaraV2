@@ -45,14 +45,10 @@
         <StartProgram>C:\Program Files\Autodesk\Revit $(RevitVersion)\Revit.exe</StartProgram>
         <StartArguments>/language RUS</StartArguments>
     </PropertyGroup>
-
-
+    
 
     <ItemGroup>
-        <PackageReference Include="ILRepack" Version="2.0.44">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="ILRepack" Version="2.0.41"/>
         <PackageReference Include="MaterialDesignColors" Version="5.*" />
         <PackageReference Include="MaterialDesignExtensions" Version="3.*" />
         <PackageReference Include="MaterialDesignThemes" Version="5.2.*" />
@@ -68,8 +64,9 @@
         <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
         <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.*" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.*" />
     </ItemGroup>
 
     <ItemGroup>

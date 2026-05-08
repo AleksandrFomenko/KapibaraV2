@@ -8,6 +8,7 @@ using Nice3point.Revit.Extensions;
 using Nice3point.Revit.Toolkit;
 using Nice3point.Revit.Toolkit.External;
 using ClashDetectiveViewModel = ClashHub.ViewModels.ClashDetectiveViewModel;
+using Nice3point.Revit.Extensions.UI;
 
 namespace ClashHub.Commands;
 

@@ -10,6 +10,7 @@ using RibbonButton = Autodesk.Revit.UI.RibbonButton;
 using RibbonItem = Autodesk.Revit.UI.RibbonItem;
 using RibbonPanel = Autodesk.Revit.UI.RibbonPanel;
 using TextBox = Autodesk.Revit.UI.TextBox;
+using Nice3point.Revit.Extensions.Internal;
 
 namespace KapibaraV2.Core;
 
@@ -28,7 +29,7 @@ public static partial class RibbonExtensions
 
         return application.CreateRibbonPanel(panelName);
     }
-
+    
 
     public static RibbonPanel CreatePanel(this UIControlledApplication application, string panelName, string tabName)
     {

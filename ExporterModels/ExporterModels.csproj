@@ -48,7 +48,7 @@
         <!-- MVVM -->
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*"/>
 
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.*"/>
 
         <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1"/>
         <PackageReference Include="System.Net.Http" Version="4.3.4"/>

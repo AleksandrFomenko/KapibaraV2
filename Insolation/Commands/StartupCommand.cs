@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
 using Insolation.Server;
 using Insolation.Server.Buffers;
 using Nice3point.Revit.Toolkit.External;
 using Insolation.ViewModels;
 using Insolation.Views;
-using JetBrains.Annotations;
-using Nice3point.Revit.Toolkit.External.Handlers;
+using Nice3point.Revit.Extensions.UI;
+
 
 namespace Insolation.Commands;
 
-/// <summary>
-///     External command entry point invoked from the Revit interface
-/// </summary>
-[UsedImplicitly]
 [Transaction(TransactionMode.Manual)]
 public class StartupCommand : ExternalCommand
 {

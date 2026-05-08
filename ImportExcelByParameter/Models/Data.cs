@@ -1,16 +1,20 @@
-﻿using KapibaraCore.Parameters;
+﻿using Autodesk.Revit.DB;
+using KapibaraCore.Parameters;
+using Nice3point.Revit.Toolkit.External;
 
 namespace ImportExcelByParameter.Models;
 
-internal class Data
+public sealed partial  class Data
 {
-    private Document _doc;
+    private Document? _doc;
 
-    internal Data(Document doc)
+    internal Data(Document? doc)
     {
         _doc = doc;
     }
-    internal List<string> LoadCategory()
+    
+    [ExternalEvent]
+    private List<string> LoadCategory()
     {
         var categories = _doc.Settings.Categories;
         return categories
@@ -22,15 +26,13 @@ internal class Data
             .ToList();
     }
     
-    internal List<string> LoadAllParameters(Document doc)
+    [ExternalEvent]
+    private List<string> LoadAllParameters() => _doc.GetProjectParameters().ToList();
+    
+    [ExternalEvent]
+    private List<string> LoadParameters(string categoryName)
     {
-        return doc.GetProjectParameters()
-            .ToList();
-    }
-
-    internal List<string> LoadParameters(string categoryName)
-    {
-        if (categoryName == null) return new List<string>();
+        if (categoryName == null) return [];
         var parameters = new HashSet<string>();
         var category = _doc.Settings.Categories
             .Cast<Category>()

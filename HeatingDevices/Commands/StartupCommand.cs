@@ -2,7 +2,6 @@
 using HeatingDevices.Views;
 using KapibaraUI.Services.Appearance;
 using Nice3point.Revit.Toolkit.External;
-using Wpf.Ui.Appearance;
 
 namespace HeatingDevices.Commands;
 

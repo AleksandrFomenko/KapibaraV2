@@ -12,9 +12,10 @@ public sealed partial class ImportExcelByParameterView
         IThemeWatcherService themeWatcherService)
     {
         DataContext = viewModel;
-        themeWatcherService.Watch(this);
         InitializeComponent();
-        ImportExcelByParameterViewModel.CloseWindow = this.Close;
+        themeWatcherService.Watch(this);
+        themeWatcherService.SetConfigTheme();
+        ImportExcelByParameterViewModel.CloseWindow = Close;
     }
 
     private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)

@@ -40,7 +40,7 @@ public class LineVisualization : IDirectContext3DServer
     public string GetApplicationId() =>  string.Empty;
     public string GetSourceId() => string.Empty;
     public bool UsesHandles() => false;
-    [CanBeNull] public Outline GetBoundingBox(View dBView) => null;
+    public Outline GetBoundingBox(View dBView) => null;
     public bool UseInTransparentPass(View dBView) => _drawSurface && _transparency > 0;
     
      public void RenderScene(View view, DisplayStyle displayStyle)

@@ -28,6 +28,14 @@
             Margin="0,10"
             Command="{Binding StartCommand}"
             Icon="{ui:SymbolIcon DocumentTableTruck24}"/>
+        
+        <ProgressBar
+            DockPanel.Dock="Bottom"
+            Height="4"
+            Margin="10,0,10,4"
+            Value="{Binding CurrentProgress}"
+            Maximum="{Binding MaxProgress}"
+            IsIndeterminate="{Binding IsIndeterminate}"/>
 
         <StackPanel Margin="10,8" VerticalAlignment="Top">
             

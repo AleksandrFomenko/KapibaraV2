@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ImportExcelByParameter.Configuration;
 using ImportExcelByParameter.Enums;
 using ImportExcelByParameter.Models;
@@ -10,7 +12,6 @@ public sealed partial class ImportExcelByParameterViewModel : ObservableObject
 {
     private readonly ExcelByParameterModel _model;
     private Config Cfg { get; set; }
-    private readonly Document _doc;
 
     internal static Action CloseWindow { get; set; }
 
@@ -18,6 +19,11 @@ public sealed partial class ImportExcelByParameterViewModel : ObservableObject
     [ObservableProperty] private List<string> _parameters;
     [ObservableProperty] private List<string> _sheets;
     [ObservableProperty] private string _parameterFilter = string.Empty;
+    
+    
+    [ObservableProperty] private int _currentProgress;
+    [ObservableProperty] private int _maxProgress;
+    [ObservableProperty] private bool _isIndeterminate;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(StartCommand))]
@@ -40,36 +46,46 @@ public sealed partial class ImportExcelByParameterViewModel : ObservableObject
     
     public bool IsCategoryVisible => SelectionMode == SelectionMode.ByCategory;
 
-    public ImportExcelByParameterViewModel(Document doc, Config config)
+    public ImportExcelByParameterViewModel(Config config, ExcelByParameterModel model)
     {
-        _doc = doc;
         Cfg = KapibaraCore.Configuration.Configuration.LoadConfig<Config>(config.GetPath());
-        _model = new ExcelByParameterModel(doc);
-        _categories = _model.Data.LoadCategory();
+        _model = model;
 
-        if (Cfg == null) return;
-
-        _pathExcel = File.Exists(Cfg.PathStr) ? Cfg.PathStr : "File not found";
-        _selectedCategory = Cfg.Category;
-        _parameter = Cfg.Parameter;
-        _sheet = Cfg.ListStr;
-        _rowNumber = Cfg.Number;
-
-        if (!string.IsNullOrEmpty(Cfg.PathStr))
+        if (Cfg != null)
         {
-            try { _sheets = _model.Excel.GetWorksheetNames(Cfg.PathStr); }
-            catch { _sheets = []; }
+            _pathExcel = File.Exists(Cfg.PathStr) ? Cfg.PathStr : "File not found";
+            _selectedCategory = Cfg.Category;
+            _parameter = Cfg.Parameter;
+            _sheet = Cfg.ListStr;
+            _rowNumber = Cfg.Number;
+
+            if (!string.IsNullOrEmpty(Cfg.PathStr))
+            {
+                try { _sheets = _model.Excel.GetWorksheetNames(Cfg.PathStr); }
+                catch { _sheets = []; }
+            }
         }
 
-        if (string.IsNullOrEmpty(Cfg.Category)) return;
-        try { _parameters = _model.Data.LoadAllParameters(_doc);; }
-        catch { _parameters = []; }
+        InitializeAsync();
+    }
+
+    private async void InitializeAsync()
+    {
+        try
+        {
+            Categories = await _model.Data.LoadCategoryAsyncEvent.RaiseAsync();
+            await LoadParameters();
+        }
+        catch (Exception e)
+        {
+            // ignored
+        }
     }
     
     partial void OnSelectionModeChanged(SelectionMode value)
     {
         OnPropertyChanged(nameof(IsCategoryVisible));
-        LoadParameters();
+        _ = LoadParameters();
     }
 
     partial void OnPathExcelChanged(string value) =>
@@ -79,10 +95,10 @@ public sealed partial class ImportExcelByParameterViewModel : ObservableObject
     {
         Cfg.Category = value;
         Cfg.SaveConfig();
-        LoadParameters();
+        _ = LoadParameters();
     }
     
-    partial void OnParameterFilterChanged(string value) => LoadParameters();
+    partial void OnParameterFilterChanged(string value) => _ = LoadParameters();
 
     partial void OnParameterChanged(string value)
     {
@@ -108,8 +124,18 @@ public sealed partial class ImportExcelByParameterViewModel : ObservableObject
         _model.SetParameterName(Parameter);
         _model.SetSheetName(Sheet);
         _model.SetRowNumber(RowNumber);
-        _model.Execute(PathExcel, SelectedCategory, SelectionMode);
-        CloseWindow.Invoke();
+
+        CurrentProgress = 0;
+
+        var isFirst = true;
+        var progress = new Progress<int>(value =>
+        {
+            if (isFirst) { MaxProgress = value; isFirst = false; }
+            else CurrentProgress = value;
+        });
+
+         _model.Execute(PathExcel, SelectedCategory, SelectionMode, progress);
+       
     }
 
     [RelayCommand]
@@ -133,11 +159,11 @@ public sealed partial class ImportExcelByParameterViewModel : ObservableObject
         !string.IsNullOrEmpty(PathExcel) &&
         (SelectionMode != SelectionMode.ByCategory || !string.IsNullOrEmpty(SelectedCategory));
 
-    private void LoadParameters()
+    private async Task LoadParameters()
     {
         var all = SelectionMode == SelectionMode.ByCategory
-            ? _model.Data.LoadParameters(SelectedCategory)
-            : _model.Data.LoadAllParameters(_doc);
+            ? await _model.Data.LoadParametersAsyncEvent.RaiseAsync(SelectedCategory)
+            : await _model.Data.LoadAllParametersAsyncEvent.RaiseAsync();
 
         Parameters = string.IsNullOrEmpty(ParameterFilter)
             ? all
