@@ -160,4 +160,13 @@ public partial class RizerCreatorViewModel : ObservableObject
             }
         }
     }
+    
+    [RelayCommand]
+    private async Task MarkingActiveView()
+    {
+        await _model.MarkActiveViewAsync(
+            SelectedMarkHeatDevice,
+            SelectedMarkPipe,
+            SelectedMarkPipeAccessory);
+    }
 }

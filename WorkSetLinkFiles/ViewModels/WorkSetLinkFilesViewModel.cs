@@ -8,7 +8,6 @@ namespace WorkSetLinkFiles.ViewModels;
 
 public sealed partial class WorkSetLinkFilesViewModel : ObservableObject
 {
-    private readonly Data _data;
     private readonly Document _doc;
     private readonly WorkSetLinkFilesModel _model;
     public static Action Close;
@@ -88,7 +87,7 @@ public sealed partial class WorkSetLinkFilesViewModel : ObservableObject
     public WorkSetLinkFilesViewModel(Document doc)
     {
         _doc = doc;
-        _data = new Data(doc);
+        var data = new Data(doc);
         _model = new WorkSetLinkFilesModel(doc);
         
         NameText = "Наименование";
@@ -98,8 +97,8 @@ public sealed partial class WorkSetLinkFilesViewModel : ObservableObject
         LevelText = "Перенести уровни в рабочий набор:";
 
 
-        LinksRevitModels = _data.GetLinks();
-        Worksets = _data.GetWorksets();
+        LinksRevitModels = data.GetLinks();
+        Worksets = data.GetWorksets();
         WorksetLevel = Worksets.FirstOrDefault() ?? string.Empty;
         WorksetAxes = Worksets.FirstOrDefault() ?? string.Empty;
         foreach (var link in LinksRevitModels)
@@ -155,14 +154,12 @@ public sealed partial class WorkSetLinkFilesViewModel : ObservableObject
     }
     private void Link_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(LinkFiles.IsChecked))
+        if (e.PropertyName != nameof(LinkFiles.IsChecked)) return;
+        var anyChecked = LinksRevitModels.Any(link => link.IsChecked);
+        if (IsCheckedAllLinks && IsCheckedAllLinks != anyChecked)
         {
-            var anyChecked = LinksRevitModels.Any(link => link.IsChecked);
-            if (IsCheckedAllLinks && IsCheckedAllLinks != anyChecked)
-            {
-                IsCheckedAllLinks = anyChecked;
-            }
-            StartCommand.NotifyCanExecuteChanged();
+            IsCheckedAllLinks = anyChecked;
         }
+        StartCommand.NotifyCanExecuteChanged();
     }
 }

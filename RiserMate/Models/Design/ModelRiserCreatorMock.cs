@@ -58,6 +58,11 @@ public class ModelRiserCreatorMock : IModelRiserCreator
         }
     }
 
+    public Task MarkActiveViewAsync(string marksHeatDevice, string marksPipe, string markPipeAccessory)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task CreateViewsAsync(List<HeatingRiser> heatingRisers, string parameterName, string viewOption,
         bool isMarking,
         string marksHeatDevice, string marksPipe, string markPipeAccessory, IProgress<(int val, string msg)> progress)

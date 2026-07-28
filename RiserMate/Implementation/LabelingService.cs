@@ -7,7 +7,7 @@ namespace RiserMate.Implementation;
 public class LabelingService(View3D view) : ILabelingService
 {
     private readonly View3D _view = view ?? throw new ArgumentNullException(nameof(view));
-    private readonly Document? _document = Context.ActiveDocument;
+    private readonly Document? _document = RevitContext.ActiveDocument;
 
     public void MarkHeatDevice(string marksHeatDevice)
     {
@@ -25,16 +25,26 @@ public class LabelingService(View3D view) : ILabelingService
 
         if (mark == null) return;
 
-        var diagonalDirection = GetDiagonalDirection();
-        var offset = 10.0;
+        var up = _view.UpDirection.Normalize();
+        const double horizontalOffset = 10.0;
+        const double verticalOffset = 5.0;
 
         foreach (var heatDevice in heatDevices)
         {
             var reference = new Reference(heatDevice);
-            if (heatDevice.Location is not LocationPoint location) continue;
+            if (heatDevice.Location is not LocationPoint) continue;
 
-            var point = location.Point;
-            var tagPoint = CalculateTagPoint(point, diagonalDirection, offset);
+            var leaderEnd = GetElbowPoint(heatDevice);
+            if (leaderEnd == null) continue;
+
+            var connectionPoint = GetConnectionPoint(heatDevice);
+            var direction = connectionPoint != null
+                ? GetScreenHorizontalAwayFromConnection(heatDevice, connectionPoint)
+                : _view.RightDirection.Normalize();
+
+            var tagPoint = leaderEnd
+                           + direction * horizontalOffset
+                           + up * verticalOffset;
 
             var tag = IndependentTag.Create(
                 _document,
@@ -43,15 +53,14 @@ public class LabelingService(View3D view) : ILabelingService
                 reference,
                 true,
                 TagOrientation.Horizontal,
-                GetElbowPoint(heatDevice)
+                leaderEnd
             );
 
             if (tag != null)
             {
                 tag.LeaderEndCondition = LeaderEndCondition.Free;
                 tag.TagHeadPosition = tagPoint;
-                var leaderEnd = GetElbowPoint(heatDevice);
-                if (leaderEnd != null) tag.SetLeaderEnd(reference, GetElbowPoint(heatDevice));
+                tag.SetLeaderEnd(reference, leaderEnd);
             }
 
             _document.Regenerate();
@@ -66,91 +75,85 @@ public class LabelingService(View3D view) : ILabelingService
             }
         }
     }
-    
-    
+
+
     public void MarkPipeAccessory(string markPipeAccessory)
-{
-    if (_document == null) return;
-
-    var pipeAccessories = new FilteredElementCollector(_document, _view.Id)
-        .OfCategory(BuiltInCategory.OST_PipeAccessory)
-        .WhereElementIsNotElementType()
-        .Cast<FamilyInstance>()
-        .Where(p => p.SuperComponent == null)
-        .ToList();
-
-    var mark = new FilteredElementCollector(_document)
-        .OfCategory(BuiltInCategory.OST_PipeAccessoryTags)
-        .WhereElementIsElementType()
-        .FirstOrDefault(m => m.Name == markPipeAccessory);
-
-    if (mark == null) return;
-    
-    var viewOrigin   = _view.Origin;
-    var viewScale    = _view.Scale;
-    var viewRight    = _view.RightDirection;
-    var viewUp       = _view.UpDirection;
-    var viewDir      = _view.ViewDirection;
-    
-    const double offsetX = 6;
-    const double offsetY = 2;
-
-
-    var createdTags = new List<IndependentTag>();
-
-    foreach (var pipeAccessory in pipeAccessories)
     {
-        if (pipeAccessory.Location is not LocationPoint location) continue;
+        if (_document == null) return;
 
-        var reference  = new Reference(pipeAccessory);
-        var hostPoint  = location.Point;
-        
-        var (hx, hy, hz) = ProjectToView(hostPoint, viewOrigin, viewRight, viewUp, viewDir, viewScale);
-        
-        var tagHeadWorld = hostPoint
-                           - offsetX * viewRight
-                           - offsetY * viewUp;
-        
-        var leaderEnd = hostPoint;
+        var pipeAccessories = new FilteredElementCollector(_document, _view.Id)
+            .OfCategory(BuiltInCategory.OST_PipeAccessory)
+            .WhereElementIsNotElementType()
+            .Cast<FamilyInstance>()
+            .Where(p => p.SuperComponent == null)
+            .ToList();
 
-        try
+        var mark = new FilteredElementCollector(_document)
+            .OfCategory(BuiltInCategory.OST_PipeAccessoryTags)
+            .WhereElementIsElementType()
+            .FirstOrDefault(m => m.Name == markPipeAccessory);
+
+        if (mark == null) return;
+
+        var viewRight = _view.RightDirection;
+        var viewUp = _view.UpDirection;
+
+
+        const double offsetX = 6;
+        const double offsetY = 2;
+
+
+        var createdTags = new List<IndependentTag>();
+
+        foreach (var pipeAccessory in pipeAccessories)
         {
-            var tag = IndependentTag.Create(
-                _document, mark.Id, _view.Id,
-                reference, true, TagOrientation.Horizontal,
-                tagHeadWorld);
+            if (pipeAccessory.Location is not LocationPoint location) continue;
 
-            tag.LeaderEndCondition = LeaderEndCondition.Free;
-            tag.TagHeadPosition   = tagHeadWorld;
-            tag.SetLeaderEnd(reference, leaderEnd);
+            var reference = new Reference(pipeAccessory);
+            var hostPoint = location.Point;
 
-            createdTags.Add(tag);
-            _document.Regenerate();
+            var tagHeadWorld = hostPoint
+                               - offsetX * viewRight
+                               - offsetY * viewUp;
+
+            var leaderEnd = hostPoint;
+
+            try
+            {
+                var tag = IndependentTag.Create(
+                    _document, mark.Id, _view.Id,
+                    reference, true, TagOrientation.Horizontal,
+                    tagHeadWorld);
+
+                tag.LeaderEndCondition = LeaderEndCondition.Free;
+                tag.TagHeadPosition = tagHeadWorld;
+                tag.SetLeaderEnd(reference, leaderEnd);
+
+                createdTags.Add(tag);
+                _document.Regenerate();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+
+        //RemoveIntersectingTags(createdTags);
     }
 
-    //RemoveIntersectingTags(createdTags);
 
-    Console.WriteLine(createdTags.Count);
-}
-    
-    
     private void RemoveIntersectingTags(List<IndependentTag> tags)
     {
         var tagsToDelete = new HashSet<ElementId>();
 
-        for (int i = 0; i < tags.Count; i++)
+        for (var i = 0; i < tags.Count; i++)
         {
             if (tagsToDelete.Contains(tags[i].Id)) continue;
 
             var bbI = tags[i].get_BoundingBox(_view);
             if (bbI == null) continue;
 
-            for (int j = i + 1; j < tags.Count; j++)
+            for (var j = i + 1; j < tags.Count; j++)
             {
                 if (tagsToDelete.Contains(tags[j].Id)) continue;
 
@@ -165,7 +168,7 @@ public class LabelingService(View3D view) : ILabelingService
         foreach (var id in tagsToDelete)
             _document?.Delete(id);
     }
-    
+
     private static bool BoundingBoxesIntersectXy(BoundingBoxXYZ a, BoundingBoxXYZ b)
     {
         return a.Min.X <= b.Max.X && a.Max.X >= b.Min.X &&
@@ -203,9 +206,21 @@ public class LabelingService(View3D view) : ILabelingService
         var pipesBySystem = verticalPipes
             .GroupBy(p => p.MEPSystem?.Id)
             .Where(g => g.Key != null);
-        
-        var diagonalDirection = GetDiagonalDirection();
-        var offset = 10;
+
+        var deviceCenters = new FilteredElementCollector(_document, _view.Id)
+            .OfCategory(BuiltInCategory.OST_MechanicalEquipment)
+            .WhereElementIsNotElementType()
+            .Select(GetElementCenter)
+            .OfType<XYZ>()
+            .ToList();
+
+        var up = _view.UpDirection.Normalize();
+        const double horizontalOffsetMm = 1.0;
+        const double verticalOffsetMm = 5.0;
+
+        var horizontalOffset = horizontalOffsetMm / 304.8 * _view.Scale;
+        var verticalOffset = verticalOffsetMm / 304.8 * _view.Scale;
+
 
         foreach (var systemGroup in pipesBySystem)
         {
@@ -214,19 +229,16 @@ public class LabelingService(View3D view) : ILabelingService
 
             if (sortedPipes.Count == 0) continue;
 
-            
-            var currentMinZ = GetMidPipe(sortedPipes[0]).Z;
-            var lengthIgnore = 5.0 * 304.8;
+            var direction = GetPipeTagDirection(sortedPipes[0], deviceCenters);
 
-            for (int i = 0; i < sortedPipes.Count; i++)
+            var currentMinZ = GetMidPipe(sortedPipes[0]).Z;
+            var lengthIgnore = 1.0 * 304.8;
+
+            for (var i = 0; i < sortedPipes.Count; i++)
             {
-                var pipe = sortedPipes[i]; 
-                
-                if (i % 2 != 0) 
-                {
-                    continue;
-                }
-                
+                var pipe = sortedPipes[i];
+
+                if (i % 2 != 0) continue;
 
                 if (pipe.Location is not LocationCurve location) continue;
 
@@ -251,6 +263,7 @@ public class LabelingService(View3D view) : ILabelingService
             foreach (var pipe in validPipes)
             {
                 var reference = new Reference(pipe);
+                var midPipe = GetMidPipe(pipe);
 
                 var tag = IndependentTag.Create(
                     _document,
@@ -259,21 +272,82 @@ public class LabelingService(View3D view) : ILabelingService
                     reference,
                     true,
                     TagOrientation.Horizontal,
-                    GetMidPipe(pipe)
+                    midPipe
                 );
 
-                if (tag != null)
-                {
-                    var midPipe = GetMidPipe(pipe);
-                    tag.LeaderEndCondition = LeaderEndCondition.Free;
-                    tag.TagHeadPosition = CalculateTagPointForPipe(midPipe, diagonalDirection, offset);
-                }
+                if (tag == null) continue;
+
+                tag.LeaderEndCondition = LeaderEndCondition.Free;
+
+                var desiredHead = midPipe
+                                  + direction * horizontalOffset
+                                  - up * verticalOffset;
+
+                tag.TagHeadPosition = desiredHead;
+
+                _document.Regenerate();
+
+                AdjustTagClearance(tag, midPipe, direction, desiredHead);
             }
 
             break;
         }
+    }
 
-        _document.Regenerate();
+    private void AdjustTagClearance(IndependentTag tag, XYZ pipePoint, XYZ direction, XYZ currentHead)
+    {
+        var bb = tag.get_BoundingBox(_view);
+        if (bb == null) return;
+
+        var t = bb.Transform;
+        var corners = new[]
+        {
+            t.OfPoint(new XYZ(bb.Min.X, bb.Min.Y, bb.Min.Z)),
+            t.OfPoint(new XYZ(bb.Max.X, bb.Min.Y, bb.Min.Z)),
+            t.OfPoint(new XYZ(bb.Min.X, bb.Max.Y, bb.Min.Z)),
+            t.OfPoint(new XYZ(bb.Max.X, bb.Max.Y, bb.Min.Z)),
+            t.OfPoint(new XYZ(bb.Min.X, bb.Min.Y, bb.Max.Z)),
+            t.OfPoint(new XYZ(bb.Max.X, bb.Min.Y, bb.Max.Z)),
+            t.OfPoint(new XYZ(bb.Min.X, bb.Max.Y, bb.Max.Z)),
+            t.OfPoint(new XYZ(bb.Max.X, bb.Max.Y, bb.Max.Z))
+        };
+
+
+        var nearestEdge = corners.Min(c => c.DotProduct(direction));
+        var pipeProjection = pipePoint.DotProduct(direction);
+
+        var clearance = 5.0 / 304.8 * _view.Scale;
+
+        var shortfall = pipeProjection + clearance - nearestEdge;
+        if (shortfall <= 0) return;
+
+        tag.TagHeadPosition = currentHead + direction * shortfall;
+    }
+
+
+    private XYZ GetPipeTagDirection(Pipe pipe, List<XYZ> deviceCenters)
+    {
+        var right = _view.RightDirection.Normalize();
+        var pipeMid = GetMidPipe(pipe);
+
+        const double searchRadius = 3000 / 304.8;
+
+        var nearbyCenters = deviceCenters
+            .Where(c =>
+            {
+                var dx = c.X - pipeMid.X;
+                var dy = c.Y - pipeMid.Y;
+                return Math.Sqrt(dx * dx + dy * dy) < searchRadius;
+            })
+            .ToList();
+
+        if (nearbyCenters.Count == 0) return right;
+
+        var avgCenter = nearbyCenters.Aggregate(XYZ.Zero, (acc, p) => acc + p) / nearbyCenters.Count;
+
+        var delta = avgCenter.DotProduct(right) - pipeMid.DotProduct(right);
+
+        return delta >= 0 ? right.Negate() : right;
     }
 
     private XYZ GetMidPipe(Pipe pipe)
@@ -288,119 +362,85 @@ public class LabelingService(View3D view) : ILabelingService
         return (point1 + point2) / 2.0;
     }
 
-    private XYZ CalculateTagPointForPipe(XYZ point, XYZ direction, double offset)
-    {
-        var leftDirection = new XYZ(-direction.Y, direction.X, 0).Normalize();
-
-        return new XYZ(
-            point.X + leftDirection.X * offset,
-            point.Y + leftDirection.Y * offset,
-            point.Z - offset * 0.75
-        );
-    }
-    
-
     private void CreateSpotElevation(Element element)
     {
         if (_document == null || element.Location is not LocationPoint) return;
-        
-        var diagonalDirection = GetDiagonalDirection();
-        var offset = 10.0;
 
-        var bendPoint = CalculateBendPoint(element);
-        if (bendPoint == null) return;
-        var endPoint = CalculateTagPoint2(bendPoint, diagonalDirection, offset);
+        var connectionPoint = GetConnectionPoint(element);
+        if (connectionPoint == null) return;
 
-        var referenceEdge = GetLowestEdgeReference(element);
-        if (referenceEdge == null) return;
+        var (reference, point) = GetFarthestLowestEdgePoint(element, connectionPoint);
+        if (reference == null || point == null) return;
+
+        var direction = GetScreenHorizontalAwayFromConnection(element, connectionPoint);
+
+        const double leaderLength = 3.0;
+        const double shelfLength = 2.0;
+        var dropOffset = 0.001 / 304.8 * _view.Scale;
+
+        var drop = -_view.UpDirection.Normalize() * dropOffset;
+
+        var bendPoint = point + direction * leaderLength + drop;
+        var endPoint = bendPoint + direction * shelfLength;
 
         var spotDimension = _document.Create.NewSpotElevation(
             _view,
-            referenceEdge,
-            GetClosestPointOnEdge(referenceEdge),
+            reference,
+            point,
             bendPoint,
             endPoint,
-            GetClosestPointOnEdge(referenceEdge),
+            point,
             true
         );
-        spotDimension.LeaderShoulderPosition = CorrectPointSpotElevation(GetClosestPointOnEdge(referenceEdge));
     }
 
-    private Reference? GetLowestEdgeReference(Element element)
+    private XYZ GetScreenHorizontalAwayFromConnection(Element element, XYZ connectionPoint)
     {
-        var options = new Options
-        {
-            ComputeReferences = true,
-            View = _view
-        };
+        var right = _view.RightDirection.Normalize();
 
-        var geom = element.get_Geometry(options);
-        if (geom == null) return null;
+        var center = GetElementCenter(element);
+        if (center == null) return right;
 
-        List<Solid> allSolids = [];
+        var delta = center.DotProduct(right) - connectionPoint.DotProduct(right);
 
-        foreach (var obj in geom)
-            if (obj is Solid s && s.Volume > 0)
-            {
-                allSolids.Add(s);
-            }
-            else if (obj is GeometryInstance instance)
-            {
-                var symbolGeom = instance.GetSymbolGeometry();
-                foreach (var symObj in symbolGeom)
-                    if (symObj is Solid ss && ss.Volume > 0)
-                        allSolids.Add(ss);
-            }
-
-        if (allSolids.Count == 0) return null;
-
-        var maxVolume = allSolids.Max(s => s.Volume);
+        return delta >= 0 ? right : right.Negate();
+    }
 
 
-        const double tolerance = 0.0001;
-        var largestSolids = allSolids
-            .Where(s => Math.Abs(s.Volume - maxVolume) < tolerance)
+    private XYZ? GetElementCenter(Element element)
+    {
+        var bbox = element.get_BoundingBox(null);
+        if (bbox == null) return null;
+
+        var localCenter = (bbox.Min + bbox.Max) / 2.0;
+        return bbox.Transform.OfPoint(localCenter);
+    }
+
+
+    private static XYZ? GetConnectionPoint(Element element)
+    {
+        if (element is not FamilyInstance familyInstance) return null;
+
+        var connectors = familyInstance.MEPModel?.ConnectorManager?.Connectors;
+        if (connectors == null) return null;
+
+        var points = connectors
+            .Cast<Connector>()
+            .Where(c => c.IsConnected)
+            .Select(c => c.Origin)
             .ToList();
 
-        Edge? lowestEdge = null;
-        var minZ = double.MaxValue;
+        if (points.Count == 0)
+            points = connectors.Cast<Connector>().Select(c => c.Origin).ToList();
 
-        foreach (var solid in largestSolids)
-        foreach (Edge? edge in solid.Edges)
-        {
-            var curve = edge?.AsCurve();
+        if (points.Count == 0) return null;
 
-            var point1 = curve?.GetEndPoint(0);
-            var point2 = curve?.GetEndPoint(1);
-
-            if (point1 != null && point2 != null)
-            {
-                var edgeMinZ = Math.Min(point1.Z, point2.Z);
-
-                if (!(edgeMinZ < minZ)) continue;
-                minZ = edgeMinZ;
-            }
-
-            lowestEdge = edge;
-        }
-
-        return lowestEdge?.Reference;
+        var sum = points.Aggregate(XYZ.Zero, (acc, p) => acc + p);
+        return sum / points.Count;
     }
 
-    private static XYZ CorrectPointSpotElevation(XYZ? xyz)
+    private (Reference? Reference, XYZ? Point) GetFarthestLowestEdgePoint(Element element, XYZ connectionPoint)
     {
-        return xyz != null ? new XYZ(xyz.X, xyz.Y, xyz.Z - 0.1) : new XYZ();
-    }
-
-
-    private XYZ? GetClosestPointOnEdge(Reference edgeReference)
-    {
-        if (edgeReference == null || _view is null)
-            return null;
-
-        var element = _document!.GetElement(edgeReference.ElementId);
-        if (element == null) return null;
-
         var options = new Options
         {
             ComputeReferences = true,
@@ -408,60 +448,86 @@ public class LabelingService(View3D view) : ILabelingService
         };
 
         var geom = element.get_Geometry(options);
-        if (geom == null) return null;
+        if (geom == null) return (null, null);
 
-        var transform = Transform.Identity;
+        var allSolids = new List<(Solid Solid, Transform Transform)>();
 
         foreach (var obj in geom)
-        {
-            if (obj is not GeometryInstance instance) continue;
-            transform = instance.Transform;
-            break;
-        }
-
-        var edge = element.GetGeometryObjectFromReference(edgeReference) as Edge;
-        if (edge == null) return null;
-
-        var curve = edge.AsCurve();
-        if (curve == null) return null;
-
-        var transformedCurve = curve.CreateTransformed(transform);
-
-        var eyePosition = _view.Origin;
-        var viewDirection = _view.ViewDirection.Normalize();
-
-        var point1 = transformedCurve.GetEndPoint(0);
-        var point2 = transformedCurve.GetEndPoint(1);
-
-        var lowestZ = Math.Min(point1.Z, point2.Z);
-
-        if (Math.Abs(point1.Z - lowestZ) < 0.0001)
-        {
-            if (Math.Abs(point2.Z - lowestZ) < 0.0001)
+            switch (obj)
             {
-                var toPoint1 = point1 - eyePosition;
-                var toPoint2 = point2 - eyePosition;
-
-                var projection1 = toPoint1.DotProduct(viewDirection);
-                var projection2 = toPoint2.DotProduct(viewDirection);
-
-                return projection1 > projection2 ? point1 : point2;
+                case Solid solid when solid.Volume > 0:
+                    allSolids.Add((solid, Transform.Identity));
+                    break;
+                case GeometryInstance instance:
+                {
+                    var transform = instance.Transform;
+                    foreach (var symObj in instance.GetSymbolGeometry())
+                        if (symObj is Solid symSolid && symSolid.Volume > 0)
+                            allSolids.Add((symSolid, transform));
+                    break;
+                }
             }
 
-            return point1;
+        if (allSolids.Count == 0) return (null, null);
+
+        var maxVolume = allSolids.Max(s => s.Solid.Volume);
+        const double volumeTolerance = 0.0001;
+
+        var largestSolids = allSolids
+            .Where(s => Math.Abs(s.Solid.Volume - maxVolume) < volumeTolerance)
+            .ToList();
+
+        var edges = new List<(Edge Edge, Transform Transform)>();
+
+        foreach (var (solid, transform) in largestSolids)
+        foreach (Edge edge in solid.Edges)
+            if (edge != null)
+                edges.Add((edge, transform));
+
+        if (edges.Count == 0) return (null, null);
+
+        var minZ = double.MaxValue;
+
+        foreach (var (edge, transform) in edges)
+        {
+            var curve = edge.AsCurve();
+            if (curve == null) continue;
+
+            var z0 = transform.OfPoint(curve.GetEndPoint(0)).Z;
+            var z1 = transform.OfPoint(curve.GetEndPoint(1)).Z;
+
+            minZ = Math.Min(minZ, Math.Min(z0, z1));
         }
 
-        return point2;
+        const double zTolerance = 0.01;
+
+        Reference? bestReference = null;
+        XYZ? bestPoint = null;
+        var maxDistance = double.MinValue;
+
+        foreach (var (edge, transform) in edges)
+        {
+            var curve = edge.AsCurve();
+            if (curve == null || edge.Reference == null) continue;
+
+            for (var i = 0; i < 2; i++)
+            {
+                var worldPoint = transform.OfPoint(curve.GetEndPoint(i));
+
+                if (worldPoint.Z > minZ + zTolerance) continue;
+
+                var distance = worldPoint.DistanceTo(connectionPoint);
+                if (distance <= maxDistance) continue;
+
+                maxDistance = distance;
+                bestReference = edge.Reference;
+                bestPoint = worldPoint;
+            }
+        }
+
+        return (bestReference, bestPoint);
     }
 
-    private XYZ GetDiagonalDirection()
-    {
-        var orientation = _view.GetOrientation();
-        var forwardDirection = orientation.ForwardDirection;
-        var upDirection = orientation.UpDirection;
-        var rightDirection = forwardDirection.CrossProduct(upDirection).Normalize();
-        return (rightDirection + upDirection).Normalize();
-    }
 
     private XYZ? GetElbowPoint(Element element)
     {
@@ -476,108 +542,14 @@ public class LabelingService(View3D view) : ILabelingService
         return null;
     }
 
-    private XYZ CalculateTagPoint(XYZ point, XYZ direction, double offset)
-    {
-        return new XYZ(
-            point.X + direction.X * offset,
-            point.Y + direction.Y * offset,
-            point.Z + direction.Z * offset / 2
-        );
-    }
-
-    private XYZ CalculateTagPoint2(XYZ point, XYZ direction, double offset)
-    {
-        return new XYZ(
-            point.X + direction.X * offset,
-            point.Y + direction.Y * offset,
-            point.Z + direction.Z * offset
-        );
-    }
-    
     private static (double x, double y, double z) ProjectToView(
         XYZ worldPoint, XYZ viewOrigin, XYZ viewRight, XYZ viewUp, XYZ viewDir, int viewScale)
     {
         var delta = worldPoint - viewOrigin;
         return (
             delta.DotProduct(viewRight) / viewScale,
-            delta.DotProduct(viewUp)    / viewScale,
-            delta.DotProduct(viewDir)   / viewScale
+            delta.DotProduct(viewUp) / viewScale,
+            delta.DotProduct(viewDir) / viewScale
         );
-    }
-
-    private static XYZ ProjectToWorld(
-        double vx, double vy, double vz,
-        XYZ viewOrigin, XYZ viewRight, XYZ viewUp, XYZ viewDir, int viewScale)
-    {
-        return viewOrigin
-               + vx * viewScale * viewRight
-               + vy * viewScale * viewUp
-               + vz * viewScale * viewDir;
-    }
-
-    private XYZ? CalculateBendPoint(Element element)
-    {
-        if (element == null || _view == null)
-            return null;
-
-        var options = new Options();
-        options.View = _view;
-        options.ComputeReferences = true;
-
-        var geomElement = element.get_Geometry(options);
-
-        if (geomElement == null)
-            return null;
-
-        var faceCenters = new List<XYZ>();
-
-        foreach (var geomObj in geomElement)
-            if (geomObj is Solid solid && solid.Faces.Size > 0)
-                foreach (Face face in solid.Faces)
-                    try
-                    {
-                        var uvBox = face.GetBoundingBox();
-
-                        if (uvBox != null && uvBox.Min != null && uvBox.Max != null)
-                        {
-                            var centerUv = new UV(
-                                (uvBox.Min.U + uvBox.Max.U) / 2.0,
-                                (uvBox.Min.V + uvBox.Max.V) / 2.0
-                            );
-
-                            var centerXyz = face.Evaluate(centerUv);
-
-                            if (centerXyz != null) faceCenters.Add(centerXyz);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
-
-        if (faceCenters.Count > 0)
-        {
-            double sumX = 0, sumY = 0, sumZ = 0;
-
-            foreach (var center in faceCenters)
-            {
-                sumX += center.X;
-                sumY += center.Y;
-                sumZ += center.Z;
-            }
-
-            var overallCenter = new XYZ(
-                sumX / faceCenters.Count,
-                sumY / faceCenters.Count,
-                sumZ / faceCenters.Count
-            );
-
-            return overallCenter;
-        }
-
-        var bbox = element.get_BoundingBox(_view);
-        if (bbox != null && bbox.Min != null && bbox.Max != null) return (bbox.Min + bbox.Max) / 2.0;
-
-        return null;
     }
 }

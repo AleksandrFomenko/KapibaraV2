@@ -111,6 +111,9 @@ namespace KapibaraV2
          panelMepGeneral.AddPushButton<Marking.Commands.StartupCommand>("Marking")
              .SetImage("/KapibaraV2;component/Resources/Icons/Mark16.png")
              .SetLargeImage("/KapibaraV2;component/Resources/Icons/Mark32.png");
+         panelMepGeneral.AddPushButton<VentilationInstallations.Commands.StartupCommand>("Вент.\nустановки")
+             .SetImage("/KapibaraV2;component/Resources/Icons/Cooler32.png")
+             .SetLargeImage("/KapibaraV2;component/Resources/Icons/Cooler32.png");
          /*
         panelMepGeneral.AddPushButton<HeatingDevices.Commands.StartupCommand>("Space\nHeater")
             .SetImage("/KapibaraV2;component/Resources/Icons/SpaceHeater32.png")

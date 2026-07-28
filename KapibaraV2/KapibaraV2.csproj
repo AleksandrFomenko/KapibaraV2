@@ -64,9 +64,9 @@
         <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
         <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.*" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.*" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
     </ItemGroup>
 
     <ItemGroup>
@@ -99,6 +99,7 @@
         <ProjectReference Include="..\Settings\Settings.csproj" />
         <ProjectReference Include="..\SolidIntersection\SolidIntersection.csproj" />
         <ProjectReference Include="..\SortingCategories\SortingCategories.csproj" />
+        <ProjectReference Include="..\VentilationInstallations\VentilationInstallations.csproj" />
         <ProjectReference Include="..\ViewByParameter\ViewByParameter.csproj" />
         <ProjectReference Include="..\ViewManager\ViewManager.csproj" />
         <ProjectReference Include="..\WorkSetLinkFiles\WorkSetLinkFiles.csproj" />

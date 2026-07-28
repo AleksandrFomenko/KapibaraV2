@@ -37,6 +37,7 @@
       <ProjectReference Include="..\Marking\Marking.csproj" />
       <ProjectReference Include="..\RiserMate\RiserMate.csproj" />
       <ProjectReference Include="..\Settings\Settings.csproj" />
+      <ProjectReference Include="..\VentilationInstallations\VentilationInstallations.csproj" />
       <ProjectReference Include="..\ViewByParameter\ViewByParameter.csproj" />
     </ItemGroup>
 

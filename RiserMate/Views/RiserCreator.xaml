@@ -179,6 +179,15 @@
                                               Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
                                               ItemsSource="{Binding MarksPipeAccessory}"
                                               SelectedItem="{Binding SelectedMarkPipeAccessory}"/>
+                                    
+                                    <ui:Button DockPanel.Dock="Top"
+                                               Visibility="{Binding VisibleMark,
+                                              Converter={StaticResource BooleanCollapsedVisibilityConverter}}" 
+                                               Appearance="Info"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               Command="{Binding MarkingActiveViewCommand}"
+                                               Content="Маркировать активный вид" />
 
 
                                 </DockPanel>

@@ -11,7 +11,7 @@ public class ModelRiserMateCreator(
     IViewCreationService viewCreationService,
     IFilterCreationService filterCreationService) : IModelRiserCreator
 {
-    private readonly Document? _document = Context.ActiveDocument;
+    private Document? _document => Context.ActiveDocument;
 
     public List<string> GetUserParameters()
     {
@@ -50,6 +50,40 @@ public class ModelRiserMateCreator(
     public List<string> GetMarksPipeAccessory()
     {
         return GetMarks(BuiltInCategory.OST_PipeAccessoryTags);
+    }
+
+    public async Task MarkActiveViewAsync(string marksHeatDevice, string marksPipe, string markPipeAccessory)
+    {
+        await Handlers.Handlers.AsyncEventHandler.RaiseAsync(async app =>
+        {
+            if (_document.ActiveView is not View3D view)
+                return;
+
+            using var t = new Transaction(_document, "RiserMate: Маркировка активного вида");
+
+            try
+            {
+                t.Start();
+
+                var service = new LabelingService(view);
+
+                if (!string.IsNullOrEmpty(marksHeatDevice))
+                    service.MarkHeatDevice(marksHeatDevice);
+
+                if (!string.IsNullOrEmpty(marksPipe))
+                    service.MarkPipe(marksPipe);
+
+                if (!string.IsNullOrEmpty(markPipeAccessory))
+                    service.MarkPipeAccessory(markPipeAccessory);
+
+                t.Commit();
+            }
+            catch (Exception ex)
+            {
+                if (t.GetStatus() == TransactionStatus.Started) t.RollBack();
+                Console.WriteLine($"Ошибка маркировки активного вида: {ex.Message}");
+            }
+        });
     }
 
 
@@ -181,8 +215,8 @@ public class ModelRiserMateCreator(
                     }
 
                     _document?.Regenerate();
-                    
-                    
+
+
                     if (isMarking)
                     {
                         var service = new LabelingService(view);
@@ -193,7 +227,7 @@ public class ModelRiserMateCreator(
 
                             if (!string.IsNullOrEmpty(marksPipe))
                                 service.MarkPipe(marksPipe);
-                            
+
                             if (!string.IsNullOrEmpty(markPipeAccessory))
                                 service.MarkPipeAccessory(markPipeAccessory);
                         }

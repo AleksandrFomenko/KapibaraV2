@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using WixSharp;
 
 namespace Setup;
@@ -14,8 +15,10 @@ public class Build
 
         static void Main(string[] args)
         {
-            var versions = new List<string> { "22", "23" };
+            var versions = new List<string> { "22"};
             var patterns = new List<string>();
+            Environment.CurrentDirectory = Path.GetFullPath(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
 
             foreach (var ver in versions)
             {

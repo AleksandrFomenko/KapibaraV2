@@ -10,7 +10,7 @@ namespace KapibaraUI.Services.Appearance;
 
 public sealed class ThemeWatcherService : IThemeWatcherService
 {
-    private  readonly List<FrameworkElement> ObservedElements = [];
+    private readonly List<FrameworkElement> ObservedElements = [];
 
     private static readonly string DllPath = Assembly.GetExecutingAssembly().Location;
     private static readonly string DllDirectory = Path.GetDirectoryName(DllPath);

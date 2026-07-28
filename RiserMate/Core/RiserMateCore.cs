@@ -6,7 +6,8 @@ namespace RiserMate.Core;
 
 public static class RiserMateCore
 {
-    private static readonly Document? Document = Context.ActiveDocument;
+    private static Document? Document => Context.ActiveDocument;
+
 
     public static List<Pipe> GetBottomPipesByRiser(string riserName, string parameterName)
     {
@@ -76,10 +77,12 @@ public static class RiserMateCore
     private static IList<Element> GetElementsFromTopConnector(
         Pipe startPipe,
         HashSet<ElementId> visited,
-        ElementId? stopId)
+        ElementId? stopId,
+        out HashSet<ElementId> excludedIds)
     {
-        var cm = startPipe.ConnectorManager;
-        var connectors = cm?.Connectors;
+        excludedIds = new HashSet<ElementId>();
+
+        var connectors = startPipe.ConnectorManager?.Connectors;
         if (connectors == null || connectors.Size == 0)
             return new List<Element>();
 
@@ -88,26 +91,27 @@ public static class RiserMateCore
         if (visited.Add(startPipe.Id))
             result.Add(startPipe);
 
-        Connector? bottomConnector = null;
-        var minZ = double.PositiveInfinity;
-        foreach (Connector c in connectors)
+        var connectorList = connectors.Cast<Connector>().ToList();
+
+        var bottomConnector = connectorList
+            .OrderBy(c => c.Origin.Z)
+            .FirstOrDefault();
+        
+        if (bottomConnector != null)
         {
-            var z = c.Origin.Z;
-            if (z < minZ)
+            foreach (Connector refC in bottomConnector.AllRefs)
             {
-                minZ = z;
-                bottomConnector = c;
+                if (refC.Owner != null && refC.Owner is not MEPSystem)
+                    excludedIds.Add(refC.Owner.Id);
             }
         }
-        
-        foreach (Connector c in connectors)
-        {
 
-            if (bottomConnector != null && c == bottomConnector)
-            {
+        foreach (var c in connectorList)
+        {
+            if (bottomConnector != null &&
+                c.Id == bottomConnector.Id &&
+                c.Owner.Id == bottomConnector.Owner.Id)
                 continue;
-            }
-            
 
             TraverseFromConnector(c, visited, result, stopId);
         }
@@ -211,7 +215,9 @@ public static class RiserMateCore
                aMin.Y <= bMax.Y + tol && aMax.Y + tol >= bMin.Y &&
                aMin.Z <= bMax.Z + tol && aMax.Z + tol >= bMin.Z;
     }
-    private static List<Element> GetIntersectingElementsForEach(IList<Element> connectedElements)
+    private static List<Element> GetIntersectingElementsForEach(
+        IList<Element> connectedElements,
+        HashSet<ElementId> excludedIds)
     {
         var resultIds = new HashSet<ElementId>();
         var result = new List<Element>();
@@ -236,13 +242,16 @@ public static class RiserMateCore
                 continue;
 
             var pipeBox = GetPipeBoundingBox(pipe);
-
             if (pipeBox == null) continue;
 
             foreach (var (fi, box) in famBoxes)
             {
+                if (excludedIds.Contains(fi.Id))
+                    continue;
+
                 if (!BoxesIntersect(pipeBox, box))
                     continue;
+
                 if (resultIds.Add(fi.Id))
                     result.Add(fi);
             }
@@ -259,7 +268,7 @@ public static class RiserMateCore
         var stopId = pipes.Count > 1 ? pipes[1].Id : null;
    
 
-        var connectedElements = GetElementsFromTopConnector(startPipe, visited, stopId);
+        var connectedElements = GetElementsFromTopConnector(startPipe, visited, stopId, out var excludedIds);
 
         foreach (var el in connectedElements)
         {
@@ -276,7 +285,7 @@ public static class RiserMateCore
             }
         }
 
-        var intersected = GetIntersectingElementsForEach(connectedElements);
+        var intersected = GetIntersectingElementsForEach(connectedElements, excludedIds);
         
         foreach (var el in intersected)
         {

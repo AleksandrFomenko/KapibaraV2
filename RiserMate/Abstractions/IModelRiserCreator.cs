@@ -17,6 +17,8 @@ public interface IModelRiserCreator
         List<HeatingRiser> heatingRisers, 
         string parameter, 
         IProgress<(int val, string msg)> progress = null);
+    
+    Task MarkActiveViewAsync(string marksHeatDevice, string marksPipe, string markPipeAccessory);
     Task CreateViewsAsync(
         List<HeatingRiser> heatingRisers,
         string parameterName,
