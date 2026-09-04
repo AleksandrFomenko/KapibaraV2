@@ -17,12 +17,9 @@ public class ResaveExporter : RevitExporter
         UpdateTransmissionData(destFilePath);
     }
 
-    private string GetModelNameFromPath(string filePath)
-    {
-        return Path.GetFileNameWithoutExtension(filePath);
-    }
+    private static string GetModelNameFromPath(string filePath) => Path.GetFileNameWithoutExtension(filePath);
 
-    private void UpdateTransmissionData(string modelFilePath)
+    private static void UpdateTransmissionData(string modelFilePath)
     {
         var localModelPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(modelFilePath);
         var transData = TransmissionData.ReadTransmissionData(localModelPath);

@@ -1,8 +1,8 @@
 ﻿namespace ClashHub.Models.Entity;
 
-public class ElementEntity(string Type, int Id, string TypeFamily)
+public class ElementEntity(string type, long id, string familyType)
 {
-    public string Type { get; set; } = Type;
-    public int Id { get; set; } = Id;
-    public string TypeFamily { get; set; } = TypeFamily;
+    public string Type { get; } = type;
+    public long Id { get; } = id;
+    public string FamilyType { get; } = familyType;
 }

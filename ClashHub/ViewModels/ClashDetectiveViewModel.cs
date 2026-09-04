@@ -14,6 +14,8 @@ namespace ClashHub.ViewModels;
 public sealed partial class ClashDetectiveViewModel : ObservableObject
 {
     private IPickerElements _picker;
+    private readonly IClashViewCreator _viewCreator;
+    
     [ObservableProperty] private string _pathToFile;
     [ObservableProperty] private List<IFileParser<ClashTest>> _formats;
     [ObservableProperty] private IFileParser<ClashTest> _selectedFormat;
@@ -28,11 +30,21 @@ public sealed partial class ClashDetectiveViewModel : ObservableObject
     
     partial void OnSelectedCheckChanged(ClashTest value)
     {
+        foreach (var old in Collisions)
+        {
+            old.ShowEvent -= ShowElements;
+            old.ShowIsolatedEvent -= CreateClashView;
+        }
+
         Collisions.Clear();
+
+        if (value == null) return;
+
         foreach (var clashResult in value.Results)
         {
             Collisions.Add(clashResult);
-            clashResult.ShowEvent += ShowElement;
+            clashResult.ShowEvent += ShowElements;
+            clashResult.ShowIsolatedEvent += CreateClashView;
         }
     }
     
@@ -50,9 +62,10 @@ public sealed partial class ClashDetectiveViewModel : ObservableObject
         GetCollisionElements();
     }
 
-    public ClashDetectiveViewModel(IPickerElements picker)
+    public ClashDetectiveViewModel(IPickerElements picker, IClashViewCreator viewCreator)
     {
         _picker = picker;
+        _viewCreator = viewCreator;
         Formats = [new XmlFileParser()];
         SelectedFormat = Formats.First();
     }
@@ -87,7 +100,7 @@ public sealed partial class ClashDetectiveViewModel : ObservableObject
         PickElement(SecondElement.Id);
     }
 
-    private void PickElement(int id)
+    private void PickElement(long id)
     {
         _picker.PickElement(id);
     }
@@ -120,8 +133,8 @@ public sealed partial class ClashDetectiveViewModel : ObservableObject
         var firstElementFamilyType  = firstObj?.Layer  ?? "error";
         var secondElementFamilyType = secondObj?.Layer ?? "error";
 
-        if (!int.TryParse(firstElementId,  out var firstId))  firstId  = 0;
-        if (!int.TryParse(secondElementId, out var secondId)) secondId = 0;
+        if (!long.TryParse(firstElementId,  out var firstId))  firstId  = 0;
+        if (!long.TryParse(secondElementId, out var secondId)) secondId = 0;
 
         FirstElement  = new ElementEntity(firstElementType,  firstId,  firstElementFamilyType);
         SecondElement = new ElementEntity(secondElementType, secondId, secondElementFamilyType);
@@ -134,8 +147,17 @@ public sealed partial class ClashDetectiveViewModel : ObservableObject
             ?.Value;
     }
 
-    private void ShowElement()
+    [RelayCommand]
+    private void ShowElements()
     {
-        Console.WriteLine("нажал");
+        if (FirstElement == null || SecondElement == null) return;
+        _picker.PickElements([FirstElement.Id, SecondElement.Id]);
+    }
+    
+    [RelayCommand]
+    private void CreateClashView()
+    {
+        if (FirstElement == null || SecondElement == null) return;
+        _viewCreator.CreateViewAsync(FirstElement.Id, SecondElement.Id);
     }
 }

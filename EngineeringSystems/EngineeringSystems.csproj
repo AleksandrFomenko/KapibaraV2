@@ -15,7 +15,7 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
         <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*" />
         <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.*" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7"/>
         <!--Dialogs -->
         <PackageReference Include="gong-wpf-dragdrop" Version="3.2.0" />
     </ItemGroup>

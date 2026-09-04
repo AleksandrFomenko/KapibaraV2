@@ -9,7 +9,7 @@ public static class GroupDataStorageService
         private const string JsonFieldName = "JsonData";
         private const string VendorId      = "Kapibara";
 
-        private static readonly Guid SchemaGuid = new Guid("B8D0D7C3-35E1-44FE-9FA3-1B8C5D9B4E11");
+        private static readonly Guid SchemaGuid = new("B8D0D7C3-35E1-44FE-9FA3-1B8C5D9B4E11");
 
         private static readonly JsonSerializerOptions? JsonOptions = new JsonSerializerOptions
         {

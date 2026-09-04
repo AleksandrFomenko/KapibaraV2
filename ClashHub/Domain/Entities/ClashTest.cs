@@ -139,12 +139,13 @@ public sealed partial class ClashResult : ObservableObject
     }
 
     public event Action ShowEvent;
+    public event Action ShowIsolatedEvent;
     
     [RelayCommand]
     private void ClickShow() => ShowEvent?.Invoke();
 
     [RelayCommand]
-    private void ClickShowIsolated() => ShowEvent?.Invoke();
+    private void ClickShowIsolated() => ShowIsolatedEvent?.Invoke();
 }
 
 public class ClashObject

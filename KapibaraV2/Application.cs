@@ -6,8 +6,6 @@ using Nice3point.Revit.Extensions.UI;
 using Nice3point.Revit.Toolkit.External;
 
 
-
-
 namespace KapibaraV2
 {
     [UsedImplicitly]
@@ -18,7 +16,6 @@ namespace KapibaraV2
             InitializeTheme();
             CreateRibbon(); 
             GroupSystems.StartHost();
-            
         }
 
         private void CreateRibbon()

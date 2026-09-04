@@ -2,5 +2,6 @@
 
 public interface IPickerElements
 {
-    void PickElement(int id);
+    void PickElement(long id);
+    void PickElements(IEnumerable<long> ids);
 }

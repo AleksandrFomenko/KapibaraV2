@@ -44,6 +44,7 @@
         <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*"/>
         <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
+        <PackageReference Include="Polyfill" Version="10.5.1" PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup>
